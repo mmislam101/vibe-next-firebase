@@ -1,6 +1,49 @@
-# Vibe coding Template
+# Vibe Coding Template
 
-Template to start your Vibe coding
+This template is designed for prototyping an MVP of a web app product by Vibe Coding using Cursor, hosted on Google Firebase.
+The template follows the Waterfall Methodology to help manage the relationship between the developer and the AI.
+
+                  SRS
+                   |
+       ___________SRD__________
+      /            |           \
+   API Doc    Database Doc    Frontend Doc
+      |            |                |
+   Functions   Firestore         Next.js
+
+## How to use this Template
+- AGENTS.md file
+   - Contains instructions for each of the Agent Roles: SRS Agent, SRD Agent, SDD Agent, API Agent, and Frontend Agent
+   - Contains instructions on how the Agents should implement the Waterfall
+- SRS Doc (`docs/system/system-requirements.md`)
+   - Product level requirements and specifications
+- SRD Doc (`docs/system/software-requirements.md`)
+   - Software architecture
+   - Software requirements
+- SDD Docs (`docs/software`)
+   - API Doc (`docs/software/api-specification.md`)
+   - Database Doc (`docs/software/database-schema.md`)
+   - Frontend Doc (`docs/software/frontend-requirements.md`)
+- PHASES.md
+   - Use to help stage changes
+   - Already seeded with Auth flow and basic layout
+
+1. Create the Firebase Account and Project in `https://console.firebase.google.com`
+2. Have Agent implement Phase 1 from the `PHASES.md` doc
+3. Test locally successfully
+4. Deploy to Firebase successfully
+5. Fill out the rest of the SRS document with full product details
+6. Have AI generate the rest of the documents and code changes following the Waterfall methodology
+
+## Cursor Commands
+Use these to help during development
+- Run with `.cursor/commands/failingtests.md` when API tests are failing
+- Use `.cursor/commands/feedback.md` as a prefix and then provide Github Copilot feedback from PR
+- Use `.cursor/commands/runninglocally.md` as a prefix when coming across problems while testing the app locally
+
+**Delete above, below is the Readme**
+
+# [Insert App Name Here]
 
 ## Tech Stack
 
