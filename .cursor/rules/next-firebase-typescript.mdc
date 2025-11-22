@@ -1,0 +1,1121 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Comprehensive Cursor Rules for Next.js + TypeScript + Firebase Projects
+
+Based on current best practices from official documentation and proven developer patterns, these cursor rules provide comprehensive guidance for building production-ready applications with Next.js, TypeScript, and Firebase.
+
+## Next.js and React Development Patterns
+
+### Component Architecture Rules
+
+**Always use functional components with TypeScript.** Class components are deprecated in favor of hooks-based functional components that provide better performance and developer experience.
+
+```typescript
+// ✅ Correct pattern
+interface UserProfileProps {
+  user: User;
+  onUpdate: (user: User) => void;
+}
+
+export function UserProfile({ user, onUpdate }: UserProfileProps) {
+  const [editing, setEditing] = useState(false);
+  
+  return (
+    <div>
+      <h1>{user.name}</h1>
+      {editing && <UserEditForm user={user} onSave={onUpdate} />}
+    </div>
+  );
+}
+
+// ❌ Avoid - class components
+class UserProfile extends Component<UserProfileProps> { ... }
+```
+
+**Prefer Server Components as the default pattern.** Use Client Components only when browser APIs, interactivity, or state management is required. This optimization dramatically improves initial page load performance.
+
+```typescript
+// ✅ Server Component (default) - direct database access
+async function PostsList() {
+  const posts = await fetch('https://api.example.com/posts', {
+    cache: 'force-cache', // Leverage Next.js caching
+  });
+  
+  return <PostGrid posts={await posts.json()} />;
+}
+
+// ✅ Client Component - interactive features only
+'use client';
+export function PostInteractions({ postId }: { postId: string }) {
+  const [liked, setLiked] = useState(false);
+  const [count, setCount] = useState(0);
+  
+  return (
+    <button onClick={() => setLiked(!liked)}>
+      {liked ? '❤️' : '🤍'} {count}
+    </button>
+  );
+}
+```
+
+### Data Fetching Patterns
+
+**Implement parallel data fetching in Server Components.** This pattern significantly reduces loading times by fetching independent data sources simultaneously.
+
+```typescript
+// ✅ Parallel fetching pattern
+async function DashboardPage() {
+  const userPromise = getUser();
+  const postsPromise = getPosts();
+  const analyticsPromise = getAnalytics();
+  
+  // Fetch in parallel, not sequential
+  const [user, posts, analytics] = await Promise.all([
+    userPromise,
+    postsPromise,
+    analyticsPromise
+  ]);
+
+  return (
+    <div>
+      <UserProfile user={user} />
+      <PostsList posts={posts} />
+      <AnalyticsDashboard data={analytics} />
+    </div>
+  );
+}
+```
+
+### API Routes Best Practices
+
+**Structure API routes with proper error handling and TypeScript.** Use NextRequest and NextResponse for enhanced functionality and type safety.
+
+```typescript
+// ✅ app/api/users/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function GET(request: NextRequest) {
+  try {
+    const searchParams = request.nextUrl.searchParams;
+    const query = searchParams.get('query');
+    
+    const users = await db.user.findMany({
+      where: query ? { name: { contains: query } } : {}
+    });
+    
+    return NextResponse.json(users);
+  } catch (error) {
+    console.error('Failed to fetch users:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch users' },
+      { status: 500 }
+    );
+  }
+}
+
+// ✅ Dynamic routes with proper typing
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const user = await getUserById(params.id);
+  
+  if (!user) {
+    return NextResponse.json(
+      { error: 'User not found' },
+      { status: 404 }
+    );
+  }
+  
+  return NextResponse.json(user);
+}
+```
+
+## TypeScript Best Practices
+
+### Interface vs Type Usage Rules
+
+**Use interfaces for object shapes and extensible contracts.** Interfaces provide better error messages and can be extended, making them ideal for component props and data models.
+
+```typescript
+// ✅ Use interface for object shapes
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+interface AdminUser extends User {
+  permissions: string[];
+}
+
+// ✅ Use type for unions and transformations
+type Status = 'loading' | 'success' | 'error';
+type ApiResponse<T> = { data: T } | { error: string };
+type CreateUserInput = Omit<User, 'id'>;
+```
+
+### React Component Typing Rules
+
+**Define explicit props interfaces above component definitions.** This improves readability and enables better IntelliSense support.
+
+```typescript
+// ✅ Explicit props interface
+interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
+  variant: 'primary' | 'secondary' | 'danger';
+  size?: 'sm' | 'md' | 'lg';
+  loading?: boolean;
+}
+
+export function Button({ variant, size = 'md', loading, ...props }: ButtonProps) {
+  return (
+    <button 
+      className={`btn btn-${variant} btn-${size}`}
+      disabled={loading}
+      {...props}
+    />
+  );
+}
+
+// ✅ Generic components with constraints
+interface ListProps<T> {
+  items: T[];
+  renderItem: (item: T) => React.ReactNode;
+  keyExtractor: (item: T) => string;
+}
+
+function List<T>({ items, renderItem, keyExtractor }: ListProps<T>) {
+  return (
+    <ul>
+      {items.map(item => (
+        <li key={keyExtractor(item)}>
+          {renderItem(item)}
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+### Utility Types and Generics
+
+**Leverage TypeScript utility types for common transformations.** This reduces boilerplate and improves type safety across the application.
+
+```typescript
+// ✅ Strategic use of utility types
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  age: number;
+  createdAt: Date;
+}
+
+// For API inputs/outputs
+type CreateUserInput = Omit<User, 'id' | 'createdAt'>;
+type UpdateUserInput = Partial<CreateUserInput>;
+type UserProfile = Pick<User, 'name' | 'email'>;
+
+// For form handling
+interface UserForm {
+  name?: string;
+  email?: string;
+  age?: number;
+}
+type CompleteUserForm = Required<UserForm>;
+
+// ✅ Constrained generics for type safety
+function updateEntity<T extends { id: string }>(
+  entity: T, 
+  updates: Partial<T>
+): T {
+  return { ...entity, ...updates };
+}
+```
+
+## Firebase Integration Patterns
+
+### Firestore Service Patterns
+
+**Create service classes for database operations with proper error handling and TypeScript support.** This provides a clean abstraction over Firebase APIs.
+
+```typescript
+// ✅ services/UserService.ts
+import { 
+  collection, 
+  doc, 
+  getDoc, 
+  getDocs, 
+  addDoc, 
+  updateDoc, 
+  deleteDoc,
+  query,
+  where,
+  orderBy,
+  limit
+} from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+
+export interface User {
+  id?: string;
+  email: string;
+  displayName: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export class UserService {
+  private collectionRef = collection(db, 'users');
+
+  async createUser(userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
+    try {
+      const docRef = await addDoc(this.collectionRef, {
+        ...userData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+      return docRef.id;
+    } catch (error) {
+      console.error('Failed to create user:', error);
+      throw new Error(`Failed to create user: ${error.message}`);
+    }
+  }
+
+  async getUser(userId: string): Promise<User | null> {
+    try {
+      const docSnap = await getDoc(doc(this.collectionRef, userId));
+      if (!docSnap.exists()) return null;
+      
+      return {
+        id: docSnap.id,
+        ...docSnap.data(),
+      } as User;
+    } catch (error) {
+      console.error('Failed to get user:', error);
+      throw new Error(`Failed to get user: ${error.message}`);
+    }
+  }
+
+  async updateUser(userId: string, updates: Partial<User>): Promise<void> {
+    try {
+      await updateDoc(doc(this.collectionRef, userId), {
+        ...updates,
+        updatedAt: new Date(),
+      });
+    } catch (error) {
+      console.error('Failed to update user:', error);
+      throw new Error(`Failed to update user: ${error.message}`);
+    }
+  }
+}
+```
+
+### Firestore Security Rules
+
+**Implement comprehensive security rules with data validation.** Security rules are your first line of defense against malicious access. Use `firestore.rules` to implement security rules for firestore access based on authentication.
+
+### Firebase Functions Deployment and Permissions
+
+**Ensure proper IAM permissions are configured before deploying Cloud Functions.** Firebase Functions require specific permissions to access Artifact Registry for storing container images.
+
+#### Common Deployment Issues and Solutions
+
+**Problem: Permission denied errors during deployment**
+
+When deploying Firebase Functions (1st Gen or 2nd Gen), you may encounter this error:
+
+```
+Failed to create 1st Gen function: Unable to retrieve the repository metadata for 
+projects/PROJECT_ID/locations/REGION/repositories/gcf-artifacts. 
+Ensure that the Cloud Functions service account has 'artifactregistry.repositories.list' 
+and 'artifactregistry.repositories.get' permissions.
+```
+
+**Solution: Grant Artifact Registry Reader role to Cloud Functions service accounts**
+
+```bash
+# Get your project number
+gcloud projects describe PROJECT_ID --format="value(projectNumber)"
+
+# Grant permissions to the App Engine default service account
+gcloud projects add-iam-policy-binding PROJECT_ID \
+  --member="serviceAccount:PROJECT_ID@appspot.gserviceaccount.com" \
+  --role="roles/artifactregistry.reader"
+
+# Grant permissions to the Cloud Functions service agent
+gcloud projects add-iam-policy-binding PROJECT_ID \
+  --member="serviceAccount:service-PROJECT_NUMBER@gcf-admin-robot.iam.gserviceaccount.com" \
+  --role="roles/artifactregistry.reader"
+```
+
+#### Artifact Cleanup Policy
+
+**Set up automatic cleanup of old container images to avoid storage costs.**
+
+After your first successful deployment, configure a cleanup policy to automatically delete old container images:
+
+```bash
+# Set up cleanup policy (deletes images older than 1 day)
+firebase functions:artifacts:setpolicy
+
+# Or during deployment with --force flag
+firebase deploy --only functions --force
+```
+
+This prevents accumulation of old container images in Artifact Registry, which can incur small monthly storage costs.
+
+#### Best Practices for Functions Deployment
+
+```typescript
+// ✅ functions/package.json - Proper configuration
+{
+  "name": "functions",
+  "engines": {
+    "node": "20"  // Use Node.js 20 for latest features
+  },
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "deploy": "npm run clean && npm run build && firebase deploy --only functions",
+    "clean": "rm -rf lib node_modules/.cache"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^5.0.0"  // Use latest version
+  }
+}
+```
+
+```typescript
+// ✅ Proper function configuration with memory and timeout settings
+import * as functions from 'firebase-functions';
+
+export const api = functions
+  .runWith({
+    memory: '256MB',        // Adjust based on needs (128MB, 256MB, 512MB, 1GB, 2GB, 4GB)
+    timeoutSeconds: 60,     // Max 540 seconds for HTTP functions
+    minInstances: 0,        // Keep at 0 for cost optimization
+    maxInstances: 10,       // Prevent runaway costs
+  })
+  .https.onRequest(async (req, res) => {
+    // Function implementation
+  });
+```
+
+#### Troubleshooting Deployment Issues
+
+1. **Service account not found error:**
+   - Ensure Firebase APIs are enabled in Google Cloud Console
+   - Check that the service accounts exist in IAM & Admin
+
+2. **Build failures:**
+   - Clear build cache: `rm -rf lib node_modules/.cache`
+   - Ensure TypeScript compiles successfully: `npm run build`
+   - Check for syntax errors in compiled JavaScript
+
+3. **Region-specific issues:**
+   - Verify the region is supported for Cloud Functions
+   - Ensure Artifact Registry API is enabled for the region
+   - Check quota limits for the specific region
+
+### Next.js + Firebase Hosting Architecture
+
+**Configure Next.js to work seamlessly with Firebase Hosting in both development and production.** This pattern enables static export for production while maintaining full Next.js features during development.
+
+#### The Challenge
+
+When deploying Next.js to Firebase Hosting as a static site (`output: 'export'`), you lose certain features:
+- API Routes (not needed - Firebase Functions handle this)
+- Middleware (must use client-side protection instead)
+- Server-side rendering (static generation only)
+
+However, these features are valuable during development. The solution is **conditional static export**.
+
+#### Solution: Conditional Static Export Configuration
+
+**next.config.ts:**
+```typescript
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
+  // Enable static export ONLY for production builds
+  // Keep dynamic mode for local development (supports middleware, better DX)
+  ...(process.env.NEXT_PUBLIC_BUILD_MODE === 'export' && { output: 'export' }),
+  
+  eslint: {
+    dirs: ['app', 'components', 'lib'],
+  },
+  
+  // Development: Proxy API calls to Firebase Functions emulator
+  // Production: Firebase Hosting rewrites handle this (see firebase.json)
+  async rewrites() {
+    if (process.env.NODE_ENV === 'development') {
+      const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'your-project-id';
+      return [
+        {
+          source: '/api/:path*',
+          destination: `http://localhost:5001/${projectId}/us-central1/api/:path*`,
+        },
+      ];
+    }
+    return [];
+  },
+};
+
+export default nextConfig;
+```
+
+**package.json scripts:**
+```json
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "build:prod": "NEXT_PUBLIC_BUILD_MODE=export NODE_ENV=production next build",
+    "deploy": "npm run clean && npm run build:prod && firebase deploy --only hosting",
+    "emulators": "firebase emulators:start",
+    "clean": "rm -rf .next out dist node_modules/.cache"
+  }
+}
+```
+
+**firebase.json (production rewrites):**
+```json
+{
+  "hosting": {
+    "public": "out",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "/api/**",
+        "function": "api"
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
+```
+
+#### How API Communication Works
+
+**Development Flow:**
+```
+Browser → http://localhost:3000/api/v1/me
+          ↓ (Next.js rewrites in next.config.ts)
+          http://localhost:5001/PROJECT_ID/us-central1/api/v1/me
+          ↓
+          Firebase Functions Emulator
+```
+
+**Production Flow:**
+```
+Browser → https://your-app.web.app/api/v1/me
+          ↓ (Firebase Hosting rewrites in firebase.json)
+          https://us-central1-PROJECT_ID.cloudfunctions.net/api/v1/me
+          ↓
+          Firebase Cloud Functions
+```
+
+#### Frontend API Calls
+
+**Frontend code works identically in both environments:**
+
+```typescript
+// ✅ app/context/AuthContext.tsx
+'use client';
+import { useState, useEffect } from 'react';
+import { auth } from '@/lib/firebase';
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState(null);
+
+  const signIn = async () => {
+    const result = await signInWithPopup(auth, googleProvider);
+    const idToken = await result.user.getIdToken();
+    
+    // Call API - works in dev and production
+    const response = await fetch('/api/v1/me', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${idToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch user profile');
+    }
+    
+    const data = await response.json();
+    setUser(data);
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, signIn }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+```
+
+#### Authentication Protection Strategy
+
+**Development (with middleware):**
+```typescript
+// ✅ middleware.ts - Server-side protection (dev only)
+import { NextRequest, NextResponse } from 'next/server';
+
+export function middleware(request: NextRequest) {
+  const authToken = request.cookies.get('authToken');
+  const path = request.nextUrl.pathname;
+  
+  const isProtectedRoute = path.startsWith('/dashboard') || 
+                           path.startsWith('/settings');
+  
+  if (isProtectedRoute && !authToken) {
+    return NextResponse.redirect(new URL('/', request.url));
+  }
+  
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+};
+```
+
+**Production (client-side protection - works with static export):**
+```typescript
+// ✅ app/(authenticated)/layout.tsx - Client-side protection
+'use client';
+import { useAuth } from '@/app/hooks/useAuth';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+
+export default function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/');
+    }
+  }, [user, loading, router]);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  if (!user) {
+    return null; // Will redirect
+  }
+
+  return (
+    <div>
+      <Navigation />
+      <main>{children}</main>
+    </div>
+  );
+}
+```
+
+#### Local Development Setup
+
+**Start Firebase Emulators + Next.js:**
+
+Terminal 1 - Firebase Emulators:
+```bash
+npm run emulators
+# Starts Functions, Firestore, Auth emulators
+# UI available at http://localhost:4000
+```
+
+Terminal 2 - Next.js:
+```bash
+npm run dev
+# Starts Next.js at http://localhost:3000
+# API calls automatically proxy to emulators
+```
+
+**Or use a process manager like `concurrently`:**
+
+```json
+{
+  "scripts": {
+    "dev:full": "concurrently \"npm run dev\" \"npm run emulators\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.0"
+  }
+}
+```
+
+#### Environment Variables
+
+**Required in `.env.local`:**
+```env
+# Firebase Project
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
+NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abc123
+
+# Local development automatically uses emulators
+# No additional env vars needed for emulator connection
+```
+
+**Firebase client initialization (with emulator support):**
+
+```typescript
+// ✅ lib/firebase.ts
+import { initializeApp, getApps } from 'firebase/app';
+import { getAuth, connectAuthEmulator } from 'firebase/auth';
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+};
+
+// Initialize Firebase
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Connect to emulators in development
+if (process.env.NODE_ENV === 'development') {
+  if (typeof window !== 'undefined') {
+    // Only in browser environment
+    connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
+    connectFirestoreEmulator(db, 'localhost', 8080);
+  }
+}
+
+export { app, auth, db };
+```
+
+#### Deployment Workflow
+
+**Build for production:**
+```bash
+npm run build:prod
+# Sets NEXT_PUBLIC_BUILD_MODE=export
+# Generates static files in ./out directory
+```
+
+**Deploy to Firebase:**
+```bash
+# Deploy hosting only
+npm run deploy
+
+# Or deploy everything (hosting + functions + firestore)
+firebase deploy
+
+# Deploy specific services
+firebase deploy --only hosting
+firebase deploy --only functions
+firebase deploy --only firestore:rules,firestore:indexes
+```
+
+#### Benefits of This Architecture
+
+✅ **Development Experience:**
+- Full middleware support for route protection
+- Hot reload and fast refresh
+- Easy debugging with emulators
+- Matches production Firebase environment
+
+✅ **Production Optimization:**
+- Static hosting (faster, cheaper)
+- CDN distribution via Firebase Hosting
+- No Node.js server needed
+- Automatic scaling
+
+✅ **Code Simplicity:**
+- Single codebase for dev and prod
+- Frontend code doesn't change between environments
+- No environment-specific API URL configuration
+
+✅ **Security:**
+- Server-side protection in dev (middleware)
+- Client-side protection in prod (still secure with Firebase Auth)
+- Firebase Functions enforce authentication via tokens
+
+#### Common Pitfalls to Avoid
+
+❌ **Don't use Next.js API routes for production:** Firebase Functions are your backend. Next.js API routes won't work with static export and create confusion.
+
+❌ **Don't hardcode API URLs:** Use relative paths (`/api/v1/me`) and let rewrites handle routing.
+
+❌ **Don't skip emulator testing:** Always test with Firebase emulators before deploying to catch issues early.
+
+❌ **Don't forget to set `NEXT_PUBLIC_BUILD_MODE=export`:** Without this, production builds won't generate the static `out` directory.
+
+## Performance Optimization Patterns
+
+### Image and Asset Optimization
+
+**Always use Next.js Image component with proper sizing and optimization.** This provides automatic WebP conversion, lazy loading, and responsive images.
+
+```typescript
+// ✅ Optimized image usage
+import Image from 'next/image';
+
+export function HeroSection() {
+  return (
+    <div>
+      <Image
+        src="/hero.jpg"
+        alt="Hero image"
+        width={1200}
+        height={600}
+        priority // Above-the-fold image
+        placeholder="blur"
+        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQ..." 
+      />
+      
+      <Image
+        src="/gallery/photo1.jpg"
+        alt="Gallery photo"
+        width={400}
+        height={300}
+        // Lazy loading by default for below-the-fold images
+      />
+    </div>
+  );
+}
+```
+
+### Code Splitting and Dynamic Imports
+
+**Implement strategic code splitting for heavy components and libraries.** This reduces initial bundle size and improves First Contentful Paint.
+
+```typescript
+// ✅ Component-level code splitting
+import dynamic from 'next/dynamic';
+
+const ChartComponent = dynamic(() => import('./ChartComponent'), {
+  loading: () => <ChartSkeleton />,
+  ssr: false // Disable SSR for client-only components
+});
+
+const AdminPanel = dynamic(() => import('./AdminPanel'), {
+  loading: () => <AdminPanelSkeleton />
+});
+
+// ✅ Conditional loading
+export function Dashboard() {
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  
+  const AdvancedSettings = dynamic(() => import('./AdvancedSettings'));
+  
+  return (
+    <div>
+      <button onClick={() => setShowAdvanced(true)}>
+        Show Advanced Settings
+      </button>
+      {showAdvanced && <AdvancedSettings />}
+    </div>
+  );
+}
+```
+
+### Firestore Query Optimization
+
+**Structure queries for optimal performance with proper indexing.** Order fields by selectivity and always implement pagination.
+
+```typescript
+// ✅ Optimized Firestore queries
+import { 
+  collection, 
+  query, 
+  where, 
+  orderBy, 
+  limit, 
+  startAfter 
+} from 'firebase/firestore';
+
+// Order filters by selectivity (most selective first)
+const optimizedQuery = query(
+  collection(db, 'products'),
+  where('category', '==', 'electronics'), // More selective
+  where('inStock', '==', true),           // Less selective
+  orderBy('category'),                    // Match index field order
+  orderBy('inStock'),
+  orderBy('price', 'desc'),
+  limit(20)                               // Always limit results
+);
+
+// ✅ Pagination pattern
+export async function getProductsPaginated(lastDoc?: QueryDocumentSnapshot) {
+  let q = query(
+    collection(db, 'products'),
+    where('published', '==', true),
+    orderBy('createdAt', 'desc'),
+    limit(10)
+  );
+
+  if (lastDoc) {
+    q = query(q, startAfter(lastDoc));
+  }
+
+  const snapshot = await getDocs(q);
+  return {
+    products: snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })),
+    lastDoc: snapshot.docs[snapshot.docs.length - 1]
+  };
+}
+```
+
+## Security Best Practices
+
+### Input Validation and Sanitization
+
+**Validate all inputs using schema validation libraries.** Use Zod for runtime type checking and validation.
+
+```typescript
+// ✅ Input validation with Zod
+import { z } from 'zod';
+
+const createUserSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(100, 'Name too long'),
+  email: z.string().email('Invalid email format'),
+  age: z.number().min(18, 'Must be 18 or older').max(120, 'Invalid age'),
+  password: z.string()
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Password too weak')
+});
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const validatedData = createUserSchema.parse(body);
+    
+    // Proceed with validated data
+    const user = await createUser(validatedData);
+    return NextResponse.json(user, { status: 201 });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: error.errors },
+        { status: 400 }
+      );
+    }
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+```
+
+### Rate Limiting and API Security
+
+**Implement rate limiting on all public endpoints.** Use appropriate limits based on endpoint sensitivity.
+
+```typescript
+// ✅ API rate limiting
+import { Ratelimit } from '@upstash/ratelimit';
+import { Redis } from '@upstash/redis';
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
+
+const ratelimit = new Ratelimit({
+  redis: redis,
+  limiter: Ratelimit.slidingWindow(10, '10 s'), // 10 requests per 10 seconds
+});
+
+export async function POST(request: Request) {
+  const ip = request.headers.get('x-forwarded-for') ?? '127.0.0.1';
+  const { success, limit, remaining, reset } = await ratelimit.limit(ip);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: 'Rate limit exceeded' },
+      { status: 429, headers: { 'X-RateLimit-Remaining': remaining.toString() } }
+    );
+  }
+
+  // Process request
+}
+```
+
+## Error Handling Patterns
+
+### Comprehensive Error Boundaries
+
+**Implement error boundaries with proper fallback UI and error reporting.** This prevents entire application crashes from component errors.
+
+```typescript
+// ✅ Error boundary component
+'use client';
+import React, { ErrorInfo, ReactNode } from 'react';
+
+interface Props {
+  children: ReactNode;
+  fallback?: ReactNode;
+}
+
+interface State {
+  hasError: boolean;
+  error?: Error;
+}
+
+export class ErrorBoundary extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('Error boundary caught an error:', error, errorInfo);
+    
+    // Report to error tracking service
+    if (process.env.NODE_ENV === 'production') {
+      // Analytics.reportError(error, errorInfo);
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback || (
+        <div className="error-fallback">
+          <h2>Something went wrong</h2>
+          <button onClick={() => this.setState({ hasError: false })}>
+            Try again
+          </button>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+```
+
+### Result Type Pattern for Error Handling
+
+**Use Result types for predictable error handling.** This provides explicit error handling without exceptions.
+
+```typescript
+// ✅ Result type pattern
+type Result<T, E = Error> = 
+  | { success: true; data: T }
+  | { success: false; error: E };
+
+async function fetchUser(id: string): Promise<Result<User>> {
+  try {
+    const user = await userService.getUser(id);
+    if (!user) {
+      return { success: false, error: new Error('User not found') };
+    }
+    return { success: true, data: user };
+  } catch (error) {
+    return { success: false, error: error as Error };
+  }
+}
+
+// ✅ Usage with type narrowing
+export async function UserProfile({ userId }: { userId: string }) {
+  const result = await fetchUser(userId);
+  
+  if (!result.success) {
+    return <ErrorMessage error={result.error.message} />;
+  }
+  
+  // result.data is safely typed as User
+  return <div>{result.data.name}</div>;
+}
+```
+
+## Code Organization Best Practices
+
+### Feature-Based Architecture
+
+**Organize code by features rather than file types.** This improves maintainability and makes it easier to work on related functionality.
+
+```
+src/
+├── features/
+│   ├── authentication/
+│   │   ├── components/
+│   │   │   ├── LoginForm.tsx
+│   │   │   └── SignupForm.tsx
+│   │   ├── hooks/
+│   │   │   └── useAuth.ts
+│   │   ├── services/
+│   │   │   └── AuthService.ts
+│   │   ├── types/
+│   │   │   └── auth.types.ts
+│   │   └── __tests__/
+│   ├── user-management/
+│   │   ├── components/
+│   │   ├── services/
+│   │   └── types/
+│   └── dashboard/
+│       ├── components/
+│       ├── services/
+│       └── types/
+├── shared/
+│   ├── components/
+│   │   ├── ui/        # Reusable UI components
+│   │   └── layout/    # Layout components
+│   ├── hooks/         # Generic hooks
+│   ├── utils/         # Helper functions
+│   └── types/         # Shared types
+```
+
+### Import/Export Standards
+
+**Use consistent import/export patterns with proper path aliases.** This improves code readability and refactoring capabilities.
+
+```typescript
+// ✅ Consistent import organization
+// 1. React and Next.js imports
+import React from 'react';
+import { NextPage } from 'next';
+
+// 2. External library imports (alphabetical)
+import { collection, query } from 'firebase/firestore';
+import { z } from 'zod';
+
+// 3. Internal imports with aliases (alphabetical)
+import { Button } from '@/components/ui/Button';
+import { useAuth } from '@/hooks/useAuth';
+import { UserService } from '@/services/UserService';
+
+// 4. Relative imports
+import './Component.module.css';
+
+// ✅ Prefer named exports
+export const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
+  return <div>{user.name}</div>;
+};
+
+// ✅ Strategic barrel exports (avoid performance issues)
+// components/ui/index.ts
+export { Button } from './Button';
+export { Card } from './Card';
+export { Modal } from './Modal';
+// Avoid: export * from './Button' (hurts tree-shaking)
+```

@@ -1,0 +1,27 @@
+{
+  "name": "Next.js Application",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "preinstall": "npm run functions:install",
+    "dev": "next dev",
+    "build": "next build",
+    "build:prod": "NEXT_PUBLIC_BUILD_MODE=export NODE_ENV=production next build",
+    "start": "next start",
+    "lint": "next lint",
+    "clean": "rm -rf .next out dist node_modules/.cache",
+    "kill-port": "lsof -ti:3000 | xargs kill -9 2>/dev/null || echo 'No process found on port 3000'",
+    "functions": "cd functions && npm run serve",
+    "functions:install": "cd functions && npm install",
+    "functions:test": "cd functions && npm test",
+    "functions:deploy": "cd functions && npm run deploy",
+    "functions:kill-port": "lsof -ti:5001 | xargs kill -9 2>/dev/null || echo 'No process found on port 5001'",
+    "deploy": "npm run clean && npm run build:prod && firebase deploy --only hosting",
+    "deploy:firestore:config": "firebase deploy --only firestore:rules,firestore:indexes",
+    "emulators": "firebase emulators:start"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}

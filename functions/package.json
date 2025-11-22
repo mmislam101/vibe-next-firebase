@@ -1,0 +1,25 @@
+{
+  "name": "functions",
+  "version": "1.0.0",
+  "description": "Firebase Functions",
+  "private": true,
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "clean": "rm -rf lib node_modules/.cache",
+    "deploy": "npm run clean && npm run build && firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "test": "jest --passWithNoTests",
+    "test:watch": "jest --watch --passWithNoTests"
+  },
+  "engines": {
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}
