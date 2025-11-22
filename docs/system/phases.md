@@ -27,46 +27,7 @@ SRS-REQ-UI-016
 SRS-REQ-UI-017
 SRS-REQ-UI-018
 
-## Phase 2: Patient Management
-- Onboarding flow
-- Patient CRUD operations
+## Phase 2: 
 
-### SRS Requirements
-
-## Phase 3: Observer Management
-- Patient CRUD operations
-- Observer Onboarding flow
-
-### SRS Requirements
-
-## Phase 4: Alert & Scheduling
-- Alert creation and management
-- Webhook scheduling service integration
-- iCalendar RRULE parser implementation (or library integration)
-- RRULE-to-Cron converter for webhook services
-- Schedule lifecycle management
-
-### SRS Requirements
-
-## Phase 5: Incident & Escalation
-- Incident creation engine
-- Escalation policy engine
-- Escalation timer system
-- State machine implementation
-
-### SRS Requirements
-
-## Phase 6: Notifications
-- SMS gateway integration
-- Notification queue worker
-- Acknowledgment link generation
-- Delivery status tracking
-
-### SRS Requirements
-
-## Phase 7: Deployment
-- Production environment setup
-- Monitoring and alerting
-- Soft launch with beta users
 
 ### SRS Requirements
