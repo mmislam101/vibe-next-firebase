@@ -156,15 +156,7 @@
 
 ## 3. Non-Functional Requirements
 
-### 3.1 Performance
-
-**SRS-REQ-PERF-001:** The system SHALL process incoming webhooks within 2 seconds.
-
-**SRS-REQ-PERF-002:** Notifications SHALL be queued within 3 seconds of incident creation.
-
-**SRS-REQ-PERF-003:** Acknowledgment links SHALL respond within 1 second.
-
-### 3.2 Security
+### 3.1 Security
 
 **SRS-REQ-SEC-001:** All API endpoints SHALL require authentication via:
 - Bearer tokens (JWT)
@@ -172,35 +164,19 @@
 
 **SRS-REQ-SEC-002:** Webhook callbacks SHALL be validated using HMAC-SHA256 signatures.
 
-**SRS-REQ-SEC-003:** Sensitive data SHALL be encrypted:
-- Phone numbers (at rest)
-- Passwords (bcrypt, minimum 10 rounds)
-- Invitation tokens (hashed)
+**SRS-REQ-SEC-003:** All API communication SHALL use HTTPS/TLS 1.2+.
 
-**SRS-REQ-SEC-004:** All API communication SHALL use HTTPS/TLS 1.2+.
-
-**SRS-REQ-SEC-005:** Observers SHALL only access data for their assigned patients.
-
-**SRS-REQ-SEC-006:** Acknowledgment links SHALL:
-- Expire after 24 hours
-- Be single-use or require authentication for repeated use
-- Include CSRF protection
-
-**SRS-REQ-SEC-007:** Rate limiting SHALL be applied:
-- 100 requests/minute per caretaker account
-- 20 requests/minute per observer
-- 1000 webhooks/hour per account
+**SRS-REQ-SEC-004:** Rate limiting on APIs SHALL be applied:
+- 100 requests/minute
 
 ### 3.3 Scalability
 
-**SRS-REQ-SCALE-001:** The notification queue SHALL be horizontally scalable.
-
-**SRS-REQ-SCALE-002:** The system SHALL support database read replicas for queries.
+**SRS-REQ-SCALE-003:** The system SHALL support database read replicas for queries.
 
 ---
 
 ## 4. Testing Requirements
 
-Test only API layer
+**SRS-REQ-TEST-001:** The system SHALL only test API functions using BDD.
 
 **End of Document**
