@@ -1,22 +1,21 @@
 # Software Requirements Document
-## Patient Alert Notification System - Next.js on Firebase
 
-**Technology Stack:** Next.js 15, Firebase Hosting, Firestore, Firebase Cloud Functions, Tailwind CSS
+**Technology Stack:** Next.js, Firebase Hosting, Firestore, Firebase Cloud Functions, Tailwind CSS
 
 ---
 
 ## 1. Executive Summary
 
-This document defines the software requirements for implementing the Patient Alert Notification System as a Next.js application hosted on Firebase. Phase 1 focuses on establishing the core infrastructure, authentication, and user interface layout.
+This document defines the software requirements for implementing the [Insert Project Name] as a Next.js application hosted on Firebase.
 
 ### 1.1 Technology Stack
 
-- **Frontend Framework:** Next.js 15 (App Router) with React 19
+- **Frontend Framework:** Next.js (App Router) with React
 - **Hosting:** Firebase Hosting (static export)
 - **Database:** Cloud Firestore
 - **API Layer:** Firebase Cloud Functions (TypeScript)
 - **Authentication:** Firebase Authentication (Google Sign-In)
-- **UI Framework:** Tailwind CSS 4
+- **UI Framework:** Tailwind CSS
 
 ### 1.2 Key Architectural Decisions
 
@@ -123,11 +122,11 @@ app/
 
 ### 3.2 UI Framework Requirements
 
-**SRD-REQ-FRONT-002:** [Implements: SRS-REQ-UI-002, SRS-REQ-UI-018] The application SHALL use Tailwind CSS 4 for styling:
+**SRD-REQ-FRONT-002:** [Implements: SRS-REQ-UI-002, SRS-REQ-UI-018] The application SHALL use Tailwind CSS for styling:
 
 - **Design System:** Modern, clean healthcare-focused UI
 - **Responsive Design:** Mobile-first approach, optimized for mobile devices
-- **Accessibility:** WCAG 2.1 AA compliance
+- **Accessibility:** WCAG AA compliance
 - **Component Library:** Custom components built on Tailwind utilities
 - **Dark Mode:** Optional (future enhancement)
 
@@ -269,7 +268,7 @@ export function LeftSideMenu() {
             Dashboard
           </NavLink>
           
-          {/* Future navigation items will be added here in Phase 2+ */}
+          {/* Future navigation items will be added here */}
         </nav>
       </div>
     </aside>
@@ -672,8 +671,6 @@ export async function verifyAuth(req: Request): Promise<string> {
 - User role determination (caretaker/observer) - foundation for future use
 - Authorization helper functions
 
-**Note:** Specific access control enforcement for patients, alerts, and incidents will be implemented in Phase 2+.
-
 ---
 
 ## 5. Firestore Database Requirements
@@ -685,8 +682,6 @@ export async function verifyAuth(req: Request): Promise<string> {
 - `users` - User accounts (both caretakers and observers)
   - Fields: `uid`, `email`, `displayName`, `photoURL`, `role`, `createdAt`, `updatedAt`
 
-**Note:** Additional collections (patients, observers, alerts, incidents, etc.) will be added in Phase 2+.
-
 ### 5.2 Security Rules
 
 **SRD-REQ-DB-002:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005] Firestore security rules SHALL enforce:
@@ -695,14 +690,12 @@ export async function verifyAuth(req: Request): Promise<string> {
 - Cloud Functions have full access via Admin SDK
 - Default deny for all other access
 
-**Note:** More granular security rules for patients, observers, alerts, and incidents will be added in Phase 2+.
-
 ### 5.3 Indexes
 
 **SRD-REQ-DB-003:** [Implements: SRS-REQ-SCALE-002] Basic indexes:
 
 - Single-field indexes created automatically by Firestore
-- Composite indexes will be added as needed in future phases
+- Composite indexes will be added as needed
 
 ---
 
@@ -711,8 +704,6 @@ export async function verifyAuth(req: Request): Promise<string> {
 **SRD-REQ-INT-001:** [Implements: SRS-REQ-TECH-001] SHALL only integrate:
 
 - **Firebase Authentication:** Google OAuth for user authentication
-
-**Note:** Additional external services (Quirrel, Twilio, SendGrid) will be integrated in Phase 2+.
 
 ---
 
@@ -770,8 +761,6 @@ const nextConfig: NextConfig = {
 }
 ```
 
-**Note:** API routes will be added in Phase 2+ when backend endpoints are implemented.
-
 ### 7.3 Environment Variables
 
 **SRD-REQ-DEV-004:** [Implements: SRS-SRD-REQ-SEC-001] Required environment variables:
@@ -788,8 +777,6 @@ const nextConfig: NextConfig = {
 
 **Cloud Functions (.env):**
 - No additional environment variables required
-
-**Note:** Additional environment variables (Quirrel, Twilio, SendGrid) will be added in Phase 2+.
 
 ---
 
@@ -809,8 +796,6 @@ const nextConfig: NextConfig = {
 - Code splitting for authenticated routes
 - Optimized bundle size with tree shaking
 - Minimal initial JavaScript payload
-
-**Note:** Additional performance optimizations (image optimization, lazy loading, caching) will be implemented in Phase 2+ as features are added.
 
 ---
 
@@ -834,8 +819,6 @@ const nextConfig: NextConfig = {
 - Cloud Function authentication middleware
 - Frontend route protection via middleware (development) and client-side checks (production)
 
-**Note:** Role-based access control for patients, observers, and incidents will be implemented in Phase 2+.
-
 ### 9.3 Data Protection
 
 **SRD-REQ-SEC-003:** [Implements: SRS-SRD-REQ-SEC-003] Basic data protection:
@@ -844,8 +827,6 @@ const nextConfig: NextConfig = {
 - HTTPS/TLS for all communications
 - Secure cookie configuration
 - Environment variables for sensitive configuration
-
-**Note:** Additional data protection (phone number encryption, token hashing) will be implemented in Phase 2+ as features require them.
 
 ---
 
@@ -862,8 +843,6 @@ const nextConfig: NextConfig = {
 - User profile dropdown and logout
 - Loading states
 - Responsive design across devices
-
-**Note:** Automated testing (unit, integration, E2E) will be established in Phase 2+ as the application grows in complexity.
 
 ---
 
@@ -884,16 +863,12 @@ firebase deploy --only hosting
 firebase deploy --only firestore:rules
 ```
 
-**Note:** Cloud Functions deployment will be added in Phase 2+ when API endpoints are implemented.
-
 ### 11.2 Environment Configuration
 
 **SRD-REQ-DEPLOY-002:** [Implements: SRS-REQ-TECH-001] Environment setup:
 
 - **Development:** Local development server (`npm run dev`)
 - **Production:** Firebase Hosting with static site
-
-**Note:** Firebase emulators and staging environments will be added in Phase 2+ as backend complexity increases.
 
 ### 11.3 Monitoring
 
@@ -903,74 +878,45 @@ firebase deploy --only firestore:rules
 - Firebase Authentication logs
 - Browser console error tracking
 
-**Note:** Advanced monitoring (Performance Monitoring, Crashlytics, API metrics) will be added in Phase 2+.
-
 ---
 
-## 12. Implementation Phases
+## 12. Dependencies
 
-### Core Infrastructure and User Creation
-**Goal:** Establish foundation with authentication and basic UI layout
-
-**Deliverables:**
-- Package.json with basic scripts
-- Firebase initialization (Hosting, Firestore, Authentication, Functions)
-- Firebase Functions setup with basic structure
-- Google Sign-In authentication flow (Login/Logout)
-- Landing page for unauthenticated users
-- Authenticated layout with:
-  - Top navigation bar with profile dropdown
-  - Left sidebar menu (desktop/tablet)
-  - Mobile hamburger menu
-  - Global loading overlay
-- Basic dashboard page (placeholder)
-- Firebase Hosting deployment configuration
-- Firestore security rules foundation
-
-**SRS Requirements Implemented:**
-- SRS-REQ-UI-001 through SRS-REQ-UI-018
-
----
-
-## 13. Dependencies
-
-### 13.1 Frontend Dependencies
+### 12.1 Frontend Dependencies
 
 ```json
 {
   "dependencies": {
-    "next": "^15.0.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "firebase": "^11.0.0",
-    "tailwindcss": "^4.0.0",
-    "@heroicons/react": "^2.2.0"
+    "next"
+    "react"
+    "react-dom"
+    "firebase"
+    "tailwindcss"
+    "@heroicons/react"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "@types/node": "^20.0.0",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0"
+    "typescript"
+    "@types/node"
+    "@types/react"
+    "@types/react-dom"
   }
 }
 ```
 
-### 13.2 Cloud Functions Dependencies
+### 12.2 Cloud Functions Dependencies
 
 ```json
 {
   "dependencies": {
-    "firebase-admin": "^13.0.0",
-    "firebase-functions": "^6.0.0"
+    "firebase-admin"
+    "firebase-functions"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "@types/node": "^20.0.0"
+    "typescript"
+    "@types/node"
   }
 }
 ```
-
-**Note:** Additional dependencies (Twilio, SendGrid, rrule, axios) will be added in Phase 2+.
 
 ---
 
