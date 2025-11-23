@@ -1,19 +1,19 @@
 # Software Requirements Document
 ## Patient Alert Notification System - Next.js on Firebase
 
-**Version:** 1.0  
-**Date:** November 9, 2025  
+**Version:** 1.0 (Phase 1)  
+**Date:** November 23, 2025  
 **Document Status:** Draft  
-**Project Phase:** MVP  
+**Project Phase:** Phase 1 - Core Infrastructure  
 **Technology Stack:** Next.js 15, Firebase Hosting, Firestore, Firebase Cloud Functions, Tailwind CSS
 
 ---
 
 ## 1. Executive Summary
 
-This document defines the software requirements for implementing the Patient Alert Notification System as a Next.js application hosted on Firebase. The system provides a PagerDuty-style alert management platform for healthcare scenarios, enabling caretakers to manage patient profiles, assign observers, create scheduled alerts, and handle incident escalation workflows.
+This document defines the software requirements for implementing the Patient Alert Notification System as a Next.js application hosted on Firebase. Phase 1 focuses on establishing the core infrastructure, authentication, and user interface layout.
 
-### 1.1 Technology Stack
+### 1.1 Technology Stack (Phase 1)
 
 - **Frontend Framework:** Next.js 15 (App Router) with React 19
 - **Hosting:** Firebase Hosting (static export)
@@ -21,86 +21,68 @@ This document defines the software requirements for implementing the Patient Ale
 - **API Layer:** Firebase Cloud Functions (TypeScript)
 - **Authentication:** Firebase Authentication (Google Sign-In)
 - **UI Framework:** Tailwind CSS 4
-- **Scheduling Service:** Quirrel (external webhook scheduler)
-- **SMS Gateway:** Twilio
-- **Email Service:** SendGrid (optional for MVP)
 
-### 1.2 Key Architectural Decisions
+### 1.2 Key Architectural Decisions (Phase 1)
 
 - **Static Site Generation:** Next.js static export for optimal Firebase Hosting performance
-- **Serverless API:** All business logic in Firebase Cloud Functions
-- **Real-time Updates:** Firestore real-time listeners for incident status changes
-- **Queue-First Architecture:** Background job processing for notifications and escalations
+- **Serverless API:** All business logic in Firebase Cloud Functions (basic structure)
 - **Type-Safe Development:** Full TypeScript implementation across frontend and backend
+- **Component-Based UI:** Reusable React components with Tailwind CSS
 
 ---
 
 ## 2. System Architecture Overview
 
-### 2.1 High-Level Architecture
+### 2.1 High-Level Architecture (Phase 1)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    Firebase Hosting                          │
 │              (Next.js Static Export)                         │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │   Dashboard  │  │  Onboarding  │  │  Incidents    │      │
-│  │   (Caretaker)│  │   (Observer) │  │   (Observer)  │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
+│  ┌──────────────┐  ┌──────────────┐                         │
+│  │Landing Page  │  │  Dashboard    │                         │
+│  │(Unauthenti-  │  │ (Authenticated)│                        │
+│  │    cated)    │  │               │                         │
+│  └──────────────┘  └──────────────┘                         │
 └─────────────────────────────────────────────────────────────┘
                           │
-                          │ HTTPS API Calls
+                          │ HTTPS API Calls (Future)
                           ▼
 ┌─────────────────────────────────────────────────────────────┐
 │              Firebase Cloud Functions                        │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │  Patient API │  │  Alert API    │  │ Incident API │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │ Observer API │  │ Escalation   │  │ Notification │      │
-│  └──────────────┘  │   Engine      │  │   Service    │      │
-│                    └──────────────┘  └──────────────┘      │
+│  ┌──────────────┐                                            │
+│  │  Basic API   │  (Placeholder for future endpoints)        │
+│  │  Structure   │                                            │
+│  └──────────────┘                                            │
 └─────────────────────────────────────────────────────────────┘
                           │
-                          │
-        ┌─────────────────┼─────────────────┐
-        │                 │                 │
-        ▼                 ▼                 ▼
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│  Firestore   │  │   Quirrel    │  │    Twilio    │
-│   Database   │  │  Scheduler   │  │  SMS Gateway │
-└──────────────┘  └──────────────┘  └──────────────┘
+                          ▼
+                  ┌──────────────┐
+                  │  Firestore   │
+                  │   Database   │
+                  └──────────────┘
 ```
 
-### 2.2 Core Components
+### 2.2 Core Components (Phase 1)
 
 1. **Next.js Frontend Application**
-   - Caretaker dashboard for patient and alert management
-   - Observer onboarding flow
-   - Observer dashboard for incident management
-   - Real-time incident status updates
+   - Landing page for unauthenticated users
+   - Google Sign-In authentication flow
+   - Authenticated layout with navigation structure
+   - Responsive design (desktop, tablet, mobile)
+   - Loading states and UI components
 
 2. **Firebase Cloud Functions (API Layer)**
-   - Patient management endpoints
-   - Observer invitation and management
-   - Alert creation and scheduling
-   - Incident lifecycle management
-   - Escalation policy engine
-   - Notification delivery service
-   - Webhook receiver for scheduled triggers
+   - Basic API structure and routing setup
+   - Authentication middleware
+   - Placeholder for future endpoints
 
 3. **Firestore Database**
-   - Patient profiles
-   - Observer accounts and assignments
-   - Alert definitions and schedules
-   - Incident records
-   - Notification logs
-   - Escalation policies
+   - User accounts (basic storage)
+   - Security rules foundation
 
 4. **External Services**
-   - Quirrel: Webhook scheduling service
-   - Twilio: SMS notification delivery
-   - SendGrid: Email notifications (optional)
+   - Firebase Authentication (Google OAuth)
 
 ---
 
@@ -108,7 +90,7 @@ This document defines the software requirements for implementing the Patient Ale
 
 ### 3.1 Next.js Application Structure
 
-**SRD-REQ-FRONT-001:** [Implements: SRS-REQ-UI-003, SRS-REQ-UI-004, SRS-REQ-UI-017] The application SHALL follow Next.js 15 App Router structure:
+**SRD-REQ-FRONT-001:** [Implements: SRS-REQ-UI-003, SRS-REQ-UI-004, SRS-REQ-UI-017] The application SHALL follow Next.js 15 App Router structure (Phase 1):
 
 ```
 app/
@@ -124,58 +106,23 @@ app/
 │   │   ├── UserDropdownMenu.tsx # User profile dropdown
 │   │   ├── LoadingOverlay.tsx  # Global loading indicator
 │   │   └── NavLink.tsx         # Navigation link component
-│   ├── auth/                    # Authentication components
-│   │   └── GoogleSignInButton.tsx # Google OAuth button
-│   ├── PatientCard.tsx          # Patient profile card
-│   ├── AlertCard.tsx            # Alert schedule card
-│   ├── IncidentCard.tsx         # Active incident card
-│   ├── EscalationPolicyEditor.tsx
-│   └── NotificationPreferences.tsx
+│   └── auth/                    # Authentication components
+│       └── GoogleSignInButton.tsx # Google OAuth button
 ├── context/                      # React context providers
 │   ├── AuthContext.tsx          # Firebase Auth state
-│   ├── LoadingContext.tsx       # Global loading state
-│   ├── PatientContext.tsx       # Patient data management
-│   └── IncidentContext.tsx      # Real-time incident updates
+│   └── LoadingContext.tsx       # Global loading state
 ├── hooks/                        # Custom React hooks
 │   ├── useAuth.ts               # Authentication hook
 │   ├── useLoadingState.ts       # Loading state hook
 │   └── useMobileMenu.ts         # Mobile menu state hook
 ├── (authenticated)/             # Route group for authenticated pages
 │   ├── layout.tsx               # Authenticated layout wrapper
-│   ├── dashboard/               # Caretaker dashboard
-│   │   └── page.tsx
-│   ├── patients/                # Patient management
-│   │   ├── page.tsx             # Patient list
-│   │   ├── [id]/page.tsx        # Patient detail
-│   │   └── new/page.tsx         # Create patient
-│   ├── alerts/                  # Alert management
-│   │   ├── page.tsx             # Alert list
-│   │   ├── [id]/page.tsx        # Alert detail
-│   │   └── new/page.tsx         # Create alert
-│   ├── incidents/               # Incident management
-│   │   ├── page.tsx             # Active incidents
-│   │   └── [id]/page.tsx        # Incident detail
-│   ├── observers/               # Observer management (caretaker only)
-│   │   ├── page.tsx             # Observer list
-│   │   └── invite/page.tsx      # Invite observer
-│   └── settings/                # Settings pages
-│       ├── page.tsx             # Account settings
-│       └── notifications/page.tsx # Notification preferences
-├── onboarding/                  # Observer onboarding (public)
-│   ├── [token]/page.tsx         # Onboarding flow
-│   └── [token]/complete/page.tsx
-├── ack/                         # Quick acknowledgment (public)
-│   └── [token]/page.tsx         # Acknowledge incident
-├── resolve/                     # Quick resolution (public)
-│   └── [token]/page.tsx         # Resolve incident
-├── login/                       # Authentication (public)
-│   └── page.tsx
-├── firebase/                     # Firebase configuration
-│   └── config.ts
+│   └── dashboard/               # Dashboard placeholder
+│       └── page.tsx
 ├── lib/                          # Utilities
-│   ├── api-client.ts            # API client for Cloud Functions
+│   ├── firebase.ts              # Firebase configuration
 │   └── utils.ts                 # Helper functions
-└── middleware.ts                 # Route protection middleware
+└── middleware.ts                 # Route protection middleware (development only)
 ```
 
 ### 3.2 UI Framework Requirements
@@ -188,56 +135,27 @@ app/
 - **Component Library:** Custom components built on Tailwind utilities
 - **Dark Mode:** Optional (future enhancement)
 
-**SRD-REQ-FRONT-003:** [Implements: SRS-REQ-UI-003, SRS-REQ-UI-013, SRS-REQ-UI-016] Key UI components SHALL include:
+**SRD-REQ-FRONT-003:** [Implements: SRS-REQ-UI-003, SRS-REQ-UI-013, SRS-REQ-UI-016] Key UI components for Phase 1 SHALL include:
 
-- **Patient Profile Card:** Display patient info, status, active alerts count
-- **Alert Schedule Card:** Show alert name, schedule, next trigger time
-- **Incident Card:** Display incident status, severity, assigned observer
-- **Escalation Policy Editor:** Visual editor for escalation levels
-- **Notification Preferences:** Observer preference management
-- **Real-time Status Indicators:** Visual indicators for incident states
+- **Button:** Primary, secondary, and danger variants
+- **Input:** Text input with validation states
+- **Card:** Container component for content sections
+- **Loading Overlay:** Full-screen loading indicator
+- **Navigation Components:** NavLink, LeftSideMenu, TopNavBar, MobileNavMenu
 
 ### 3.3 State Management
 
-**SRD-REQ-FRONT-004:** [Implements: SRS-REQ-UI-003, SRS-REQ-UI-017] The application SHALL use React Context API for state management:
+**SRD-REQ-FRONT-004:** [Implements: SRS-REQ-UI-003, SRS-REQ-UI-017] The application SHALL use React Context API for state management in Phase 1:
 
-- **AuthContext:** Firebase Authentication state
-- **PatientContext:** Patient data and CRUD operations
-- **AlertContext:** Alert schedules and management
-- **IncidentContext:** Real-time incident updates via Firestore listeners
-
-**SRD-REQ-FRONT-005:** [Implements: SRS-REQ-INC-001, SRS-REQ-INC-002, SRS-REQ-INC-003] Real-time updates SHALL be implemented using Firestore listeners:
-
-```typescript
-// Example: Real-time incident updates
-useEffect(() => {
-  const unsubscribe = onSnapshot(
-    query(
-      collection(db, 'incidents'),
-      where('status', '==', 'triggered'),
-      where('patientId', 'in', userPatientIds)
-    ),
-    (snapshot) => {
-      const incidents = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setActiveIncidents(incidents);
-    }
-  );
-  
-  return () => unsubscribe();
-}, [userPatientIds]);
-```
+- **AuthContext:** Firebase Authentication state and user profile
+- **LoadingContext:** Global loading state management
 
 ### 3.4 Routing and Navigation
 
-**SRD-REQ-FRONT-006:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005] The application SHALL implement protected routes:
+**SRD-REQ-FRONT-006:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005] The application SHALL implement protected routes (Phase 1):
 
-- **Public Routes:** Landing page, login, onboarding, acknowledgment links
-- **Caretaker Routes:** Dashboard, patients, alerts, observers (require caretaker role)
-- **Observer Routes:** Observer dashboard, assigned incidents (require observer role)
-- **Shared Routes:** Profile settings, notification preferences
+- **Public Routes:** Landing page (/)
+- **Authenticated Routes:** Dashboard (/dashboard)
 
 **SRD-REQ-FRONT-007:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005] Route protection SHALL be implemented via middleware:
 
@@ -340,7 +258,7 @@ export default function AuthenticatedLayout({
 
 export function LeftSideMenu() {
   const pathname = usePathname();
-  const { user, userRole } = useAuth();
+  const { user } = useAuth();
   
   return (
     <aside className="hidden md:flex md:flex-shrink-0 w-64 bg-white border-r border-gray-200">
@@ -355,47 +273,7 @@ export function LeftSideMenu() {
             Dashboard
           </NavLink>
           
-          <NavLink 
-            href="/patients" 
-            icon={UserGroupIcon}
-            active={pathname.startsWith('/patients')}
-          >
-            Patients
-          </NavLink>
-          
-          <NavLink 
-            href="/alerts" 
-            icon={BellIcon}
-            active={pathname.startsWith('/alerts')}
-          >
-            Alerts
-          </NavLink>
-          
-          <NavLink 
-            href="/incidents" 
-            icon={ExclamationTriangleIcon}
-            active={pathname.startsWith('/incidents')}
-          >
-            Incidents
-          </NavLink>
-          
-          {userRole === 'caretaker' && (
-            <NavLink 
-              href="/observers" 
-              icon={UsersIcon}
-              active={pathname.startsWith('/observers')}
-            >
-              Observers
-            </NavLink>
-          )}
-          
-          <NavLink 
-            href="/settings" 
-            icon={CogIcon}
-            active={pathname === '/settings'}
-          >
-            Settings
-          </NavLink>
+          {/* Future navigation items will be added here in Phase 2+ */}
         </nav>
       </div>
     </aside>
@@ -403,15 +281,15 @@ export function LeftSideMenu() {
 }
 ```
 
-**SRD-REQ-FRONT-012:** [Implements: SRS-REQ-UI-004, SRS-REQ-UI-005, SRS-REQ-UI-017] The left-side menu SHALL:
+**SRD-REQ-FRONT-012:** [Implements: SRS-REQ-UI-004, SRS-REQ-UI-005, SRS-REQ-UI-017] The left-side menu SHALL (Phase 1):
 - Be visible only on viewports ≥768px width (hidden on mobile)
 - Have a fixed width between 200-280px (recommend 256px/64rem)
 - Remain fixed/persistent during navigation
 - Highlight the currently active navigation item with visual indicator
 - Use clear iconography for each menu item (from @heroicons/react)
-- Show role-specific navigation items (Observers link only for caretakers)
 - Maintain selection state across page navigation
 - Use semantic HTML (`<nav>`, `<aside>`)
+- Include placeholder structure for future navigation items
 
 #### 3.5.4 Top Navigation Bar
 
@@ -502,7 +380,6 @@ export function TopNavBar() {
 
 export function UserDropdownMenu() {
   const { user, logout } = useAuth();
-  const router = useRouter();
   
   return (
     <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
@@ -513,27 +390,7 @@ export function UserDropdownMenu() {
           <p className="text-sm text-gray-500 truncate">{user?.email}</p>
         </div>
         
-        {/* Menu Items */}
-        <DropdownMenuItem 
-          icon={UserCircleIcon}
-          onClick={() => router.push('/settings')}
-        >
-          Account Settings
-        </DropdownMenuItem>
-        
-        <DropdownMenuItem 
-          icon={BellAlertIcon}
-          onClick={() => router.push('/settings/notifications')}
-        >
-          Notification Preferences
-        </DropdownMenuItem>
-        
-        <DropdownMenuItem 
-          icon={QuestionMarkCircleIcon}
-          onClick={() => router.push('/help')}
-        >
-          Help & Documentation
-        </DropdownMenuItem>
+        {/* Placeholder for future menu items (Settings, Help, etc.) */}
         
         {/* Divider */}
         <div className="border-t border-gray-200 my-1" />
@@ -552,16 +409,16 @@ export function UserDropdownMenu() {
 }
 ```
 
-**SRD-REQ-FRONT-016:** [Implements: SRS-REQ-UI-008, SRS-REQ-UI-009, SRS-REQ-UI-017] The dropdown menu SHALL:
+**SRD-REQ-FRONT-016:** [Implements: SRS-REQ-UI-008, SRS-REQ-UI-009, SRS-REQ-UI-017] The dropdown menu SHALL (Phase 1):
 - Appear when profile icon is clicked
 - Display user's full name and email at the top
-- Include links to Account Settings, Notification Preferences, Help/Documentation
 - Show Logout/Sign Out option with clear visual separation (divider line)
 - Position Logout as the last item
-- Include icons for all menu items for visual clarity
+- Include icon for Logout menu item
 - Close when clicking outside or selecting an option
 - Use proper ARIA attributes for accessibility
 - Implement click-outside detection or focus trap
+- Include placeholder for future menu items
 
 #### 3.5.5 Mobile Responsive Layout
 
@@ -731,14 +588,12 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
 }
 ```
 
-**SRD-REQ-FRONT-022:** [Implements: SRS-REQ-UI-016] Loading indicators SHALL be displayed for:
+**SRD-REQ-FRONT-022:** [Implements: SRS-REQ-UI-016] Loading indicators SHALL be displayed for (Phase 1):
 - Initial page load and route navigation
-- Form submissions (create/update patient, alert, observer)
-- Data fetching operations (fetching patients, incidents, alerts)
 - Authentication operations (login, logout, token refresh)
-- File uploads (patient profile photos)
 - API calls that take longer than 200ms
-- Bulk operations (batch updates, deletes)
+
+**Note:** Additional loading states for form submissions, data fetching, file uploads, and bulk operations will be added in Phase 2+ as features are implemented.
 
 #### 3.5.7 Layout Consistency and Accessibility
 
@@ -761,112 +616,35 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
 
 ---
 
-## 4. Firebase Cloud Functions Requirements
+## 4. Firebase Cloud Functions Requirements (Phase 1)
 
 ### 4.1 Function Organization
 
-**SRD-REQ-FUNC-001:** [Implements: SRS-REQ-TECH-001] Cloud Functions SHALL be organized by feature domain:
+**SRD-REQ-FUNC-001:** [Implements: SRS-REQ-TECH-001] Cloud Functions SHALL be organized with basic structure for Phase 1:
 
 ```
 functions/
 ├── src/
 │   ├── index.ts                 # Main exports
-│   ├── patients/                # Patient management
+│   ├── api/                     # API endpoints (placeholder)
 │   │   └── index.ts
-│   ├── observers/               # Observer management
-│   │   └── index.ts
-│   ├── alerts/                  # Alert management
-│   │   └── index.ts
-│   ├── incidents/               # Incident management
-│   │   └── index.ts
-│   ├── notifications/           # Notification service
-│   │   └── index.ts
-│   ├── escalation/              # Escalation engine
-│   │   └── index.ts
-│   ├── webhooks/                # Webhook receivers
-│   │   └── index.ts
-│   ├── scheduling/              # Schedule management
-│   │   └── index.ts
-│   ├── services/                # Business logic services
-│   │   ├── patient-service.ts
-│   │   ├── observer-service.ts
-│   │   ├── alert-service.ts
-│   │   ├── incident-service.ts
-│   │   ├── escalation-service.ts
-│   │   ├── notification-service.ts
-│   │   └── scheduling-service.ts
 │   └── shared/                  # Shared utilities
 │       ├── auth.ts              # Authentication helpers
-│       ├── firebase-admin.ts    # Firebase Admin SDK
-│       ├── quirrel-client.ts    # Quirrel API client
-│       ├── twilio-client.ts     # Twilio SMS client
-│       └── validators.ts        # Input validation
+│       ├── firebase-admin.ts    # Firebase Admin SDK initialization
+│       └── validators.ts        # Input validation utilities
 └── package.json
 ```
 
-### 4.2 API Endpoints
+### 4.2 API Endpoints (Phase 1)
 
-**SRD-REQ-FUNC-002:** [Implements: SRS-REQ-API-003, SRS-REQ-API-004, SRS-REQ-API-005, SRS-REQ-API-006, SRS-REQ-API-007, SRS-REQ-API-008, SRS-REQ-API-009, SRS-REQ-API-010, SRS-REQ-API-011] The following API endpoints SHALL be implemented:
+**SRD-REQ-FUNC-002:** [Implements: SRS-REQ-API-003] Basic API structure SHALL be established (Phase 1):
 
-#### Patient Management (`/api/v1/patients`)
-- `POST /api/v1/patients` - Create patient profile
-- `GET /api/v1/patients` - List caretaker's patients
-- `GET /api/v1/patients/{id}` - Get patient details
-- `PUT /api/v1/patients/{id}` - Update patient
-- `DELETE /api/v1/patients/{id}` - Archive patient
-- `GET /api/v1/patients/{id}/incidents` - Get patient incidents
+#### Basic API Setup
+- API routing structure with versioning (`/api/v1/`)
+- Health check endpoint for testing: `GET /api/v1/health`
+- Authentication middleware framework
 
-#### Observer Management (`/api/v1/observers`)
-- `POST /api/v1/patients/{patientId}/observers/invite` - Invite observer
-- `GET /api/v1/patients/{patientId}/observers` - List patient observers
-- `PUT /api/v1/patients/{patientId}/observers/{id}` - Update assignment
-- `DELETE /api/v1/patients/{patientId}/observers/{id}` - Remove observer
-- `POST /api/v1/invitations/{id}/resend` - Resend invitation
-- `DELETE /api/v1/invitations/{id}` - Cancel invitation
-
-#### Alert Management (`/api/v1/alerts`)
-- `POST /api/v1/patients/{patientId}/alerts` - Create alert
-- `GET /api/v1/patients/{patientId}/alerts` - List patient alerts
-- `GET /api/v1/alerts/{id}` - Get alert details
-- `PUT /api/v1/alerts/{id}` - Update alert
-- `DELETE /api/v1/alerts/{id}` - Cancel alert
-- `POST /api/v1/alerts/{id}/pause` - Pause alert
-- `POST /api/v1/alerts/{id}/resume` - Resume alert
-- `POST /api/v1/alerts/{id}/test` - Test trigger alert
-
-#### Incident Management (`/api/v1/incidents`)
-- `GET /api/v1/incidents` - List all incidents (caretaker)
-- `GET /api/v1/patients/{patientId}/incidents` - List patient incidents
-- `GET /api/v1/incidents/{id}` - Get incident details
-- `POST /api/v1/incidents/{id}/resolve` - Resolve incident
-- `POST /api/v1/incidents/{id}/reassign` - Reassign incident
-- `POST /api/v1/incidents/{id}/notes` - Add note
-
-#### Observer Operations (`/api/v1/me`)
-- `GET /api/v1/me` - Get observer profile
-- `PUT /api/v1/me` - Update profile
-- `PUT /api/v1/me/preferences` - Update notification preferences
-- `GET /api/v1/me/patients` - List assigned patients
-- `GET /api/v1/me/incidents` - List active incidents
-- `POST /api/v1/incidents/{id}/acknowledge` - Acknowledge incident
-- `POST /api/v1/incidents/{id}/resolve` - Resolve incident
-
-#### Onboarding (`/api/v1/invitations`)
-- `GET /api/v1/invitations/{token}` - Get invitation details
-- `POST /api/v1/invitations/{token}/accept` - Accept invitation
-- `POST /api/v1/auth/verify-phone` - Verify phone via SMS
-- `POST /api/v1/auth/verify-email` - Verify email
-
-#### Public Endpoints (`/ack`, `/resolve`)
-- `GET /ack/{token}` - Acknowledgment page
-- `POST /ack/{token}` - Submit acknowledgment
-- `GET /resolve/{token}` - Resolution page
-- `POST /resolve/{token}` - Submit resolution
-
-#### Webhook Endpoints (`/webhooks`)
-- `POST /webhooks/alert-trigger` - Receive scheduled alert trigger
-- `POST /webhooks/sms-status` - Receive SMS delivery status
-- `POST /webhooks/email-status` - Receive email delivery status
+**Note:** Specific feature endpoints (patients, observers, alerts, incidents) will be implemented in Phase 2+.
 
 ### 4.3 Authentication and Authorization
 
@@ -892,162 +670,53 @@ export async function verifyAuth(req: Request): Promise<string> {
 }
 ```
 
-**SRD-REQ-FUNC-004:** [Implements: SRS-REQ-SEC-005] Role-based access control SHALL be enforced:
+**SRD-REQ-FUNC-004:** [Implements: SRS-REQ-SEC-005] Role-based access control framework SHALL be established (Phase 1):
 
-- **Caretaker Role:** Full access to their patients, alerts, and incidents
-- **Observer Role:** Access only to assigned patients and incidents
-- **Public Endpoints:** Token-based access for acknowledgment/resolution links
+- Authentication middleware for verifying Firebase tokens
+- User role determination (caretaker/observer) - foundation for future use
+- Authorization helper functions
 
-### 4.4 Escalation Engine
-
-**SRD-REQ-FUNC-005:** [Implements: SRS-REQ-ESC-001, SRS-REQ-ESC-002, SRS-REQ-ESC-003, SRS-REQ-ESC-004, SRS-REQ-ESC-005] The escalation engine SHALL be implemented as a Cloud Function triggered by Firestore:
-
-```typescript
-// Firestore trigger for incident escalation
-export const onIncidentCreated = functions.firestore
-  .document('incidents/{incidentId}')
-  .onCreate(async (snap, context) => {
-    const incident = snap.data();
-    
-    // Start Level 1 escalation
-    await startEscalationLevel(incident.id, 1);
-    
-    // Schedule escalation timer
-    await scheduleEscalationTimer(incident.id, 1);
-  });
-```
-
-**SRD-REQ-FUNC-006:** [Implements: SRS-REQ-ESC-004, SRS-REQ-ESC-007, SRS-REQ-ESC-008] Escalation timers SHALL use Cloud Functions scheduled functions:
-
-```typescript
-// Scheduled function for escalation checks
-export const checkEscalations = functions.pubsub
-  .schedule('every 1 minutes')
-  .onRun(async (context) => {
-    const dueEscalations = await getDueEscalations();
-    
-    for (const escalation of dueEscalations) {
-      await processEscalation(escalation);
-    }
-  });
-```
-
-### 4.5 Notification Service
-
-**SRD-REQ-FUNC-007:** [Implements: SRS-REQ-NOTIF-001, SRS-REQ-NOTIF-003, SRS-REQ-NOTIF-004, SRS-REQ-TECH-001] Notification delivery SHALL be implemented as a queue-based system:
-
-```typescript
-// Notification queue processor
-export const processNotificationQueue = functions.pubsub
-  .schedule('every 30 seconds')
-  .onRun(async (context) => {
-    const pendingNotifications = await getPendingNotifications();
-    
-    for (const notification of pendingNotifications) {
-      await sendNotification(notification);
-    }
-  });
-```
-
-**SRD-REQ-FUNC-008:** [Implements: SRS-REQ-NOTIF-001, SRS-REQ-NOTIF-002, SRS-REQ-INT-006, SRS-REQ-INT-007, SRS-REQ-INT-008] SMS notifications SHALL use Twilio:
-
-```typescript
-// Twilio SMS service
-export async function sendSMSNotification(
-  phoneNumber: string,
-  message: string
-): Promise<string> {
-  const twilioClient = twilio(
-    process.env.TWILIO_ACCOUNT_SID,
-    process.env.TWILIO_AUTH_TOKEN
-  );
-  
-  const result = await twilioClient.messages.create({
-    body: message,
-    to: phoneNumber,
-    from: process.env.TWILIO_PHONE_NUMBER,
-    statusCallback: `${API_BASE_URL}/webhooks/sms-status`
-  });
-  
-  return result.sid;
-}
-```
+**Note:** Specific access control enforcement for patients, alerts, and incidents will be implemented in Phase 2+.
 
 ---
 
-## 5. Firestore Database Requirements
+## 5. Firestore Database Requirements (Phase 1)
 
 ### 5.1 Collection Structure
 
-**SRD-REQ-DB-001:** [Implements: SRS-REQ-PATIENT-001, SRS-REQ-OBS-001, SRS-REQ-OBS-007, SRS-REQ-ALERT-001, SRS-REQ-INC-001, SRS-REQ-ESC-001, SRS-REQ-NOTIF-003, SRS-REQ-TECH-001] The following Firestore collections SHALL be implemented:
+**SRD-REQ-DB-001:** [Implements: SRS-REQ-TECH-001] Basic Firestore collections for Phase 1:
 
-- `caretakers` - Caretaker user accounts
-- `patients` - Patient profiles
-- `observers` - Observer user accounts
-- `observer_invitations` - Pending observer invitations
-- `patient_observers` - Observer-patient assignments
-- `escalation_policies` - Patient escalation policies
-- `alerts` - Alert definitions
-- `alert_schedules` - Alert schedule metadata
-- `scheduled_instances` - Individual scheduled occurrences
-- `incidents` - Alert incidents
-- `notifications` - Notification delivery logs
-- `incident_actions` - Incident action audit log
-- `acknowledgment_tokens` - Acknowledgment link tokens
+- `users` - User accounts (both caretakers and observers)
+  - Fields: `uid`, `email`, `displayName`, `photoURL`, `role`, `createdAt`, `updatedAt`
+
+**Note:** Additional collections (patients, observers, alerts, incidents, etc.) will be added in Phase 2+.
 
 ### 5.2 Security Rules
 
-**SRD-REQ-DB-002:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005, SRS-REQ-SEC-006] Firestore security rules SHALL enforce:
+**SRD-REQ-DB-002:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005] Firestore security rules SHALL enforce (Phase 1):
 
-- Caretakers can only access their own patients and related data
-- Observers can only access assigned patients and incidents
-- Public acknowledgment tokens have limited read access
+- Authenticated users can read/write their own user document
 - Cloud Functions have full access via Admin SDK
+- Default deny for all other access
+
+**Note:** More granular security rules for patients, observers, alerts, and incidents will be added in Phase 2+.
 
 ### 5.3 Indexes
 
-**SRD-REQ-DB-003:** [Implements: SRS-REQ-SCALE-002] Composite indexes SHALL be created for:
+**SRD-REQ-DB-003:** [Implements: SRS-REQ-SCALE-002] Basic indexes for Phase 1:
 
-- `incidents`: `status + triggeredAt`, `patientId + status`, `assignedObserverId + status`
-- `alerts`: `patientId + status`, `status + nextTriggerAt`
-- `notifications`: `incidentId`, `observerId + createdAt`, `deliveryStatus + sentAt`
-- `scheduled_instances`: `scheduledTime + status`, `alertId + scheduledTime`
+- Single-field indexes created automatically by Firestore
+- Composite indexes will be added as needed in future phases
 
 ---
 
-## 6. External Service Integration
+## 6. External Service Integration (Phase 1)
 
-### 6.1 Quirrel Scheduling Service
+**SRD-REQ-INT-001:** [Implements: SRS-REQ-TECH-001] Phase 1 SHALL only integrate:
 
-**SRD-REQ-INT-001:** [Implements: SRS-SRD-REQ-INT-001, SRS-SRD-REQ-INT-002, SRS-REQ-SCHED-001, SRS-REQ-SCHED-002, SRS-REQ-SCHED-004] Quirrel integration SHALL handle:
+- **Firebase Authentication:** Google OAuth for user authentication
 
-- Creating scheduled webhooks from RRULE patterns
-- Updating schedules when alerts are modified
-- Cancelling schedules when alerts are deleted
-- Receiving and validating webhook callbacks
-
-**SRD-REQ-INT-002:** [Implements: SRS-REQ-ALERT-002, SRS-REQ-ALERT-003, SRS-REQ-SCHED-006, SRS-SRD-REQ-INT-003, SRS-REQ-INT-005] RRULE to Quirrel conversion SHALL support:
-
-- Daily, weekly, monthly, hourly patterns
-- Timezone conversion
-- Complex RRULE patterns via calculated scheduling
-
-### 6.2 Twilio SMS Service
-
-**SRD-REQ-INT-003:** [Implements: SRS-REQ-INT-006, SRS-REQ-INT-007, SRS-REQ-INT-008] Twilio integration SHALL provide:
-
-- SMS notification delivery
-- Delivery status webhooks
-- Link shortening for acknowledgment URLs
-- Rate limiting compliance
-
-### 6.3 SendGrid Email Service (Optional)
-
-**SRD-REQ-INT-004:** [Implements: SRS-REQ-INT-009, SRS-REQ-OBS-003] Email notifications SHALL be optional for MVP:
-
-- Observer invitations
-- Notification delivery (if observer prefers email)
-- Delivery status tracking
+**Note:** Additional external services (Quirrel, Twilio, SendGrid) will be integrated in Phase 2+.
 
 ---
 
@@ -1087,30 +756,29 @@ const nextConfig: NextConfig = {
 };
 ```
 
-**SRD-REQ-DEV-003:** [Implements: SRS-REQ-TECH-001, SRS-REQ-API-003, SRS-REQ-API-011] Firebase hosting SHALL route API calls to Cloud Functions:
+**SRD-REQ-DEV-003:** [Implements: SRS-REQ-TECH-001, SRS-REQ-API-003] Firebase hosting SHALL be configured for static site deployment (Phase 1):
 
 ```json
 // firebase.json
 {
   "hosting": {
     "public": "out",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
-        "source": "/api/**",
-        "function": "apiRouter"
-      },
-      {
-        "source": "/webhooks/**",
-        "function": "webhookRouter"
+        "source": "**",
+        "destination": "/index.html"
       }
     ]
   }
 }
 ```
 
-### 7.3 Environment Variables
+**Note:** API routes will be added in Phase 2+ when backend endpoints are implemented.
 
-**SRD-REQ-DEV-004:** [Implements: SRS-SRD-REQ-SEC-001, SRS-SRD-REQ-INT-001, SRS-REQ-INT-006] Required environment variables:
+### 7.3 Environment Variables (Phase 1)
+
+**SRD-REQ-DEV-004:** [Implements: SRS-SRD-REQ-SEC-001] Required environment variables for Phase 1:
 
 **Frontend (.env.local):**
 - `NEXT_PUBLIC_FIREBASE_API_KEY`
@@ -1123,219 +791,173 @@ const nextConfig: NextConfig = {
 **Note:** Google Sign-In must be enabled in Firebase Console Authentication settings.
 
 **Cloud Functions (.env):**
-- `QUIRREL_URL`
-- `QUIRREL_TOKEN`
-- `TWILIO_ACCOUNT_SID`
-- `TWILIO_AUTH_TOKEN`
-- `TWILIO_PHONE_NUMBER`
-- `SENDGRID_API_KEY` (optional)
-- `API_BASE_URL`
+- No additional environment variables required for Phase 1
+
+**Note:** Additional environment variables (Quirrel, Twilio, SendGrid) will be added in Phase 2+.
 
 ---
 
-## 8. Performance Requirements
+## 8. Performance Requirements (Phase 1)
 
 ### 8.1 Frontend Performance
 
-**SRD-REQ-PERF-001:** [Implements: SRS-SRD-REQ-PERF-001, SRS-SRD-REQ-PERF-002, SRS-SRD-REQ-PERF-003] The application SHALL meet:
+**SRD-REQ-PERF-001:** [Implements: SRS-SRD-REQ-PERF-001] The application SHALL meet baseline performance targets:
 
 - First Contentful Paint: < 1.5s
 - Time to Interactive: < 3s
-- Lighthouse Performance Score: > 90
+- Lighthouse Performance Score: > 85
 
-**SRD-REQ-PERF-002:** [Implements: SRS-SRD-REQ-PERF-001, SRS-SRD-REQ-PERF-002, SRS-SRD-REQ-PERF-003] Optimization strategies:
+**SRD-REQ-PERF-002:** [Implements: SRS-SRD-REQ-PERF-001] Optimization strategies for Phase 1:
 
-- Static site generation for public pages
-- Code splitting for route-based chunks
-- Image optimization (Next.js Image component)
-- Lazy loading for non-critical components
+- Static site generation for landing page
+- Code splitting for authenticated routes
+- Optimized bundle size with tree shaking
+- Minimal initial JavaScript payload
 
-### 8.2 API Performance
-
-**SRD-REQ-PERF-003:** [Implements: SRS-SRD-REQ-PERF-001, SRS-SRD-REQ-PERF-002, SRS-SRD-REQ-PERF-003] Cloud Functions SHALL meet:
-
-- API response time: < 2s (p95)
-- Webhook processing: < 5s
-- Notification queue processing: < 30s
-
-### 8.3 Database Performance
-
-**SRD-REQ-PERF-004:** [Implements: SRS-REQ-SCALE-002, SRS-REQ-SCALE-003] Firestore queries SHALL be optimized:
-
-- Use composite indexes for complex queries
-- Limit query results with pagination
-- Cache frequently accessed data
-- Use real-time listeners efficiently
+**Note:** Additional performance optimizations (image optimization, lazy loading, caching) will be implemented in Phase 2+ as features are added.
 
 ---
 
-## 9. Security Requirements
+## 9. Security Requirements (Phase 1)
 
 ### 9.1 Authentication
 
 **SRD-REQ-SEC-001:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-API-001] Authentication SHALL use Firebase Google Authentication:
 
 - Google Sign-In OAuth authentication for all users
-- JWT token validation on all API calls
-- Session management via secure cookies
+- JWT token validation framework in Cloud Functions
+- Session management via Firebase Authentication
 - Automatic user profile creation from Google account
-- Phone number collection during onboarding (for SMS notifications)
+- User document created in Firestore on first sign-in
 
 ### 9.2 Authorization
 
-**SRD-REQ-SEC-002:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005] Role-based access control SHALL be enforced:
+**SRD-REQ-SEC-002:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005] Basic authorization framework SHALL be established (Phase 1):
 
-- Firestore security rules
-- Cloud Function authorization checks
-- Frontend route protection
-- API endpoint authorization
+- Firestore security rules for user documents (read/write own document only)
+- Cloud Function authentication middleware
+- Frontend route protection via middleware (development) and client-side checks (production)
+
+**Note:** Role-based access control for patients, observers, and incidents will be implemented in Phase 2+.
 
 ### 9.3 Data Protection
 
-**SRD-REQ-SEC-003:** [Implements: SRS-SRD-REQ-SEC-003, SRS-REQ-SEC-006] Sensitive data SHALL be protected:
+**SRD-REQ-SEC-003:** [Implements: SRS-SRD-REQ-SEC-003] Basic data protection for Phase 1:
 
-- Phone numbers encrypted at rest
-- Invitation tokens hashed
-- Acknowledgment tokens expire after 24 hours
-- Google OAuth tokens managed by Firebase (no local storage)
+- Google OAuth tokens managed by Firebase (not stored locally)
+- HTTPS/TLS for all communications
+- Secure cookie configuration
+- Environment variables for sensitive configuration
 
-### 9.4 Webhook Security
-
-**SRD-REQ-SEC-004:** [Implements: SRS-SRD-REQ-SEC-002, SRS-REQ-SEC-006, SRS-REQ-SEC-007, SRS-REQ-SCHED-005] Webhook endpoints SHALL validate:
-
-- HMAC-SHA256 signatures from Quirrel
-- Token expiration for acknowledgment links
-- Rate limiting (100 requests/minute per IP)
-- Request size limits (10KB max)
+**Note:** Additional data protection (phone number encryption, token hashing) will be implemented in Phase 2+ as features require them.
 
 ---
 
-## 10. Testing Requirements
+## 10. Testing Requirements (Phase 1)
 
-### 10.1 Unit Testing
+### 10.1 Manual Testing
 
-**SRD-REQ-TEST-001:** [Implements: SRS-REQ-USE-005] Unit tests SHALL cover:
+**SRD-REQ-TEST-001:** Manual testing SHALL verify Phase 1 functionality:
 
-- Business logic services (>80% coverage)
-- Utility functions
-- Validation logic
-- Escalation policy engine
+- Google Sign-In authentication flow
+- Landing page display (unauthenticated state)
+- Dashboard access (authenticated state)
+- Navigation menu functionality (desktop, tablet, mobile)
+- User profile dropdown and logout
+- Loading states
+- Responsive design across devices
 
-### 10.2 Integration Testing
-
-**SRD-REQ-TEST-002:** [Implements: SRS-REQ-USE-005] Integration tests SHALL verify:
-
-- API endpoint functionality
-- Firestore operations
-- External service integrations (mocked)
-- Authentication flows
-
-### 10.3 End-to-End Testing
-
-**SRD-REQ-TEST-003:** [Implements: SRS-REQ-USE-001, SRS-REQ-USE-002, SRS-REQ-USE-003, SRS-REQ-USE-004] E2E tests SHALL cover:
-
-- Complete user flows (caretaker and observer)
-- Onboarding process
-- Alert creation and triggering
-- Incident escalation workflow
-- Notification delivery
+**Note:** Automated testing (unit, integration, E2E) will be established in Phase 2+ as the application grows in complexity.
 
 ---
 
-## 11. Deployment Requirements
+## 11. Deployment Requirements (Phase 1)
 
 ### 11.1 Build Process
 
-**SRD-REQ-DEPLOY-001:** [Implements: SRS-REQ-TECH-001] Deployment SHALL use:
+**SRD-REQ-DEPLOY-001:** [Implements: SRS-REQ-TECH-001] Phase 1 deployment SHALL use:
 
 ```bash
-# Build Next.js app
+# Build Next.js app for static export
 npm run build
 
-# Deploy to Firebase
-firebase deploy --only hosting,functions,firestore
+# Deploy to Firebase Hosting
+firebase deploy --only hosting
+
+# Deploy Firestore security rules
+firebase deploy --only firestore:rules
 ```
+
+**Note:** Cloud Functions deployment will be added in Phase 2+ when API endpoints are implemented.
 
 ### 11.2 Environment Configuration
 
-**SRD-REQ-DEPLOY-002:** [Implements: SRS-REQ-TECH-001] Environment-specific configurations:
+**SRD-REQ-DEPLOY-002:** [Implements: SRS-REQ-TECH-001] Phase 1 environment setup:
 
-- **Development:** Local Firebase emulators
-- **Staging:** Separate Firebase project
-- **Production:** Production Firebase project with monitoring
+- **Development:** Local development server (`npm run dev`)
+- **Production:** Firebase Hosting with static site
+
+**Note:** Firebase emulators and staging environments will be added in Phase 2+ as backend complexity increases.
 
 ### 11.3 Monitoring
 
-**SRD-REQ-DEPLOY-003:** [Implements: SRS-REQ-REL-004, SRS-SRD-REQ-PERF-001] Monitoring SHALL include:
+**SRD-REQ-DEPLOY-003:** [Implements: SRS-REQ-REL-004] Basic monitoring for Phase 1:
 
-- Firebase Performance Monitoring
-- Cloud Functions logs
-- Error tracking (Firebase Crashlytics)
-- API usage metrics
-- Notification delivery rates
+- Firebase Hosting analytics
+- Firebase Authentication logs
+- Browser console error tracking
+
+**Note:** Advanced monitoring (Performance Monitoring, Crashlytics, API metrics) will be added in Phase 2+.
 
 ---
 
 ## 12. Implementation Phases
 
-### Phase 1: Foundation (Week 1-2)
-- Next.js project setup with Tailwind
-- Firebase project configuration
-- Google Authentication implementation
-- Basic Firestore collections
-- Core API structure
+### Phase 1: Core Infrastructure and User Creation
+**Goal:** Establish foundation with authentication and basic UI layout
 
-### Phase 2: Patient & Observer Management (Week 2-3)
-- Patient CRUD operations
-- Observer invitation system
-- Onboarding flow
-- Firestore security rules
+**Deliverables:**
+- Package.json with basic scripts
+- Firebase initialization (Hosting, Firestore, Authentication, Functions)
+- Firebase Functions setup with basic structure
+- Google Sign-In authentication flow (Login/Logout)
+- Landing page for unauthenticated users
+- Authenticated layout with:
+  - Top navigation bar with profile dropdown
+  - Left sidebar menu (desktop/tablet)
+  - Mobile hamburger menu
+  - Global loading overlay
+- Basic dashboard page (placeholder)
+- Firebase Hosting deployment configuration
+- Firestore security rules foundation
 
-### Phase 3: Alert & Scheduling (Week 3-4)
-- Alert creation and management
-- Quirrel integration
-- RRULE parsing and scheduling
-- Webhook receiver
+**SRS Requirements Implemented:**
+- SRS-REQ-UI-001 through SRS-REQ-UI-018
 
-### Phase 4: Incident & Escalation (Week 4-5)
-- Incident lifecycle management
-- Escalation policy engine
-- Escalation timer system
-- State machine implementation
-
-### Phase 5: Notifications (Week 5-6)
-- Twilio SMS integration
-- Notification queue system
-- Acknowledgment link generation
-- Delivery status tracking
-
-### Phase 6: Frontend UI (Week 6-7)
-- Caretaker dashboard
-- Observer dashboard
-- Onboarding UI
-- Incident management UI
-
-### Phase 7: Testing & Deployment (Week 7-8)
-- Comprehensive testing
-- Performance optimization
-- Security audit
-- Production deployment
+### Phase 2: TBD
+Future phases will be defined based on Phase 1 completion.
 
 ---
 
-## 13. Dependencies
+## 13. Dependencies (Phase 1)
 
 ### 13.1 Frontend Dependencies
 
 ```json
 {
   "dependencies": {
-    "next": "^15.5.4",
+    "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "firebase": "^11.4.0",
+    "firebase": "^11.0.0",
     "tailwindcss": "^4.0.0",
     "@heroicons/react": "^2.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0"
   }
 }
 ```
@@ -1345,15 +967,17 @@ firebase deploy --only hosting,functions,firestore
 ```json
 {
   "dependencies": {
-    "firebase-admin": "^13.4.0",
-    "firebase-functions": "^6.3.2",
-    "twilio": "^5.0.0",
-    "@sendgrid/mail": "^8.0.0",
-    "rrule": "^2.8.1",
-    "axios": "^1.7.7"
+    "firebase-admin": "^13.0.0",
+    "firebase-functions": "^6.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
   }
 }
 ```
+
+**Note:** Additional dependencies (Twilio, SendGrid, rrule, axios) will be added in Phase 2+.
 
 ---
 
