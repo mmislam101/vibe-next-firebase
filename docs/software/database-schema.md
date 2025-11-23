@@ -1,17 +1,12 @@
 # Database Schema Documentation
-## Patient Alert Notification System - Firestore Collections
 
-**Version:** 1.0  
-**Date:** November 9, 2025  
-**Last Updated:** November 23, 2025  
 **Database:** Cloud Firestore  
-**Document Status:** Draft
 
 ---
 
 ## 1. Overview
 
-This document defines the Firestore database schema for the Patient Alert Notification System. The schema uses Firestore's document-based NoSQL structure to store user profiles and authentication data.
+This document defines the Firestore database schema. The schema uses Firestore's document-based NoSQL structure to store user profiles and authentication data.
 
 ### 1.1 Design Principles
 
@@ -79,48 +74,6 @@ match /caretakers/{caretakerId} {
 - Google UID is used to link Firebase Auth with Firestore user profile
 - Account status tracks user lifecycle (active, suspended, deleted)
 
----
-
-### 2.2 Observers Collection
-
-**[Implements: SRD-REQ-DB-001, SRS-REQ-OBS-001, SRS-SRD-REQ-SEC-001, SRS-SRD-REQ-SEC-003]**
-
-**Collection Path:** `observers/{observerId}`
-
-**Purpose:** Store observer (responder) user accounts and profile information.
-
-**Document Structure:**
-```typescript
-interface Observer {
-  id: string;                     // Document ID (matches Firebase Auth UID)
-  email: string;                  // Unique email address (from Google account)
-  firstName: string;              // From Google account
-  lastName: string;              // From Google account
-  googleUid: string;              // Google user ID (matches Firebase Auth UID)
-  photoUrl?: string;              // Google profile photo URL
-  accountStatus: 'active' | 'paused' | 'inactive';
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-  lastLoginAt?: Timestamp;
-}
-```
-
-**Indexes:**
-- `email` (unique constraint via security rules)
-- `accountStatus + createdAt` (composite)
-
-**Security Rules:**
-```javascript
-match /observers/{observerId} {
-  allow read, write: if request.auth != null && 
-    request.auth.uid == observerId;
-}
-```
-
-**Notes:**
-- Similar structure to Caretakers collection
-- Email, first name, last name, and photo URL are automatically populated from Google account during sign-in
-- Account status can be paused temporarily without deleting the account
 
 ---
 
