@@ -3,54 +3,54 @@
 **Framework:** Next.js (App Router)
 **UI Framework:** Tailwind CSS with PostCSS 
 **Document Status:** Draft
+**Last Updated:** November 23, 2025
 
 ---
 
 ## Implementation Status
 
-### Phase 1: Authentication & Basic Layout (🔄 In Progress - November 20, 2025)
+### Authentication & Basic Layout (✅ Completed - November 20, 2025)
 
-**✅ Completed Components (Authentication Core):**
-- ✅ Firebase Client Configuration (`app/firebase/config.ts`) - [Implements: SRS-REQ-UI-001]
-- ✅ Authentication Context (`app/context/AuthContext.tsx`) - [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-UI-001]
-- ✅ Authentication Hook (`app/hooks/useAuth.ts`) - [Implements: SRS-SRD-REQ-SEC-001]
-- ✅ Google Sign-In Button Component (`app/components/auth/GoogleSignInButton.tsx`) - [Implements: SRS-REQ-UI-001, SRS-REQ-UI-002]
-- ✅ Landing Page with Auth Integration (`app/page.tsx`) - [Implements: SRS-REQ-UI-001, SRS-REQ-UI-002]
-- ✅ Dashboard Page with Basic Layout (`app/(authenticated)/dashboard/page.tsx`) - [Implements: SRS-REQ-UI-003, SRS-REQ-UI-006, SRS-REQ-UI-007]
-- ✅ Authenticated Layout Wrapper (`app/(authenticated)/layout.tsx`) - [Implements: SRS-REQ-UI-003, SRS-REQ-UI-017]
-- ✅ Root Layout with AuthProvider (`app/layout.tsx`) - [Implements: SRS-REQ-UI-003]
-- ✅ Route Protection Middleware (`middleware.ts`) - [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005, SRS-REQ-UI-001, SRS-REQ-UI-003]
-- ✅ Top Navigation Bar Component (`app/components/layout/TopNavBar.tsx`) - [Implements: SRS-REQ-UI-006, SRS-REQ-UI-007, SRS-REQ-UI-010]
-- ✅ Left Side Menu Component (`app/components/layout/LeftSideMenu.tsx`) - [Implements: SRS-REQ-UI-004, SRS-REQ-UI-005]
-- ✅ Mobile Navigation Menu (`app/components/layout/MobileNavMenu.tsx`) - [Implements: SRS-REQ-UI-010, SRS-REQ-UI-011, SRS-REQ-UI-012]
-- ✅ User Dropdown Menu (`app/components/layout/UserDropdownMenu.tsx`) - [Implements: SRS-REQ-UI-008, SRS-REQ-UI-009]
-- ✅ Navigation Link Component (`app/components/layout/NavLink.tsx`) - [Implements: SRS-REQ-UI-005]
-- ✅ Loading Overlay Component (`app/components/layout/LoadingOverlay.tsx`) - [Implements: SRS-REQ-UI-013, SRS-REQ-UI-014, SRS-REQ-UI-015]
-- ✅ Loading Context (`app/context/LoadingContext.tsx`) - [Implements: SRS-REQ-UI-013, SRS-REQ-UI-016]
-- ✅ Loading State Hook (`app/hooks/useLoadingState.ts`) - [Implements: SRS-REQ-UI-013, SRS-REQ-UI-016]
-- ✅ Mobile Menu Hook (`app/hooks/useMobileMenu.ts`) - [Implements: SRS-REQ-UI-010, SRS-REQ-UI-011]
+**✅ Completed Components:**
+- ✅ Firebase Client Configuration (`app/firebase/config.ts`)
+- ✅ Authentication Context (`app/context/AuthContext.tsx`)
+- ✅ Authentication Hook (`app/hooks/useAuth.ts`)
+- ✅ Google Sign-In Button Component (`app/components/auth/GoogleSignInButton.tsx`)
+- ✅ Landing Page with Auth Integration (`app/page.tsx`)
+- ✅ Dashboard Page with Basic Layout (`app/(authenticated)/dashboard/page.tsx`)
+- ✅ Authenticated Layout Wrapper (`app/(authenticated)/layout.tsx`)
+- ✅ Root Layout with AuthProvider (`app/layout.tsx`)
+- ✅ Route Protection Middleware (`middleware.ts`)
+- ✅ Top Navigation Bar Component (`app/components/layout/TopNavBar.tsx`)
+- ✅ Left Side Menu Component (`app/components/layout/LeftSideMenu.tsx`)
+- ✅ Mobile Navigation Menu (`app/components/layout/MobileNavMenu.tsx`)
+- ✅ User Dropdown Menu (`app/components/layout/UserDropdownMenu.tsx`)
+- ✅ Navigation Link Component (`app/components/layout/NavLink.tsx`)
+- ✅ Loading Overlay Component (`app/components/layout/LoadingOverlay.tsx`)
+- ✅ Loading Context (`app/context/LoadingContext.tsx`)
+- ✅ Loading State Hook (`app/hooks/useLoadingState.ts`)
+- ✅ Mobile Menu Hook (`app/hooks/useMobileMenu.ts`)
 
 **Completed Features:**
-- ✅ Google OAuth Sign-In with Firebase Authentication [SRS-REQ-UI-001, SRS-SRD-REQ-SEC-001]
-- ✅ Automatic user profile creation via API [SRS-SRD-REQ-SEC-001]
-- ✅ Protected routes with middleware [SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005]
-- ✅ Client-side authentication state management [SRS-REQ-UI-001]
-- ✅ Automatic redirect on login/logout [SRS-REQ-UI-001, SRS-REQ-UI-003]
-- ✅ Loading states and error handling (basic) [SRS-REQ-UI-001]
-- ✅ Token-based authentication for API calls [SRS-SRD-REQ-SEC-001]
-- ✅ Basic dashboard layout with user profile display [SRS-REQ-UI-003, SRS-REQ-UI-006, SRS-REQ-UI-007]
-- ✅ Responsive design foundation [SRS-REQ-UI-002, SRS-REQ-UI-018]
-- ✅ Full navigation layout with sidebar [SRS-REQ-UI-004, SRS-REQ-UI-005]
-- ✅ Mobile responsive navigation [SRS-REQ-UI-010, SRS-REQ-UI-011, SRS-REQ-UI-012]
-- ✅ User profile dropdown menu [SRS-REQ-UI-008, SRS-REQ-UI-009]
-- ✅ Global loading overlay system [SRS-REQ-UI-013, SRS-REQ-UI-014, SRS-REQ-UI-015, SRS-REQ-UI-016]
-- ✅ Complete layout consistency [SRS-REQ-UI-017]
+- ✅ Google OAuth Sign-In with Firebase Authentication
+- ✅ Automatic user profile creation via API
+- ✅ Protected routes with middleware
+- ✅ Client-side authentication state management
+- ✅ Automatic redirect on login/logout
+- ✅ Loading states and error handling
+- ✅ Token-based authentication for API calls
+- ✅ Basic dashboard layout with user profile display
+- ✅ Responsive design foundation
+- ✅ Full navigation layout with sidebar
+- ✅ Mobile responsive navigation
+- ✅ User profile dropdown menu
+- ✅ Global loading overlay system
+- ✅ Complete layout consistency
 
-**📋 Notes on Implementation:**
-- Role-based navigation (Observers menu for caretakers only) has placeholder comments
-- User role will be added when user profile API includes role information
-- All components follow the design specifications in the SRD
-- Dependencies added: `zustand` (state management), `@headlessui/react` (accessible UI components)
+**📋 Implementation Notes:**
+- All components follow responsive design best practices
+- Dependencies: `zustand` (state management), `@headlessui/react` (accessible UI components)
+- Design system uses Tailwind CSS with custom healthcare-focused theme
 
 ---
 
@@ -90,8 +90,6 @@ app/
 │   │   ├── Button.tsx
 │   │   ├── Input.tsx
 │   │   ├── Card.tsx
-│   │   ├── Modal.tsx
-│   │   ├── Badge.tsx
 │   │   ├── LoadingSpinner.tsx
 │   │   └── ErrorMessage.tsx
 │   ├── layout/                    # Layout components
@@ -101,66 +99,21 @@ app/
 │   │   ├── UserDropdownMenu.tsx  # User profile dropdown
 │   │   ├── LoadingOverlay.tsx    # Global loading indicator
 │   │   └── NavLink.tsx           # Navigation link component
-│   ├── auth/                      # Authentication components
-│   │   └── GoogleSignInButton.tsx # Google OAuth button
-│   ├── PatientCard.tsx            # Patient profile card
-│   ├── AlertCard.tsx              # Alert schedule card
-│   ├── IncidentCard.tsx           # Active incident card
-│   ├── EscalationPolicyEditor.tsx  # Escalation policy UI
-│   ├── NotificationPreferences.tsx
-│   ├── ObserverInviteForm.tsx
-│   └── ScheduleEditor.tsx         # RRULE schedule editor
+│   └── auth/                      # Authentication components
+│       └── GoogleSignInButton.tsx # Google OAuth button
 ├── context/                        # React Context providers
 │   ├── AuthContext.tsx            # Firebase Auth state
-│   ├── LoadingContext.tsx         # Global loading state
-│   ├── PatientContext.tsx         # Patient data
-│   ├── AlertContext.tsx           # Alert management
-│   └── IncidentContext.tsx        # Real-time incidents
+│   └── LoadingContext.tsx         # Global loading state
 ├── hooks/                          # Custom React hooks
 │   ├── useAuth.ts                 # Authentication hook
 │   ├── useLoadingState.ts         # Loading state hook
 │   └── useMobileMenu.ts           # Mobile menu state hook
 ├── (authenticated)/               # Route group for protected pages
 │   ├── layout.tsx                 # Authenticated layout wrapper
-│   ├── dashboard/                 # Caretaker dashboard
+│   ├── dashboard/                 # Dashboard
 │   │   └── page.tsx
-│   ├── patients/                  # Patient management
-│   │   ├── page.tsx               # Patient list
-│   │   ├── [id]/
-│   │   │   └── page.tsx          # Patient detail
-│   │   └── new/
-│   │       └── page.tsx          # Create patient
-│   ├── alerts/                    # Alert management
-│   │   ├── page.tsx               # Alert list
-│   │   ├── [id]/
-│   │   │   └── page.tsx          # Alert detail
-│   │   └── new/
-│   │       └── page.tsx          # Create alert
-│   ├── incidents/                 # Incident management
-│   │   ├── page.tsx               # Active incidents
-│   │   └── [id]/
-│   │       └── page.tsx          # Incident detail
-│   ├── observers/                 # Observer management (caretaker only)
-│   │   ├── page.tsx               # Observer list
-│   │   └── invite/
-│   │       └── page.tsx          # Invite observer
 │   └── settings/                  # Settings pages
-│       ├── page.tsx               # Account settings
-│       └── notifications/
-│           └── page.tsx           # Notification preferences
-├── onboarding/                     # Observer onboarding (public)
-│   └── [token]/
-│       ├── page.tsx              # Onboarding flow
-│       └── complete/
-│           └── page.tsx          # Completion page
-├── ack/                            # Quick acknowledgment (public)
-│   └── [token]/
-│       └── page.tsx              # Acknowledge page
-├── resolve/                        # Quick resolution (public)
-│   └── [token]/
-│       └── page.tsx              # Resolve page
-├── login/                          # Authentication (public)
-│   └── page.tsx
+│       └── page.tsx               # Account settings
 ├── firebase/                       # Firebase config
 │   └── config.ts
 ├── lib/                            # Utilities
@@ -389,7 +342,7 @@ export function TopNavBar() {
 
 ### 3.5 Left Side Menu Component
 
-[Implements: SRD-REQ-FRONT-011, SRD-REQ-FRONT-012, SRS-REQ-UI-004, SRS-REQ-UI-005, SRS-REQ-UI-017, SRS-REQ-SEC-005] The LeftSideMenu component SHALL implement:
+[Implements: SRD-REQ-FRONT-011, SRD-REQ-FRONT-012, SRS-REQ-UI-004, SRS-REQ-UI-005, SRS-REQ-UI-017] The LeftSideMenu component SHALL implement:
 
 ```typescript
 // app/components/layout/LeftSideMenu.tsx
@@ -398,10 +351,6 @@ export function TopNavBar() {
 import { usePathname } from 'next/navigation';
 import { 
   HomeIcon, 
-  UserGroupIcon, 
-  BellIcon, 
-  ExclamationTriangleIcon,
-  UsersIcon,
   CogIcon 
 } from '@heroicons/react/24/outline';
 import { useAuth } from '@/hooks/useAuth';
@@ -409,7 +358,7 @@ import { NavLink } from './NavLink';
 
 export function LeftSideMenu() {
   const pathname = usePathname();
-  const { user, userRole } = useAuth();
+  const { user } = useAuth();
   
   return (
     <aside className="hidden md:flex md:flex-shrink-0 w-64 bg-white border-r border-gray-200">
@@ -423,41 +372,6 @@ export function LeftSideMenu() {
           >
             Dashboard
           </NavLink>
-          
-          <NavLink 
-            href="/patients" 
-            icon={UserGroupIcon}
-            active={pathname.startsWith('/patients')}
-          >
-            Patients
-          </NavLink>
-          
-          <NavLink 
-            href="/alerts" 
-            icon={BellIcon}
-            active={pathname.startsWith('/alerts')}
-          >
-            Alerts
-          </NavLink>
-          
-          <NavLink 
-            href="/incidents" 
-            icon={ExclamationTriangleIcon}
-            active={pathname.startsWith('/incidents')}
-          >
-            Incidents
-          </NavLink>
-          
-          {/* Caretaker-only navigation */}
-          {userRole === 'caretaker' && (
-            <NavLink 
-              href="/observers" 
-              icon={UsersIcon}
-              active={pathname.startsWith('/observers')}
-            >
-              Observers
-            </NavLink>
-          )}
           
           <NavLink 
             href="/settings" 
@@ -478,7 +392,7 @@ export function LeftSideMenu() {
 - Fixed width: 256px (64rem / w-64)
 - Full height of viewport below top nav
 - Background: white with right border
-- Role-based navigation items (Observers for caretakers only)
+- Simple navigation structure for authentication-focused application
 
 ### 3.6 Navigation Link Component
 
@@ -535,24 +449,16 @@ export function NavLink({ href, icon: Icon, active, children }: NavLinkProps) {
 
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, HomeIcon, CogIcon } from '@heroicons/react/24/outline';
 import { useMobileMenu } from '@/hooks/useMobileMenu';
 import { usePathname } from 'next/navigation';
 import { NavLink } from './NavLink';
-import {
-  HomeIcon,
-  UserGroupIcon,
-  BellIcon,
-  ExclamationTriangleIcon,
-  UsersIcon,
-  CogIcon
-} from '@heroicons/react/24/outline';
 import { useAuth } from '@/hooks/useAuth';
 
 export function MobileNavMenu() {
   const { isOpen, closeMenu } = useMobileMenu();
   const pathname = usePathname();
-  const { userRole } = useAuth();
+  const { user } = useAuth();
   
   return (
     <Transition.Root show={isOpen} as={Fragment}>
@@ -605,32 +511,6 @@ export function MobileNavMenu() {
                   </div>
                   
                   <div onClick={closeMenu}>
-                    <NavLink href="/patients" icon={UserGroupIcon} active={pathname.startsWith('/patients')}>
-                      Patients
-                    </NavLink>
-                  </div>
-                  
-                  <div onClick={closeMenu}>
-                    <NavLink href="/alerts" icon={BellIcon} active={pathname.startsWith('/alerts')}>
-                      Alerts
-                    </NavLink>
-                  </div>
-                  
-                  <div onClick={closeMenu}>
-                    <NavLink href="/incidents" icon={ExclamationTriangleIcon} active={pathname.startsWith('/incidents')}>
-                      Incidents
-                    </NavLink>
-                  </div>
-                  
-                  {userRole === 'caretaker' && (
-                    <div onClick={closeMenu}>
-                      <NavLink href="/observers" icon={UsersIcon} active={pathname.startsWith('/observers')}>
-                        Observers
-                      </NavLink>
-                    </div>
-                  )}
-                  
-                  <div onClick={closeMenu}>
                     <NavLink href="/settings" icon={CogIcon} active={pathname === '/settings'}>
                       Settings
                     </NavLink>
@@ -669,8 +549,6 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import {
   UserCircleIcon,
-  BellAlertIcon,
-  QuestionMarkCircleIcon,
   ArrowRightOnRectangleIcon
 } from '@heroicons/react/24/outline';
 
@@ -708,22 +586,6 @@ export function UserDropdownMenu({ onClose }: UserDropdownMenuProps) {
         >
           <UserCircleIcon className="mr-3 h-5 w-5 text-gray-400" />
           Account Settings
-        </button>
-        
-        <button
-          onClick={() => handleNavigation('/settings/notifications')}
-          className="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-        >
-          <BellAlertIcon className="mr-3 h-5 w-5 text-gray-400" />
-          Notification Preferences
-        </button>
-        
-        <button
-          onClick={() => handleNavigation('/help')}
-          className="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-        >
-          <QuestionMarkCircleIcon className="mr-3 h-5 w-5 text-gray-400" />
-          Help & Documentation
         </button>
       </div>
       
@@ -923,15 +785,11 @@ export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   
   // Public routes that don't require authentication
-  const publicRoutes = ['/', '/login', '/onboarding', '/ack', '/resolve'];
+  const publicRoutes = ['/', '/login'];
   const isPublicRoute = publicRoutes.some(route => path.startsWith(route));
   
   // Authenticated routes (everything under /(authenticated))
   const isAuthenticatedRoute = path.startsWith('/dashboard') || 
-                                path.startsWith('/patients') ||
-                                path.startsWith('/alerts') ||
-                                path.startsWith('/incidents') ||
-                                path.startsWith('/observers') ||
                                 path.startsWith('/settings');
   
   // Redirect to landing if trying to access authenticated route without token
@@ -983,395 +841,170 @@ export const config = {
 
 ---
 
-### 4.2 Caretaker Dashboard (`/dashboard`)
+### 4.2 Dashboard (`/dashboard`)
 
-[Implements: SRD-REQ-FRONT-005, SRS-REQ-INC-002, SRS-REQ-INC-003] The caretaker dashboard SHALL be wrapped in the authenticated layout and display:
+[Implements: SRD-REQ-FRONT-005, SRS-REQ-UI-003, SRS-REQ-UI-006, SRS-REQ-UI-007] The dashboard page SHALL be wrapped in the authenticated layout and display:
 
-- **Summary Cards:**
-  - Total patients count
-  - Active alerts count
-  - Active incidents count
-  - Total observers count
+- **Welcome Section:**
+  - Welcome message with user's name
+  - User profile information (from Google account)
+  - Account status indicator
 
-- **Active Incidents Section:**
-  - List of active incidents (triggered, acknowledged)
-  - Patient name, alert name, severity, status
-  - Quick actions (view, resolve)
-  - Real-time updates via Firestore listener
-
-- **Recent Patients:**
-  - List of recently accessed patients
-  - Quick access to patient detail
+- **Profile Summary:**
+  - Display name
+  - Email address
+  - Profile photo
+  - Account created date
+  - Last login timestamp
 
 - **Quick Actions:**
-  - "Add Patient" button
-  - "Create Alert" button
-  - "Invite Observer" button
+  - "Edit Profile" button (navigates to settings)
+  - "Sign Out" button
 
 **Layout:**
-- Responsive grid layout
+- Responsive card layout
 - Mobile: Single column
-- Tablet: 2 columns
-- Desktop: 3-4 columns
+- Desktop: Centered card with max-width
 
-**Real-Time Updates:**
+**Example Implementation:**
 ```typescript
-// Example: Real-time incident updates
-useEffect(() => {
-  const unsubscribe = onSnapshot(
-    query(
-      collection(db, 'incidents'),
-      where('status', 'in', ['triggered', 'acknowledged']),
-      where('patientId', 'in', userPatientIds)
-    ),
-    (snapshot) => {
-      const incidents = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setActiveIncidents(incidents);
-    }
-  );
+export default function DashboardPage() {
+  const { user } = useAuth();
   
-  return () => unsubscribe();
-}, [userPatientIds]);
+  return (
+    <div className="max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">
+        Welcome, {user?.displayName}!
+      </h1>
+      
+      <div className="bg-white rounded-lg shadow p-6">
+        <div className="flex items-center space-x-4 mb-6">
+          <img
+            src={user?.photoURL}
+            alt="Profile"
+            className="h-20 w-20 rounded-full"
+          />
+          <div>
+            <h2 className="text-xl font-semibold">{user?.displayName}</h2>
+            <p className="text-gray-600">{user?.email}</p>
+          </div>
+        </div>
+        
+        <div className="border-t pt-4">
+          <p className="text-sm text-gray-500">
+            Account Status: <span className="text-green-600">Active</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
 ```
 
 ---
 
-### 4.3 Patient List (`/patients`)
+### 4.3 Settings Page (`/settings`)
 
-[Implements: SRS-REQ-PATIENT-001] The patient list page SHALL display:
+The settings page SHALL provide:
 
-- **Header:**
-  - "Patients" title
-  - "Add Patient" button
-  - Search/filter input
-
-- **Patient Cards:**
-  - Patient name and photo
-  - Status badge (active, inactive, archived)
-  - Active alerts count
-  - Active incidents count
-  - Observers count
-  - Last updated timestamp
-  - Quick actions (view, edit, archive)
-
-- **Empty State:**
-  - Message when no patients
-  - "Add Your First Patient" CTA
-
-**Features:**
-- Search by patient name
-- Filter by status
-- Pagination (if > 50 patients)
-- Click card to navigate to detail
-
----
-
-### 4.4 Patient Detail (`/patients/[id]`)
-
-The patient detail page SHALL include:
-
-- **Patient Header:**
-  - Patient name, photo, status
-  - Edit button
-  - Archive button
-
-- **Tabs:**
-  - Overview
-  - Alerts
-  - Observers
-  - Incidents
-  - Escalation Policy
-
-- **Overview Tab:**
-  - Patient description
-  - Key metrics (alerts, incidents, observers)
-  - Recent activity
-
-- **Alerts Tab:**
-  - List of all alerts for patient
-  - Create alert button
-  - Alert status and next trigger time
-
-- **Observers Tab:**
-  - List of assigned observers
-  - Invite observer button
-  - Observer role and status
-
-- **Incidents Tab:**
-  - Incident history
-  - Filter by status
-  - Incident details
-
-- **Escalation Policy Tab:**
-  - Current escalation policy
-  - Edit policy button
-  - Visual policy editor
-
-**Real-Time Updates:**
-- Active incidents count
-- Alert status changes
-- Observer assignments
-
----
-
-### 4.5 Create Patient (`/patients/new`)
-
-The create patient page SHALL provide:
+- **Profile Information:**
+  - Display current profile (read-only email from Google)
+  - Editable first name
+  - Editable last name
+  - Profile photo (from Google, not editable)
 
 - **Form Fields:**
-  - Patient name (required, max 200 chars)
-  - Description (optional, max 1000 chars, textarea)
-  - Photo URL (optional, URL validation)
-  - Status (default: active)
+  - First name input
+  - Last name input
 
 - **Form Validation:**
   - Client-side validation
-  - Error messages below fields
-  - Disable submit until valid
+  - Max length constraints
+  - Error messages
 
 - **Actions:**
-  - "Cancel" button (navigate back)
-  - "Create Patient" button (submit form)
+  - "Save Changes" button
+  - Success/error notifications
 
-- **Success Flow:**
-  - Show success message
-  - Redirect to patient detail page
-
----
-
-### 4.6 Alert List (`/alerts`)
-
-The alert list page SHALL display:
-
-- **Header:**
-  - "Alerts" title
-  - "Create Alert" button
-  - Filter by patient, status
-
-- **Alert Cards:**
-  - Alert name
-  - Patient name
-  - Schedule (human-readable)
-  - Next trigger time
-  - Severity badge
-  - Status badge
-  - Quick actions (view, pause, delete)
-
-- **Empty State:**
-  - Message when no alerts
-  - "Create Your First Alert" CTA
-
----
-
-### 4.7 Create Alert (`/alerts/new`)
-
-The create alert page SHALL provide:
-
-- **Form Fields:**
-  - Patient selection (required, dropdown)
-  - Alert name (required, max 200 chars)
-  - Alert message (required, max 1000 chars, textarea)
-  - Severity (required, radio: low, medium, high, critical)
-  - Schedule editor (required)
-  - Auto-resolve timeout (optional, minutes)
-
-- **Schedule Editor:**
-  - Visual schedule builder
-  - RRULE preview
-  - Timezone selection
-  - Next occurrence preview
-
-- **Form Validation:**
-  - Validate RRULE syntax
-  - Show schedule preview
-  - Validate all required fields
-
-- **Success Flow:**
-  - Show success message
-  - Redirect to alert detail page
-
----
-
-### 4.8 Incident List (`/incidents`)
-
-The incident list page SHALL display:
-
-- **Header:**
-  - "Active Incidents" title
-  - Filter by status, patient, severity
-
-- **Incident Cards:**
-  - Incident number
-  - Patient name
-  - Alert name
-  - Severity badge
-  - Status badge (triggered, acknowledged, resolved)
-  - Current escalation level
-  - Assigned observer
-  - Triggered timestamp
-  - Quick actions (view, acknowledge, resolve)
-
-- **Real-Time Updates:**
-  - Live status updates
-  - New incidents appear automatically
-  - Status changes reflected immediately
-
----
-
-### 4.9 Incident Detail (`/incidents/[id]`)
-
-The incident detail page SHALL include:
-
-- **Incident Header:**
-  - Incident number
-  - Patient name
-  - Alert name
-  - Status badge
-  - Severity badge
-
-- **Timeline:**
-  - Triggered timestamp
-  - Acknowledged timestamp (if applicable)
-  - Resolved timestamp (if applicable)
-  - Escalation events
-
-- **Actions:**
-  - Acknowledge button (if triggered)
-  - Resolve button (if acknowledged)
-  - Add note button
-  - Reassign button (caretaker only)
-
-- **Action History:**
-  - List of all actions
-  - Actor, action type, timestamp
-  - Notes and details
-
-**Real-Time Updates:**
-- Status changes
-- New actions
-- Escalation events
-
----
-
-### 4.10 Observer Onboarding (`/onboarding/[token]`)
-
-The onboarding flow SHALL include multiple steps:
-
-**Step 1: Invitation Landing**
-- Display patient name(s)
-- Display caretaker name
-- Show observer role(s)
-- Terms of service and privacy policy checkboxes
-- "Accept and Continue" button
-
-**Step 2: Account Creation**
-- "Sign in with Google" button
-- Google OAuth authentication flow
-- Automatic profile creation from Google account
-- Phone number input (E.164 format, required for SMS notifications)
-- Phone number verification via SMS code
-
-**Step 3: Phone Verification**
-- Phone verification: SMS code input
-- "Verify Phone" button
-- Email is automatically verified via Google account
-
-**Step 4: Notification Preferences**
-- Primary notification method (SMS, Email, Both)
-- Quiet hours toggle and time selection
-- High-urgency override toggle
-- "Continue" button
-
-**Step 5: Patient Context**
-- Patient information display
-- Escalation policy preview
-- Example alert notification preview
-- "Continue" button
-
-**Step 6: Confirmation**
-- Summary of setup
-- Test notification button
-- "Complete Setup" button
-
-**Success Flow:**
-- Show success message
-- Redirect to observer dashboard
-
----
-
-### 4.11 Quick Acknowledge (`/ack/[token]`)
-
-The acknowledgment page SHALL provide:
-
-- **Incident Information:**
-  - Incident number
-  - Patient name
-  - Alert name
-  - Severity
-  - Triggered time
-
-- **Actions:**
-  - "I'll Handle This" button (acknowledge)
-  - "View Details" link
-  - "Not My Responsibility" link (if applicable)
-
-- **Success State:**
-  - Confirmation message
-  - "You're assigned to this incident"
-  - "Resolve" button (if applicable)
-
-**Design:**
-- Mobile-optimized
-- Large, easy-to-tap buttons
-- Clear, simple layout
-
----
-
-### 4.12 Quick Resolve (`/resolve/[token]`)
-
-The resolution page SHALL provide:
-
-- **Incident Information:**
-  - Incident number
-  - Patient name
-  - Alert name
-  - Current status
-
-- **Resolution Form:**
-  - Note input (optional, textarea)
-  - "Mark as Resolved" button
-
-- **Success State:**
-  - Confirmation message
-  - "Thank you for responding"
-
----
-
-### 4.13 Observer Dashboard (`/observer/dashboard`)
-
-The observer dashboard SHALL display:
-
-- **My Patients:**
-  - List of assigned patients
-  - Role for each patient
-  - Active incidents count per patient
-
-- **Active Incidents:**
-  - List of incidents assigned to observer
-  - Patient name, alert name, severity
-  - Quick acknowledge/resolve actions
-
-- **Notification Preferences:**
-  - Quick access to preferences
-  - Current settings summary
-
-**Real-Time Updates:**
-- New incident assignments
-- Status changes
-- Patient updates
+**Example Implementation:**
+```typescript
+export default function SettingsPage() {
+  const { user } = useAuth();
+  const [firstName, setFirstName] = useState(user?.firstName || '');
+  const [lastName, setLastName] = useState(user?.lastName || '');
+  const [saving, setSaving] = useState(false);
+  
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await fetch('/api/v1/me', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName, lastName })
+      });
+      // Show success message
+    } catch (error) {
+      // Show error message
+    } finally {
+      setSaving(false);
+    }
+  };
+  
+  return (
+    <div className="max-w-2xl mx-auto">
+      <h1 className="text-3xl font-bold mb-8">Account Settings</h1>
+      
+      <div className="bg-white rounded-lg shadow p-6">
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Email (from Google account)
+            </label>
+            <input
+              type="email"
+              value={user?.email}
+              disabled
+              className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              First Name
+            </label>
+            <input
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              className="mt-1 block w-full rounded-md border-gray-300"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Last Name
+            </label>
+            <input
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              className="mt-1 block w-full rounded-md border-gray-300"
+            />
+          </div>
+          
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="btn-primary"
+          >
+            {saving ? 'Saving...' : 'Save Changes'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
 
 ---
 
@@ -1419,150 +1052,19 @@ interface CardProps {
 }
 ```
 
-**Badge Component:**
+**LoadingSpinner Component:**
 ```typescript
-interface BadgeProps {
-  variant: 'success' | 'warning' | 'error' | 'info';
-  children: React.ReactNode;
+interface LoadingSpinnerProps {
+  size?: 'sm' | 'md' | 'lg';
+  color?: string;
 }
 ```
 
----
-
-### 5.2 Patient Card Component
-
-[Implements: SRD-REQ-FRONT-003, SRS-REQ-PATIENT-001] The PatientCard component SHALL display:
-
-- Patient photo (or placeholder)
-- Patient name
-- Status badge
-- Active alerts count
-- Active incidents count
-- Observers count
-- Click handler for navigation
-
-**Props:**
+**ErrorMessage Component:**
 ```typescript
-interface PatientCardProps {
-  patient: Patient;
-  onClick?: (patientId: string) => void;
-}
-```
-
----
-
-### 5.3 Alert Card Component
-
-The AlertCard component SHALL display:
-
-- Alert name
-- Patient name
-- Schedule (human-readable)
-- Next trigger time
-- Severity badge
-- Status badge
-- Quick actions (pause, delete)
-
-**Props:**
-```typescript
-interface AlertCardProps {
-  alert: Alert;
-  onPause?: (alertId: string) => void;
-  onDelete?: (alertId: string) => void;
-  onClick?: (alertId: string) => void;
-}
-```
-
----
-
-### 5.4 Incident Card Component
-
-[Implements: SRD-REQ-FRONT-003, SRD-REQ-FRONT-005, SRS-REQ-INC-001, SRS-REQ-ESC-003] The IncidentCard component SHALL display:
-
-- Incident number
-- Patient name
-- Alert name
-- Severity badge
-- Status badge
-- Current escalation level
-- Assigned observer
-- Triggered timestamp
-- Quick actions (acknowledge, resolve)
-
-**Props:**
-```typescript
-interface IncidentCardProps {
-  incident: Incident;
-  onAcknowledge?: (incidentId: string) => void;
-  onResolve?: (incidentId: string) => void;
-  onClick?: (incidentId: string) => void;
-}
-```
-
----
-
-### 5.5 Escalation Policy Editor Component
-
-[Implements: SRD-REQ-FRONT-003, SRS-REQ-ESC-001, SRS-REQ-ESC-005] The EscalationPolicyEditor component SHALL provide:
-
-- **Visual Editor:**
-  - Add/remove escalation levels
-  - Drag-and-drop level reordering
-  - Observer selection per level
-  - Timeout configuration per level
-
-- **Level Configuration:**
-  - Level number
-  - Target observers (multi-select)
-  - Timeout in minutes
-  - "Notify all" toggle
-
-- **Repeat Policy:**
-  - Enable/disable toggle
-  - Max repeats input
-  - Restart from level selection
-
-**Props:**
-```typescript
-interface EscalationPolicyEditorProps {
-  policy?: EscalationPolicy;
-  patientId: string;
-  availableObservers: Observer[];
-  onSave: (policy: EscalationPolicy) => Promise<void>;
-}
-```
-
----
-
-### 5.6 Schedule Editor Component
-
-[Implements: SRS-REQ-ALERT-002, SRS-REQ-ALERT-003, SRS-REQ-SCHED-001, SRS-REQ-SCHED-002, SRS-REQ-SCHED-004, SRS-REQ-SCHED-006] The ScheduleEditor component SHALL provide:
-
-- **Visual Schedule Builder:**
-  - Frequency selection (daily, weekly, monthly, hourly)
-  - Time selection (hour, minute)
-  - Day selection (for weekly)
-  - Date selection (for monthly)
-  - Interval input (for hourly)
-
-- **RRULE Preview:**
-  - Display generated RRULE
-  - Human-readable schedule description
-  - Next occurrence preview
-
-- **Timezone Selection:**
-  - Timezone dropdown
-  - Current timezone display
-
-**Props:**
-```typescript
-interface ScheduleEditorProps {
-  value: {
-    rrule: string;
-    timezone: string;
-  };
-  onChange: (schedule: Schedule) => void;
-  error?: string;
+interface ErrorMessageProps {
+  message: string;
+  onRetry?: () => void;
 }
 ```
 
@@ -1574,7 +1076,7 @@ interface ScheduleEditorProps {
 
 ### 6.1 Context Providers
 
-[Implements: SRD-REQ-FRONT-004, SRD-REQ-FRONT-005, SRS-REQ-INC-003] The following context providers SHALL be implemented:
+[Implements: SRD-REQ-FRONT-004, SRS-REQ-UI-003] The following context providers SHALL be implemented:
 
 **AuthContext:**
 ```typescript
@@ -1583,32 +1085,25 @@ interface AuthContextValue {
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
-  // User profile automatically created from Google account
+  // User profile automatically created from Google account via API
 }
 ```
 
-**PatientContext:**
+**LoadingContext:**
 ```typescript
-interface PatientContextValue {
-  patients: Patient[];
-  loading: boolean;
-  createPatient: (data: CreatePatientData) => Promise<Patient>;
-  updatePatient: (id: string, data: UpdatePatientData) => Promise<void>;
-  deletePatient: (id: string) => Promise<void>;
-  refreshPatients: () => Promise<void>;
+interface LoadingContextValue {
+  isLoading: boolean;
+  loadingMessage: string | null;
+  startLoading: (message?: string) => void;
+  stopLoading: () => void;
 }
 ```
 
-**IncidentContext:**
-```typescript
-interface IncidentContextValue {
-  incidents: Incident[];
-  loading: boolean;
-  acknowledgeIncident: (id: string) => Promise<void>;
-  resolveIncident: (id: string, note?: string) => Promise<void>;
-  // Real-time updates via Firestore listener
-}
-```
+**Notes:**
+- AuthContext manages Firebase Authentication state
+- LoadingContext provides global loading state for API calls and long-running operations
+- User profile data fetched from `/api/v1/me` after authentication
+- All context providers wrapped in root layout for global access
 
 ---
 
@@ -1854,25 +1349,50 @@ The application SHALL handle:
 
 ## 13. Testing Requirements
 
-**[Implements: SRD-REQ-TEST-001, SRD-REQ-TEST-002, SRD-REQ-TEST-003, SRS-REQ-USE-001, SRS-REQ-USE-002, SRS-REQ-USE-003, SRS-REQ-USE-004, SRS-REQ-USE-005]**
+**[Implements: SRD-REQ-TEST-001, SRD-REQ-TEST-002]**
 
 ### 13.1 Component Testing
 
-**SRD-REQ-TEST-001:** [Implements: SRD-REQ-TEST-001, SRS-REQ-USE-005] Components SHALL be tested:
+Components SHALL be tested for:
 
-- Unit tests for utility functions
-- Component rendering tests
-- User interaction tests
-- Accessibility tests
+- Component rendering
+- User interaction (button clicks, form inputs)
+- Loading states
+- Error states
+- Accessibility compliance
 
 ### 13.2 Integration Testing
 
-**SRD-REQ-TEST-002:** [Implements: SRD-REQ-TEST-002, SRS-REQ-USE-005] Integration tests SHALL cover:
+Integration tests SHALL cover:
 
-- User flows (login, create patient, create alert)
-- API integration
-- Real-time updates
-- Form submissions
+- Authentication flow (Google Sign-In, logout)
+- API integration (`GET /api/v1/me`, `PUT /api/v1/me`)
+- Navigation between pages
+- Form submissions (settings update)
+- Route protection (middleware redirect)
+
+### 13.3 E2E Testing Scenarios
+
+Key user journeys to test:
+
+1. **First-time user sign-in:**
+   - Click "Sign in with Google"
+   - Complete Google OAuth flow
+   - Verify redirect to dashboard
+   - Verify user profile displayed
+
+2. **Update profile:**
+   - Navigate to settings
+   - Update first/last name
+   - Save changes
+   - Verify success message
+   - Verify updated data displayed
+
+3. **Sign out:**
+   - Click user dropdown
+   - Click sign out
+   - Verify redirect to landing page
+   - Verify cannot access protected routes
 
 ---
 
