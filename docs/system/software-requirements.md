@@ -1,10 +1,6 @@
 # Software Requirements Document
 ## Patient Alert Notification System - Next.js on Firebase
 
-**Version:** 1.0 (Phase 1)  
-**Date:** November 23, 2025  
-**Document Status:** Draft  
-**Project Phase:** Phase 1 - Core Infrastructure  
 **Technology Stack:** Next.js 15, Firebase Hosting, Firestore, Firebase Cloud Functions, Tailwind CSS
 
 ---
@@ -13,7 +9,7 @@
 
 This document defines the software requirements for implementing the Patient Alert Notification System as a Next.js application hosted on Firebase. Phase 1 focuses on establishing the core infrastructure, authentication, and user interface layout.
 
-### 1.1 Technology Stack (Phase 1)
+### 1.1 Technology Stack
 
 - **Frontend Framework:** Next.js 15 (App Router) with React 19
 - **Hosting:** Firebase Hosting (static export)
@@ -22,7 +18,7 @@ This document defines the software requirements for implementing the Patient Ale
 - **Authentication:** Firebase Authentication (Google Sign-In)
 - **UI Framework:** Tailwind CSS 4
 
-### 1.2 Key Architectural Decisions (Phase 1)
+### 1.2 Key Architectural Decisions
 
 - **Static Site Generation:** Next.js static export for optimal Firebase Hosting performance
 - **Serverless API:** All business logic in Firebase Cloud Functions (basic structure)
@@ -33,7 +29,7 @@ This document defines the software requirements for implementing the Patient Ale
 
 ## 2. System Architecture Overview
 
-### 2.1 High-Level Architecture (Phase 1)
+### 2.1 High-Level Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -63,7 +59,7 @@ This document defines the software requirements for implementing the Patient Ale
                   └──────────────┘
 ```
 
-### 2.2 Core Components (Phase 1)
+### 2.2 Core Components
 
 1. **Next.js Frontend Application**
    - Landing page for unauthenticated users
@@ -90,7 +86,7 @@ This document defines the software requirements for implementing the Patient Ale
 
 ### 3.1 Next.js Application Structure
 
-**SRD-REQ-FRONT-001:** [Implements: SRS-REQ-UI-003, SRS-REQ-UI-004, SRS-REQ-UI-017] The application SHALL follow Next.js 15 App Router structure (Phase 1):
+**SRD-REQ-FRONT-001:** [Implements: SRS-REQ-UI-003, SRS-REQ-UI-004, SRS-REQ-UI-017] The application SHALL follow Next.js 15 App Router structure:
 
 ```
 app/
@@ -135,7 +131,7 @@ app/
 - **Component Library:** Custom components built on Tailwind utilities
 - **Dark Mode:** Optional (future enhancement)
 
-**SRD-REQ-FRONT-003:** [Implements: SRS-REQ-UI-003, SRS-REQ-UI-013, SRS-REQ-UI-016] Key UI components for Phase 1 SHALL include:
+**SRD-REQ-FRONT-003:** [Implements: SRS-REQ-UI-003, SRS-REQ-UI-013, SRS-REQ-UI-016] Key UI components SHALL include:
 
 - **Button:** Primary, secondary, and danger variants
 - **Input:** Text input with validation states
@@ -145,14 +141,14 @@ app/
 
 ### 3.3 State Management
 
-**SRD-REQ-FRONT-004:** [Implements: SRS-REQ-UI-003, SRS-REQ-UI-017] The application SHALL use React Context API for state management in Phase 1:
+**SRD-REQ-FRONT-004:** [Implements: SRS-REQ-UI-003, SRS-REQ-UI-017] The application SHALL use React Context API for state management:
 
 - **AuthContext:** Firebase Authentication state and user profile
 - **LoadingContext:** Global loading state management
 
 ### 3.4 Routing and Navigation
 
-**SRD-REQ-FRONT-006:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005] The application SHALL implement protected routes (Phase 1):
+**SRD-REQ-FRONT-006:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005] The application SHALL implement protected routes:
 
 - **Public Routes:** Landing page (/)
 - **Authenticated Routes:** Dashboard (/dashboard)
@@ -281,7 +277,7 @@ export function LeftSideMenu() {
 }
 ```
 
-**SRD-REQ-FRONT-012:** [Implements: SRS-REQ-UI-004, SRS-REQ-UI-005, SRS-REQ-UI-017] The left-side menu SHALL (Phase 1):
+**SRD-REQ-FRONT-012:** [Implements: SRS-REQ-UI-004, SRS-REQ-UI-005, SRS-REQ-UI-017] The left-side menu SHALL:
 - Be visible only on viewports ≥768px width (hidden on mobile)
 - Have a fixed width between 200-280px (recommend 256px/64rem)
 - Remain fixed/persistent during navigation
@@ -409,7 +405,7 @@ export function UserDropdownMenu() {
 }
 ```
 
-**SRD-REQ-FRONT-016:** [Implements: SRS-REQ-UI-008, SRS-REQ-UI-009, SRS-REQ-UI-017] The dropdown menu SHALL (Phase 1):
+**SRD-REQ-FRONT-016:** [Implements: SRS-REQ-UI-008, SRS-REQ-UI-009, SRS-REQ-UI-017] The dropdown menu SHALL:
 - Appear when profile icon is clicked
 - Display user's full name and email at the top
 - Show Logout/Sign Out option with clear visual separation (divider line)
@@ -588,7 +584,7 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
 }
 ```
 
-**SRD-REQ-FRONT-022:** [Implements: SRS-REQ-UI-016] Loading indicators SHALL be displayed for (Phase 1):
+**SRD-REQ-FRONT-022:** [Implements: SRS-REQ-UI-016] Loading indicators SHALL be displayed for:
 - Initial page load and route navigation
 - Authentication operations (login, logout, token refresh)
 - API calls that take longer than 200ms
@@ -616,11 +612,11 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
 
 ---
 
-## 4. Firebase Cloud Functions Requirements (Phase 1)
+## 4. Firebase Cloud Functions Requirements
 
 ### 4.1 Function Organization
 
-**SRD-REQ-FUNC-001:** [Implements: SRS-REQ-TECH-001] Cloud Functions SHALL be organized with basic structure for Phase 1:
+**SRD-REQ-FUNC-001:** [Implements: SRS-REQ-TECH-001] Cloud Functions SHALL be organized with basic structure:
 
 ```
 functions/
@@ -635,9 +631,9 @@ functions/
 └── package.json
 ```
 
-### 4.2 API Endpoints (Phase 1)
+### 4.2 API Endpoints
 
-**SRD-REQ-FUNC-002:** [Implements: SRS-REQ-API-003] Basic API structure SHALL be established (Phase 1):
+**SRD-REQ-FUNC-002:** [Implements: SRS-REQ-API-003] Basic API structure SHALL be established:
 
 #### Basic API Setup
 - API routing structure with versioning (`/api/v1/`)
@@ -670,7 +666,7 @@ export async function verifyAuth(req: Request): Promise<string> {
 }
 ```
 
-**SRD-REQ-FUNC-004:** [Implements: SRS-REQ-SEC-005] Role-based access control framework SHALL be established (Phase 1):
+**SRD-REQ-FUNC-004:** [Implements: SRS-REQ-SEC-005] Role-based access control framework SHALL be established:
 
 - Authentication middleware for verifying Firebase tokens
 - User role determination (caretaker/observer) - foundation for future use
@@ -680,11 +676,11 @@ export async function verifyAuth(req: Request): Promise<string> {
 
 ---
 
-## 5. Firestore Database Requirements (Phase 1)
+## 5. Firestore Database Requirements
 
 ### 5.1 Collection Structure
 
-**SRD-REQ-DB-001:** [Implements: SRS-REQ-TECH-001] Basic Firestore collections for Phase 1:
+**SRD-REQ-DB-001:** [Implements: SRS-REQ-TECH-001] Basic Firestore collections:
 
 - `users` - User accounts (both caretakers and observers)
   - Fields: `uid`, `email`, `displayName`, `photoURL`, `role`, `createdAt`, `updatedAt`
@@ -693,7 +689,7 @@ export async function verifyAuth(req: Request): Promise<string> {
 
 ### 5.2 Security Rules
 
-**SRD-REQ-DB-002:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005] Firestore security rules SHALL enforce (Phase 1):
+**SRD-REQ-DB-002:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005] Firestore security rules SHALL enforce:
 
 - Authenticated users can read/write their own user document
 - Cloud Functions have full access via Admin SDK
@@ -703,16 +699,16 @@ export async function verifyAuth(req: Request): Promise<string> {
 
 ### 5.3 Indexes
 
-**SRD-REQ-DB-003:** [Implements: SRS-REQ-SCALE-002] Basic indexes for Phase 1:
+**SRD-REQ-DB-003:** [Implements: SRS-REQ-SCALE-002] Basic indexes:
 
 - Single-field indexes created automatically by Firestore
 - Composite indexes will be added as needed in future phases
 
 ---
 
-## 6. External Service Integration (Phase 1)
+## 6. External Service Integration
 
-**SRD-REQ-INT-001:** [Implements: SRS-REQ-TECH-001] Phase 1 SHALL only integrate:
+**SRD-REQ-INT-001:** [Implements: SRS-REQ-TECH-001] SHALL only integrate:
 
 - **Firebase Authentication:** Google OAuth for user authentication
 
@@ -756,7 +752,7 @@ const nextConfig: NextConfig = {
 };
 ```
 
-**SRD-REQ-DEV-003:** [Implements: SRS-REQ-TECH-001, SRS-REQ-API-003] Firebase hosting SHALL be configured for static site deployment (Phase 1):
+**SRD-REQ-DEV-003:** [Implements: SRS-REQ-TECH-001, SRS-REQ-API-003] Firebase hosting SHALL be configured for static site deployment:
 
 ```json
 // firebase.json
@@ -776,9 +772,9 @@ const nextConfig: NextConfig = {
 
 **Note:** API routes will be added in Phase 2+ when backend endpoints are implemented.
 
-### 7.3 Environment Variables (Phase 1)
+### 7.3 Environment Variables
 
-**SRD-REQ-DEV-004:** [Implements: SRS-SRD-REQ-SEC-001] Required environment variables for Phase 1:
+**SRD-REQ-DEV-004:** [Implements: SRS-SRD-REQ-SEC-001] Required environment variables:
 
 **Frontend (.env.local):**
 - `NEXT_PUBLIC_FIREBASE_API_KEY`
@@ -791,13 +787,13 @@ const nextConfig: NextConfig = {
 **Note:** Google Sign-In must be enabled in Firebase Console Authentication settings.
 
 **Cloud Functions (.env):**
-- No additional environment variables required for Phase 1
+- No additional environment variables required
 
 **Note:** Additional environment variables (Quirrel, Twilio, SendGrid) will be added in Phase 2+.
 
 ---
 
-## 8. Performance Requirements (Phase 1)
+## 8. Performance Requirements
 
 ### 8.1 Frontend Performance
 
@@ -807,7 +803,7 @@ const nextConfig: NextConfig = {
 - Time to Interactive: < 3s
 - Lighthouse Performance Score: > 85
 
-**SRD-REQ-PERF-002:** [Implements: SRS-SRD-REQ-PERF-001] Optimization strategies for Phase 1:
+**SRD-REQ-PERF-002:** [Implements: SRS-SRD-REQ-PERF-001] Optimization strategies:
 
 - Static site generation for landing page
 - Code splitting for authenticated routes
@@ -818,7 +814,7 @@ const nextConfig: NextConfig = {
 
 ---
 
-## 9. Security Requirements (Phase 1)
+## 9. Security Requirements
 
 ### 9.1 Authentication
 
@@ -832,7 +828,7 @@ const nextConfig: NextConfig = {
 
 ### 9.2 Authorization
 
-**SRD-REQ-SEC-002:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005] Basic authorization framework SHALL be established (Phase 1):
+**SRD-REQ-SEC-002:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005] Basic authorization framework SHALL be established:
 
 - Firestore security rules for user documents (read/write own document only)
 - Cloud Function authentication middleware
@@ -842,7 +838,7 @@ const nextConfig: NextConfig = {
 
 ### 9.3 Data Protection
 
-**SRD-REQ-SEC-003:** [Implements: SRS-SRD-REQ-SEC-003] Basic data protection for Phase 1:
+**SRD-REQ-SEC-003:** [Implements: SRS-SRD-REQ-SEC-003] Basic data protection:
 
 - Google OAuth tokens managed by Firebase (not stored locally)
 - HTTPS/TLS for all communications
@@ -853,11 +849,11 @@ const nextConfig: NextConfig = {
 
 ---
 
-## 10. Testing Requirements (Phase 1)
+## 10. Testing Requirements
 
 ### 10.1 Manual Testing
 
-**SRD-REQ-TEST-001:** Manual testing SHALL verify Phase 1 functionality:
+**SRD-REQ-TEST-001:** Manual testing SHALL verify functionality:
 
 - Google Sign-In authentication flow
 - Landing page display (unauthenticated state)
@@ -871,11 +867,11 @@ const nextConfig: NextConfig = {
 
 ---
 
-## 11. Deployment Requirements (Phase 1)
+## 11. Deployment Requirements
 
 ### 11.1 Build Process
 
-**SRD-REQ-DEPLOY-001:** [Implements: SRS-REQ-TECH-001] Phase 1 deployment SHALL use:
+**SRD-REQ-DEPLOY-001:** [Implements: SRS-REQ-TECH-001] Deployment SHALL use:
 
 ```bash
 # Build Next.js app for static export
@@ -892,7 +888,7 @@ firebase deploy --only firestore:rules
 
 ### 11.2 Environment Configuration
 
-**SRD-REQ-DEPLOY-002:** [Implements: SRS-REQ-TECH-001] Phase 1 environment setup:
+**SRD-REQ-DEPLOY-002:** [Implements: SRS-REQ-TECH-001] Environment setup:
 
 - **Development:** Local development server (`npm run dev`)
 - **Production:** Firebase Hosting with static site
@@ -901,7 +897,7 @@ firebase deploy --only firestore:rules
 
 ### 11.3 Monitoring
 
-**SRD-REQ-DEPLOY-003:** [Implements: SRS-REQ-REL-004] Basic monitoring for Phase 1:
+**SRD-REQ-DEPLOY-003:** [Implements: SRS-REQ-REL-004] Basic monitoring:
 
 - Firebase Hosting analytics
 - Firebase Authentication logs
@@ -913,7 +909,7 @@ firebase deploy --only firestore:rules
 
 ## 12. Implementation Phases
 
-### Phase 1: Core Infrastructure and User Creation
+### Core Infrastructure and User Creation
 **Goal:** Establish foundation with authentication and basic UI layout
 
 **Deliverables:**
@@ -934,12 +930,9 @@ firebase deploy --only firestore:rules
 **SRS Requirements Implemented:**
 - SRS-REQ-UI-001 through SRS-REQ-UI-018
 
-### Phase 2: TBD
-Future phases will be defined based on Phase 1 completion.
-
 ---
 
-## 13. Dependencies (Phase 1)
+## 13. Dependencies
 
 ### 13.1 Frontend Dependencies
 
