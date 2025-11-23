@@ -3,6 +3,7 @@
 This template is designed for prototyping an MVP of a web app product by Vibe Coding using Cursor, hosted on Google Firebase.
 The template follows the Waterfall Methodology to help manage the relationship between the developer and the AI.
 
+```
                   SRS
                    |
        ___________SRD__________
@@ -10,6 +11,7 @@ The template follows the Waterfall Methodology to help manage the relationship b
    API Doc    Database Doc    Frontend Doc
       |            |                |
    Functions   Firestore         Next.js
+```
 
 ## How to use this Template
 - AGENTS.md file
