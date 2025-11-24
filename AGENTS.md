@@ -55,6 +55,14 @@ Documents are broken into three parts,
 4. SDD Agent makes changes to the Sofware Documents where appropriate
 5. API Agent implements the changes to the Database Doc
 6. API Agent implements the changes to the API Doc following BDD Principles
-  a. Agent writes test changes first. 
-  b. Agent implements changes
+  a. Agent writes test changes first
+  b. Agent runs tests to verify they fail appropriately (red phase)
+  c. Agent implements changes to make tests pass (green phase)
+  d. Agent runs tests again to verify implementation
+  e. If tests fail:
+    - First attempt: Analyze failure, update tests if they're incorrectly written, or fix implementation
+    - Second attempt: Re-run tests after fixes
+    - If still failing after 2 attempts: Document the issue and request developer review
+    - NEVER loop more than twice on test failures - escalate to developer instead
+  f. If tests pass: Proceed to refactoring if needed (refactor phase)
 7. Frontend Agent implements the changes to the UI following the Frontend Doc.
