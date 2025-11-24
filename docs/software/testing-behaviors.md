@@ -77,73 +77,14 @@ Every authenticated endpoint MUST test these behaviors:
 #### TB-AUTH-001: Valid Google Authentication Token
 **Behavior:** When a request includes a valid Firebase ID token from Google Sign-In, the endpoint SHALL authenticate the user and process the request.
 
-**Test Structure:**
-```typescript
-describe('Authentication', () => {
-  describe('when valid Google authentication token is provided', () => {
-    it('should authenticate the user and return success', async () => {
-      const token = await getValidGoogleToken();
-      const response = await request(app)
-        .get('/api/v1/me')
-        .set('Authorization', `Bearer ${token}`);
-      
-      expect(response.status).toBe(200);
-      expect(response.body.data).toBeDefined();
-    });
-  });
-});
-```
-
 #### TB-AUTH-002: Missing Authentication Token
 **Behavior:** When a request is missing the Authorization header, the endpoint SHALL return 401 Unauthorized with appropriate error message.
-
-**Test Structure:**
-```typescript
-describe('when authentication token is missing', () => {
-  it('should return 401 Unauthorized', async () => {
-    const response = await request(app).get('/api/v1/me');
-    
-    expect(response.status).toBe(401);
-    expect(response.body.error).toBeDefined();
-    expect(response.body.code).toBe('AUTHENTICATION_ERROR');
-  });
-});
-```
 
 #### TB-AUTH-003: Invalid Authentication Token
 **Behavior:** When a request includes an invalid, malformed, or expired token, the endpoint SHALL return 401 Unauthorized.
 
-**Test Structure:**
-```typescript
-describe('when authentication token is invalid', () => {
-  it('should return 401 Unauthorized for expired token', async () => {
-    const response = await request(app)
-      .get('/api/v1/me')
-      .set('Authorization', 'Bearer invalid-token');
-    
-    expect(response.status).toBe(401);
-    expect(response.body.code).toBe('AUTHENTICATION_ERROR');
-  });
-});
-```
-
 #### TB-AUTH-004: Non-Google Authentication Provider
 **Behavior:** When a request includes a valid Firebase token but not from Google Sign-In provider, the endpoint SHALL return 401 Unauthorized.
-
-**Test Structure:**
-```typescript
-describe('when authentication token is not from Google provider', () => {
-  it('should return 401 Unauthorized', async () => {
-    const nonGoogleToken = await getNonGoogleToken();
-    const response = await request(app)
-      .get('/api/v1/me')
-      .set('Authorization', `Bearer ${nonGoogleToken}`);
-    
-    expect(response.status).toBe(401);
-    expect(response.body.error).toContain('Google authentication');
-  });
-});
-```
 
 ### 2.2 Authorization Behaviors
 
@@ -154,40 +95,8 @@ For endpoints that require specific permissions or user ownership:
 #### TB-AUTHZ-001: User Can Access Own Data
 **Behavior:** When an authenticated user requests their own data, the endpoint SHALL return the requested data.
 
-**Test Structure:**
-```typescript
-describe('Authorization', () => {
-  describe('when user requests their own data', () => {
-    it('should return the user data', async () => {
-      const userToken = await getUserToken('user123');
-      const response = await request(app)
-        .get('/api/v1/me')
-        .set('Authorization', `Bearer ${userToken}`);
-      
-      expect(response.status).toBe(200);
-      expect(response.body.data.id).toBe('user123');
-    });
-  });
-});
-```
-
 #### TB-AUTHZ-002: User Cannot Access Other User Data
 **Behavior:** When an authenticated user attempts to access another user's protected data, the endpoint SHALL return 403 Forbidden.
-
-**Test Structure:**
-```typescript
-describe('when user attempts to access another user data', () => {
-  it('should return 403 Forbidden', async () => {
-    const userToken = await getUserToken('user123');
-    const response = await request(app)
-      .get('/api/v1/users/user456')
-      .set('Authorization', `Bearer ${userToken}`);
-    
-    expect(response.status).toBe(403);
-    expect(response.body.code).toBe('AUTHORIZATION_ERROR');
-  });
-});
-```
 
 ### 2.3 Request Validation Behaviors
 
@@ -198,89 +107,14 @@ All endpoints with request bodies or parameters MUST test:
 #### TB-VAL-001: Valid Request Data
 **Behavior:** When a request includes valid data that meets all validation requirements, the endpoint SHALL process the request successfully.
 
-**Test Structure:**
-```typescript
-describe('Request Validation', () => {
-  describe('when request data is valid', () => {
-    it('should process the request successfully', async () => {
-      const validData = {
-        firstName: 'John',
-        lastName: 'Doe'
-      };
-      
-      const response = await request(app)
-        .put('/api/v1/me')
-        .set('Authorization', `Bearer ${validToken}`)
-        .send(validData);
-      
-      expect(response.status).toBe(200);
-      expect(response.body.data.firstName).toBe('John');
-    });
-  });
-});
-```
-
 #### TB-VAL-002: Missing Required Fields
 **Behavior:** When a request is missing required fields, the endpoint SHALL return 400 Bad Request with specific validation errors.
-
-**Test Structure:**
-```typescript
-describe('when required fields are missing', () => {
-  it('should return 400 Bad Request with validation errors', async () => {
-    const response = await request(app)
-      .post('/api/v1/resource')
-      .set('Authorization', `Bearer ${validToken}`)
-      .send({});
-    
-    expect(response.status).toBe(400);
-    expect(response.body.code).toBe('VALIDATION_ERROR');
-    expect(response.body.details).toBeDefined();
-  });
-});
-```
 
 #### TB-VAL-003: Invalid Data Types
 **Behavior:** When a request includes fields with incorrect data types, the endpoint SHALL return 400 Bad Request with type validation errors.
 
-**Test Structure:**
-```typescript
-describe('when data types are invalid', () => {
-  it('should return 400 Bad Request', async () => {
-    const invalidData = {
-      age: 'not-a-number',  // Should be number
-      email: 12345           // Should be string
-    };
-    
-    const response = await request(app)
-      .put('/api/v1/resource')
-      .set('Authorization', `Bearer ${validToken}`)
-      .send(invalidData);
-    
-    expect(response.status).toBe(400);
-    expect(response.body.code).toBe('VALIDATION_ERROR');
-  });
-});
-```
-
 #### TB-VAL-004: Data Exceeds Constraints
 **Behavior:** When a request includes data that exceeds length, range, or format constraints, the endpoint SHALL return 400 Bad Request with constraint violation details.
-
-**Test Structure:**
-```typescript
-describe('when data exceeds constraints', () => {
-  it('should return 400 Bad Request for string length', async () => {
-    const tooLongName = 'a'.repeat(101); // Max 100 characters
-    
-    const response = await request(app)
-      .put('/api/v1/me')
-      .set('Authorization', `Bearer ${validToken}`)
-      .send({ firstName: tooLongName });
-    
-    expect(response.status).toBe(400);
-    expect(response.body.details.firstName).toContain('Maximum length');
-  });
-});
-```
 
 ### 2.4 Success Response Behaviors
 
@@ -289,81 +123,14 @@ describe('when data exceeds constraints', () => {
 #### TB-RESP-001: Successful GET Request
 **Behavior:** When a GET request succeeds, the endpoint SHALL return 200 OK with data in standardized response format.
 
-**Test Structure:**
-```typescript
-describe('Success Responses', () => {
-  describe('GET endpoint', () => {
-    it('should return 200 OK with data', async () => {
-      const response = await request(app)
-        .get('/api/v1/me')
-        .set('Authorization', `Bearer ${validToken}`);
-      
-      expect(response.status).toBe(200);
-      expect(response.body.data).toBeDefined();
-      expect(response.body.error).toBeUndefined();
-    });
-  });
-});
-```
-
 #### TB-RESP-002: Successful POST Request (Resource Creation)
 **Behavior:** When a POST request successfully creates a resource, the endpoint SHALL return 201 Created with the created resource data.
-
-**Test Structure:**
-```typescript
-describe('POST endpoint', () => {
-  it('should return 201 Created with new resource', async () => {
-    const newResource = { name: 'New Item' };
-    
-    const response = await request(app)
-      .post('/api/v1/resources')
-      .set('Authorization', `Bearer ${validToken}`)
-      .send(newResource);
-    
-    expect(response.status).toBe(201);
-    expect(response.body.data.id).toBeDefined();
-    expect(response.body.data.name).toBe('New Item');
-  });
-});
-```
 
 #### TB-RESP-003: Successful PUT/PATCH Request
 **Behavior:** When an update request succeeds, the endpoint SHALL return 200 OK with updated resource data.
 
-**Test Structure:**
-```typescript
-describe('PUT endpoint', () => {
-  it('should return 200 OK with updated resource', async () => {
-    const updates = { firstName: 'Jane' };
-    
-    const response = await request(app)
-      .put('/api/v1/me')
-      .set('Authorization', `Bearer ${validToken}`)
-      .send(updates);
-    
-    expect(response.status).toBe(200);
-    expect(response.body.data.firstName).toBe('Jane');
-    expect(response.body.message).toBeDefined();
-  });
-});
-```
-
 #### TB-RESP-004: Successful DELETE Request
 **Behavior:** When a DELETE request succeeds, the endpoint SHALL return 200 OK or 204 No Content.
-
-**Test Structure:**
-```typescript
-describe('DELETE endpoint', () => {
-  it('should return 200 OK with deletion confirmation', async () => {
-    const response = await request(app)
-      .delete('/api/v1/resources/123')
-      .set('Authorization', `Bearer ${validToken}`);
-    
-    expect(response.status).toBe(200);
-    expect(response.body.message).toContain('deleted');
-  });
-});
-```
 
 ### 2.5 Error Response Behaviors
 
@@ -372,45 +139,8 @@ describe('DELETE endpoint', () => {
 #### TB-ERR-001: Resource Not Found
 **Behavior:** When a requested resource does not exist, the endpoint SHALL return 404 Not Found with appropriate error message.
 
-**Test Structure:**
-```typescript
-describe('Error Responses', () => {
-  describe('when resource does not exist', () => {
-    it('should return 404 Not Found', async () => {
-      const response = await request(app)
-        .get('/api/v1/resources/nonexistent')
-        .set('Authorization', `Bearer ${validToken}`);
-      
-      expect(response.status).toBe(404);
-      expect(response.body.code).toBe('NOT_FOUND');
-      expect(response.body.error).toBeDefined();
-    });
-  });
-});
-```
-
 #### TB-ERR-002: Internal Server Error
 **Behavior:** When an unexpected error occurs during request processing, the endpoint SHALL return 500 Internal Server Error without exposing sensitive details.
-
-**Test Structure:**
-```typescript
-describe('when internal error occurs', () => {
-  it('should return 500 Internal Server Error', async () => {
-    // Mock database failure
-    jest.spyOn(db, 'collection').mockImplementation(() => {
-      throw new Error('Database connection failed');
-    });
-    
-    const response = await request(app)
-      .get('/api/v1/me')
-      .set('Authorization', `Bearer ${validToken}`);
-    
-    expect(response.status).toBe(500);
-    expect(response.body.code).toBe('INTERNAL_ERROR');
-    expect(response.body.error).not.toContain('Database connection');
-  });
-});
-```
 
 ### 2.6 Database Operation Behaviors
 
@@ -419,100 +149,14 @@ describe('when internal error occurs', () => {
 #### TB-DB-001: Successful Document Creation
 **Behavior:** When creating a new document, the endpoint SHALL store the document in Firestore with all required fields and return the document ID.
 
-**Test Structure:**
-```typescript
-describe('Database Operations', () => {
-  describe('document creation', () => {
-    it('should create document in Firestore with all fields', async () => {
-      const newData = { name: 'Test' };
-      
-      const response = await request(app)
-        .post('/api/v1/resources')
-        .set('Authorization', `Bearer ${validToken}`)
-        .send(newData);
-      
-      expect(response.status).toBe(201);
-      
-      // Verify document exists in Firestore
-      const doc = await db.collection('resources').doc(response.body.data.id).get();
-      expect(doc.exists).toBe(true);
-      expect(doc.data()?.name).toBe('Test');
-      expect(doc.data()?.createdAt).toBeDefined();
-    });
-  });
-});
-```
-
 #### TB-DB-002: Successful Document Read
 **Behavior:** When reading a document, the endpoint SHALL retrieve the correct document from Firestore and return it in standardized format.
-
-**Test Structure:**
-```typescript
-describe('document read', () => {
-  it('should retrieve document from Firestore', async () => {
-    // Create test document
-    const testDoc = await db.collection('resources').add({ name: 'Test' });
-    
-    const response = await request(app)
-      .get(`/api/v1/resources/${testDoc.id}`)
-      .set('Authorization', `Bearer ${validToken}`);
-    
-    expect(response.status).toBe(200);
-    expect(response.body.data.id).toBe(testDoc.id);
-    expect(response.body.data.name).toBe('Test');
-  });
-});
-```
 
 #### TB-DB-003: Successful Document Update
 **Behavior:** When updating a document, the endpoint SHALL modify only the specified fields in Firestore and preserve other fields.
 
-**Test Structure:**
-```typescript
-describe('document update', () => {
-  it('should update only specified fields in Firestore', async () => {
-    const userId = 'user123';
-    await db.collection('users').doc(userId).set({
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john@example.com'
-    });
-    
-    const response = await request(app)
-      .put('/api/v1/me')
-      .set('Authorization', `Bearer ${validToken}`)
-      .send({ firstName: 'Jane' });
-    
-    expect(response.status).toBe(200);
-    
-    const updatedDoc = await db.collection('users').doc(userId).get();
-    expect(updatedDoc.data()?.firstName).toBe('Jane');
-    expect(updatedDoc.data()?.lastName).toBe('Doe'); // Unchanged
-    expect(updatedDoc.data()?.email).toBe('john@example.com'); // Unchanged
-  });
-});
-```
-
 #### TB-DB-004: Successful Document Deletion
 **Behavior:** When deleting a document, the endpoint SHALL remove the document from Firestore completely.
-
-**Test Structure:**
-```typescript
-describe('document deletion', () => {
-  it('should remove document from Firestore', async () => {
-    const testDoc = await db.collection('resources').add({ name: 'Test' });
-    
-    const response = await request(app)
-      .delete(`/api/v1/resources/${testDoc.id}`)
-      .set('Authorization', `Bearer ${validToken}`);
-    
-    expect(response.status).toBe(200);
-    
-    const deletedDoc = await db.collection('resources').doc(testDoc.id).get();
-    expect(deletedDoc.exists).toBe(false);
-  });
-});
-```
 
 ### 2.7 Edge Case Behaviors
 
@@ -521,104 +165,14 @@ describe('document deletion', () => {
 #### TB-EDGE-001: Empty String Values
 **Behavior:** When optional string fields receive empty strings, the endpoint SHALL either reject them or handle them according to business rules.
 
-**Test Structure:**
-```typescript
-describe('Edge Cases', () => {
-  describe('empty string values', () => {
-    it('should reject empty strings for name fields', async () => {
-      const response = await request(app)
-        .put('/api/v1/me')
-        .set('Authorization', `Bearer ${validToken}`)
-        .send({ firstName: '' });
-      
-      expect(response.status).toBe(400);
-      expect(response.body.details.firstName).toBeDefined();
-    });
-  });
-});
-```
-
 #### TB-EDGE-002: Null Values
 **Behavior:** When fields receive null values, the endpoint SHALL handle them according to field optionality rules.
-
-**Test Structure:**
-```typescript
-describe('null values', () => {
-  it('should accept null for optional fields', async () => {
-    const response = await request(app)
-      .put('/api/v1/me')
-      .set('Authorization', `Bearer ${validToken}`)
-      .send({ middleName: null });
-    
-    expect(response.status).toBe(200);
-  });
-  
-  it('should reject null for required fields', async () => {
-    const response = await request(app)
-      .post('/api/v1/resources')
-      .set('Authorization', `Bearer ${validToken}`)
-      .send({ requiredField: null });
-    
-    expect(response.status).toBe(400);
-  });
-});
-```
 
 #### TB-EDGE-003: Special Characters in Input
 **Behavior:** When input contains special characters, the endpoint SHALL sanitize or validate according to field type.
 
-**Test Structure:**
-```typescript
-describe('special characters', () => {
-  it('should accept valid special characters in names', async () => {
-    const response = await request(app)
-      .put('/api/v1/me')
-      .set('Authorization', `Bearer ${validToken}`)
-      .send({ firstName: "O'Brien-Smith" });
-    
-    expect(response.status).toBe(200);
-  });
-  
-  it('should reject SQL injection attempts', async () => {
-    const response = await request(app)
-      .put('/api/v1/me')
-      .set('Authorization', `Bearer ${validToken}`)
-      .send({ firstName: "'; DROP TABLE users; --" });
-    
-    expect(response.status).toBe(400);
-  });
-});
-```
-
 #### TB-EDGE-004: Boundary Values
 **Behavior:** When input is at minimum or maximum allowed values, the endpoint SHALL accept valid boundaries and reject values outside them.
-
-**Test Structure:**
-```typescript
-describe('boundary values', () => {
-  it('should accept maximum allowed length', async () => {
-    const maxLengthString = 'a'.repeat(100); // Exactly 100 chars
-    
-    const response = await request(app)
-      .put('/api/v1/me')
-      .set('Authorization', `Bearer ${validToken}`)
-      .send({ firstName: maxLengthString });
-    
-    expect(response.status).toBe(200);
-  });
-  
-  it('should reject over maximum allowed length', async () => {
-    const tooLongString = 'a'.repeat(101); // 101 chars
-    
-    const response = await request(app)
-      .put('/api/v1/me')
-      .set('Authorization', `Bearer ${validToken}`)
-      .send({ firstName: tooLongString });
-    
-    expect(response.status).toBe(400);
-  });
-});
-```
 
 ---
 

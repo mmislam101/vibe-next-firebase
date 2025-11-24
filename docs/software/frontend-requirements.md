@@ -11,47 +11,23 @@
 
 ### 2.1 Directory Structure
 
-```
-app/
-├── layout.tsx                      # Root layout with providers
-├── page.tsx                        # Landing page (unauthenticated)
-├── globals.css                     # Global styles + Tailwind
-├── components/                     # Reusable components
-│   ├── ui/                        # Base UI components
-│   │   ├── Button.tsx
-│   │   ├── Input.tsx
-│   │   ├── Card.tsx
-│   │   ├── LoadingSpinner.tsx
-│   │   └── ErrorMessage.tsx
-│   ├── layout/                    # Layout components
-│   │   ├── TopNavBar.tsx         # Top navigation bar
-│   │   ├── LeftSideMenu.tsx      # Left sidebar (desktop/tablet)
-│   │   ├── MobileNavMenu.tsx     # Mobile hamburger menu
-│   │   ├── UserDropdownMenu.tsx  # User profile dropdown
-│   │   ├── LoadingOverlay.tsx    # Global loading indicator
-│   │   └── NavLink.tsx           # Navigation link component
-│   └── auth/                      # Authentication components
-│       └── GoogleSignInButton.tsx # Google OAuth button
-├── context/                        # React Context providers
-│   ├── AuthContext.tsx            # Firebase Auth state
-│   └── LoadingContext.tsx         # Global loading state
-├── hooks/                          # Custom React hooks
-│   ├── useAuth.ts                 # Authentication hook
-│   ├── useLoadingState.ts         # Loading state hook
-│   └── useMobileMenu.ts           # Mobile menu state hook
-├── (authenticated)/               # Route group for protected pages
-│   ├── layout.tsx                 # Authenticated layout wrapper
-│   ├── dashboard/                 # Dashboard
-│   │   └── page.tsx
-│   └── settings/                  # Settings pages
-│       └── page.tsx               # Account settings
-├── firebase/                       # Firebase config
-│   └── config.ts
-├── lib/                            # Utilities
-│   ├── api-client.ts              # API client
-│   └── utils.ts                   # Helper functions
-└── middleware.ts                   # Route protection middleware
-```
+**App Directory Structure:**
+- `layout.tsx` - Root layout with providers
+- `page.tsx` - Landing page (unauthenticated)
+- `globals.css` - Global styles + Tailwind
+- `components/` - Reusable components
+  - `ui/` - Base UI components (Button, Input, Card, LoadingSpinner, ErrorMessage)
+  - `layout/` - Layout components (TopNavBar, LeftSideMenu, MobileNavMenu, UserDropdownMenu, LoadingOverlay, NavLink)
+  - `auth/` - Authentication components (GoogleSignInButton)
+- `context/` - React Context providers (AuthContext, LoadingContext)
+- `hooks/` - Custom React hooks (useAuth, useLoadingState, useMobileMenu)
+- `(authenticated)/` - Route group for protected pages
+  - `layout.tsx` - Authenticated layout wrapper
+  - `dashboard/page.tsx` - Dashboard page
+  - `settings/page.tsx` - Account settings
+- `firebase/config.ts` - Firebase configuration
+- `lib/` - Utilities (api-client.ts, utils.ts)
+- `middleware.ts` - Route protection middleware
 
 ---
 
@@ -70,49 +46,14 @@ app/
 
 [Implements: SRD-REQ-FRONT-008, SRD-REQ-FRONT-009, SRS-REQ-UI-001, SRS-REQ-UI-002] The landing page (`app/page.tsx`) SHALL implement:
 
-```typescript
-// app/page.tsx
-'use client';
-
-import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
-import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-
-export default function LandingPage() {
-  const { user } = useAuth();
-  const router = useRouter();
-  
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (user) {
-      router.push('/dashboard');
-    }
-  }, [user, router]);
-  
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-lg">
-        {/* Header */}
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900">Family Pager</h1>
-          <p className="mt-2 text-lg text-gray-600">
-            Patient alert notification system for caretakers and observers
-          </p>
-        </div>
-        
-        {/* Google Sign-In Button */}
-        <GoogleSignInButton />
-        
-        {/* Footer Text */}
-        <div className="text-center text-sm text-gray-500">
-          <p>Sign in with your Google account to get started</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-```
+- Client component with auth and routing hooks
+- Auto-redirect authenticated users to dashboard
+- Full-height centered layout with gradient background
+- White card container with shadow and rounded corners
+- Application title and descriptive tagline
+- Google Sign-In button as primary CTA
+- Helper text for sign-in instructions
+- Responsive from mobile (320px) to desktop (1920px+)
 
 **Design Requirements:**
 - Centered layout on all screen sizes
@@ -125,144 +66,35 @@ export default function LandingPage() {
 
 [Implements: SRD-REQ-FRONT-010, SRS-REQ-UI-003, SRS-REQ-UI-004, SRS-REQ-UI-017] The authenticated layout SHALL be implemented as a route group:
 
-```typescript
-// app/(authenticated)/layout.tsx
-'use client';
-
-import { TopNavBar } from '@/components/layout/TopNavBar';
-import { LeftSideMenu } from '@/components/layout/LeftSideMenu';
-import { MobileNavMenu } from '@/components/layout/MobileNavMenu';
-import { LoadingOverlay } from '@/components/layout/LoadingOverlay';
-import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-
-export default function AuthenticatedLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const { user, loading } = useAuth();
-  const router = useRouter();
-  
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/');
-    }
-  }, [user, loading, router]);
-  
-  if (loading) {
-    return <LoadingOverlay />;
-  }
-  
-  if (!user) {
-    return null;
-  }
-  
-  return (
-    <div className="min-h-screen flex flex-col">
-      {/* Top Navigation Bar - Always visible */}
-      <TopNavBar />
-      
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left Sidebar - Desktop/Tablet only (≥768px) */}
-        <LeftSideMenu />
-        
-        {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
-          {children}
-        </main>
-      </div>
-      
-      {/* Mobile Navigation - Hamburger Menu */}
-      <MobileNavMenu />
-      
-      {/* Global Loading Overlay */}
-      <LoadingOverlay />
-    </div>
-  );
-}
-```
+- Client component with auth and routing hooks
+- Redirect unauthenticated users to landing page
+- Show loading overlay while checking auth state
+- Return null if no user (during redirect)
+- Full-height flex layout with column direction
+- TopNavBar at top (always visible)
+- Horizontal flex container for sidebar and main content
+- LeftSideMenu (desktop/tablet only, ≥768px)
+- Main content area with scrollable overflow and gray background
+- MobileNavMenu slide-in drawer
+- Global LoadingOverlay component
 
 ### 3.4 Top Navigation Bar Component
 
 [Implements: SRD-REQ-FRONT-013, SRD-REQ-FRONT-014, SRS-REQ-UI-006, SRS-REQ-UI-007, SRS-REQ-UI-010] The TopNavBar component SHALL implement:
 
-```typescript
-// app/components/layout/TopNavBar.tsx
-'use client';
-
-import { useState } from 'react';
-import Link from 'next/link';
-import { Bars3Icon, ChevronDownIcon } from '@heroicons/react/24/outline';
-import { useAuth } from '@/hooks/useAuth';
-import { useMobileMenu } from '@/hooks/useMobileMenu';
-import { UserDropdownMenu } from './UserDropdownMenu';
-
-export function TopNavBar() {
-  const { user } = useAuth();
-  const { openMenu } = useMobileMenu();
-  const [showDropdown, setShowDropdown] = useState(false);
-  
-  return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white">
-      <div className="flex items-center justify-between h-16 px-4">
-        {/* Left Section */}
-        <div className="flex items-center space-x-4">
-          {/* Hamburger Menu - Mobile Only (<768px) */}
-          <button
-            onClick={openMenu}
-            className="md:hidden p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            aria-label="Open menu"
-          >
-            <Bars3Icon className="h-6 w-6" />
-          </button>
-          
-          {/* Logo/Brand */}
-          <Link href="/dashboard" className="flex items-center">
-            <span className="text-xl font-bold text-indigo-600">
-              Family Pager
-            </span>
-          </Link>
-        </div>
-        
-        {/* Right Section - User Profile */}
-        <div className="flex items-center">
-          <div className="relative">
-            <button
-              onClick={() => setShowDropdown(!showDropdown)}
-              className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              aria-label="User menu"
-              aria-expanded={showDropdown}
-            >
-              {/* Google Profile Picture */}
-              <img
-                src={user?.photoURL || '/default-avatar.png'}
-                alt={user?.displayName || 'User'}
-                className="h-8 w-8 rounded-full border-2 border-gray-200"
-              />
-              
-              {/* User Name - Desktop Only (≥768px) */}
-              <span className="hidden md:block text-sm font-medium text-gray-700">
-                {user?.displayName}
-              </span>
-              
-              {/* Dropdown Indicator */}
-              <ChevronDownIcon className="h-4 w-4 text-gray-500" />
-            </button>
-            
-            {/* Dropdown Menu */}
-            {showDropdown && (
-              <UserDropdownMenu onClose={() => setShowDropdown(false)} />
-            )}
-          </div>
-        </div>
-      </div>
-    </header>
-  );
-}
-```
+- Client component with auth and mobile menu hooks
+- Dropdown state management with useState
+- Sticky positioning at top with z-index 50
+- Fixed height (64px) with full width
+- Left section with hamburger menu (mobile only) and logo/brand link
+- Hamburger button with focus ring and accessibility label
+- Logo links to dashboard
+- Right section with user profile button
+- Profile picture from Google account (32px circular avatar with border)
+- User display name (visible on desktop/tablet only)
+- Dropdown toggle indicator icon
+- Conditional rendering of UserDropdownMenu based on state
+- Focus indicators and ARIA attributes for accessibility
 
 **Design Requirements:**
 - Fixed at top of viewport (sticky positioning)
@@ -275,48 +107,16 @@ export function TopNavBar() {
 
 [Implements: SRD-REQ-FRONT-011, SRD-REQ-FRONT-012, SRS-REQ-UI-004, SRS-REQ-UI-005, SRS-REQ-UI-017] The LeftSideMenu component SHALL implement:
 
-```typescript
-// app/components/layout/LeftSideMenu.tsx
-'use client';
-
-import { usePathname } from 'next/navigation';
-import { 
-  HomeIcon, 
-  CogIcon 
-} from '@heroicons/react/24/outline';
-import { useAuth } from '@/hooks/useAuth';
-import { NavLink } from './NavLink';
-
-export function LeftSideMenu() {
-  const pathname = usePathname();
-  const { user } = useAuth();
-  
-  return (
-    <aside className="hidden md:flex md:flex-shrink-0 w-64 bg-white border-r border-gray-200">
-      <div className="flex flex-col w-full">
-        {/* Navigation Links */}
-        <nav className="flex-1 px-4 py-6 space-y-2" aria-label="Main navigation">
-          <NavLink 
-            href="/dashboard" 
-            icon={HomeIcon}
-            active={pathname === '/dashboard'}
-          >
-            Dashboard
-          </NavLink>
-          
-          <NavLink 
-            href="/settings" 
-            icon={CogIcon}
-            active={pathname === '/settings'}
-          >
-            Settings
-          </NavLink>
-        </nav>
-      </div>
-    </aside>
-  );
-}
-```
+- Client component with pathname and auth hooks
+- Hidden on mobile, visible on tablet/desktop (≥768px)
+- Fixed width sidebar (256px) with white background and right border
+- Full column flex layout
+- Navigation section with vertical spacing
+- Dashboard NavLink with HomeIcon
+- Settings NavLink with CogIcon
+- Active state determined by pathname comparison
+- ARIA label for main navigation
+- Icons from Heroicons outline set
 
 **Design Requirements:**
 - Visible only on viewports ≥768px (md breakpoint)
@@ -329,39 +129,15 @@ export function LeftSideMenu() {
 
 [Implements: SRD-REQ-FRONT-012, SRS-REQ-UI-005] The NavLink component SHALL implement:
 
-```typescript
-// app/components/layout/NavLink.tsx
-'use client';
-
-import Link from 'next/link';
-import { ReactNode } from 'react';
-
-interface NavLinkProps {
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  active: boolean;
-  children: ReactNode;
-}
-
-export function NavLink({ href, icon: Icon, active, children }: NavLinkProps) {
-  return (
-    <Link
-      href={href}
-      className={`
-        flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors
-        ${active 
-          ? 'bg-indigo-50 text-indigo-600 font-medium' 
-          : 'text-gray-700 hover:bg-gray-100'
-        }
-      `}
-      aria-current={active ? 'page' : undefined}
-    >
-      <Icon className="h-5 w-5 flex-shrink-0" />
-      <span>{children}</span>
-    </Link>
-  );
-}
-```
+- TypeScript interface for props (href, icon component, active state, children)
+- Next.js Link component for client-side navigation
+- Flex layout with icon and text
+- Active state styling (indigo background and text, medium font weight)
+- Inactive state styling (gray text with hover background)
+- Icon size 20px with flex-shrink-0
+- Smooth color transitions
+- ARIA current attribute for active page
+- Touch target size minimum 44px height
 
 **Design Requirements:**
 - Active state: indigo background with indigo text
@@ -374,88 +150,20 @@ export function NavLink({ href, icon: Icon, active, children }: NavLinkProps) {
 
 [Implements: SRD-REQ-FRONT-017, SRD-REQ-FRONT-018, SRS-REQ-UI-010, SRS-REQ-UI-011, SRS-REQ-UI-012, SRS-REQ-UI-018] The MobileNavMenu component SHALL implement:
 
-```typescript
-// app/components/layout/MobileNavMenu.tsx
-'use client';
-
-import { Fragment } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import { XMarkIcon, HomeIcon, CogIcon } from '@heroicons/react/24/outline';
-import { useMobileMenu } from '@/hooks/useMobileMenu';
-import { usePathname } from 'next/navigation';
-import { NavLink } from './NavLink';
-import { useAuth } from '@/hooks/useAuth';
-
-export function MobileNavMenu() {
-  const { isOpen, closeMenu } = useMobileMenu();
-  const pathname = usePathname();
-  const { user } = useAuth();
-  
-  return (
-    <Transition.Root show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50 md:hidden" onClose={closeMenu}>
-        {/* Backdrop */}
-        <Transition.Child
-          as={Fragment}
-          enter="transition-opacity ease-linear duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="transition-opacity ease-linear duration-300"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-black bg-opacity-50" />
-        </Transition.Child>
-
-        {/* Menu Panel */}
-        <div className="fixed inset-0 flex">
-          <Transition.Child
-            as={Fragment}
-            enter="transition ease-in-out duration-300 transform"
-            enterFrom="-translate-x-full"
-            enterTo="translate-x-0"
-            leave="transition ease-in-out duration-300 transform"
-            leaveFrom="translate-x-0"
-            leaveTo="-translate-x-full"
-          >
-            <Dialog.Panel className="relative mr-16 flex w-full max-w-xs flex-1">
-              <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
-                {/* Header */}
-                <div className="flex h-16 shrink-0 items-center justify-between">
-                  <span className="text-lg font-bold text-indigo-600">Menu</span>
-                  <button
-                    type="button"
-                    className="p-2 rounded-md text-gray-700 hover:bg-gray-100"
-                    onClick={closeMenu}
-                  >
-                    <span className="sr-only">Close sidebar</span>
-                    <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                  </button>
-                </div>
-                
-                {/* Navigation - Same as desktop */}
-                <nav className="flex flex-1 flex-col space-y-2">
-                  <div onClick={closeMenu}>
-                    <NavLink href="/dashboard" icon={HomeIcon} active={pathname === '/dashboard'}>
-                      Dashboard
-                    </NavLink>
-                  </div>
-                  
-                  <div onClick={closeMenu}>
-                    <NavLink href="/settings" icon={CogIcon} active={pathname === '/settings'}>
-                      Settings
-                    </NavLink>
-                  </div>
-                </nav>
-              </div>
-            </Dialog.Panel>
-          </Transition.Child>
-        </div>
-      </Dialog>
-    </Transition.Root>
-  );
-}
-```
+- Client component using Headless UI Dialog and Transition components
+- Mobile menu state hook and pathname hook
+- Visible only on mobile (<768px) with z-index 50
+- Semi-transparent backdrop (black 50% opacity) with fade animation (300ms)
+- Backdrop closes menu on click
+- Slide-in panel from left with transform animation (300ms)
+- Panel width max 320px (max-w-xs) with margin right for tap-outside area
+- White background with vertical flex layout
+- Header section with "Menu" title and close button (XMarkIcon)
+- Close button with screen reader text
+- Navigation section matching desktop menu items
+- Auto-close menu after navigation link click
+- Smooth transitions for open/close animations
+- Overflow-y-auto for scrollable content
 
 **Design Requirements:**
 - Visible only on mobile (<768px)
@@ -470,70 +178,18 @@ export function MobileNavMenu() {
 
 [Implements: SRD-REQ-FRONT-015, SRD-REQ-FRONT-016, SRS-REQ-UI-008, SRS-REQ-UI-009, SRS-REQ-UI-017] The UserDropdownMenu component SHALL implement:
 
-```typescript
-// app/components/layout/UserDropdownMenu.tsx
-'use client';
-
-import { Fragment } from 'react';
-import { Menu, Transition } from '@headlessui/react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
-import {
-  UserCircleIcon,
-  ArrowRightOnRectangleIcon
-} from '@heroicons/react/24/outline';
-
-interface UserDropdownMenuProps {
-  onClose: () => void;
-}
-
-export function UserDropdownMenu({ onClose }: UserDropdownMenuProps) {
-  const { user, signOut } = useAuth();
-  const router = useRouter();
-  
-  const handleNavigation = (path: string) => {
-    router.push(path);
-    onClose();
-  };
-  
-  const handleLogout = async () => {
-    await signOut();
-    onClose();
-  };
-  
-  return (
-    <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-200">
-      {/* User Info Section */}
-      <div className="px-4 py-3">
-        <p className="text-sm font-medium text-gray-900">{user?.displayName}</p>
-        <p className="text-sm text-gray-500 truncate">{user?.email}</p>
-      </div>
-      
-      {/* Menu Items */}
-      <div className="py-1">
-        <button
-          onClick={() => handleNavigation('/settings')}
-          className="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-        >
-          <UserCircleIcon className="mr-3 h-5 w-5 text-gray-400" />
-          Account Settings
-        </button>
-      </div>
-      
-      {/* Logout Section */}
-      <div className="py-1">
-        <button
-          onClick={handleLogout}
-          className="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-        >
-          <ArrowRightOnRectangleIcon className="mr-3 h-5 w-5 text-red-500" />
-          Sign Out
-        </button>
-      </div>
-    </div>
-  );
-}
-```
+- Client component with auth and router hooks
+- Receives onClose callback prop
+- Absolute positioning (right-aligned) below parent
+- Width 224px (w-56) with shadow and border ring
+- User info section displaying name and truncated email
+- Sections separated by horizontal dividers
+- Account Settings button with UserCircleIcon (navigates to /settings)
+- Sign Out button with ArrowRightOnRectangleIcon (red styling)
+- Close dropdown after navigation or logout
+- Async logout handler
+- Full-width buttons with icon and text layout
+- Hover states for all menu items
 
 **Design Requirements:**
 - Dropdown positioned below profile icon
@@ -546,64 +202,18 @@ export function UserDropdownMenu({ onClose }: UserDropdownMenuProps) {
 
 [Implements: SRD-REQ-FRONT-019, SRD-REQ-FRONT-020, SRS-REQ-UI-013, SRS-REQ-UI-014, SRS-REQ-UI-015] The LoadingOverlay component SHALL implement:
 
-```typescript
-// app/components/layout/LoadingOverlay.tsx
-'use client';
-
-import { useLoadingState } from '@/hooks/useLoadingState';
-import { useEffect, useState } from 'react';
-
-export function LoadingOverlay() {
-  const { isLoading, loadingMessage } = useLoadingState();
-  const [shouldDisplay, setShouldDisplay] = useState(false);
-  
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    
-    if (isLoading) {
-      // Show after 200ms to avoid flashing on fast operations
-      timer = setTimeout(() => {
-        setShouldDisplay(true);
-      }, 200);
-    } else {
-      // Hide immediately when loading completes
-      setShouldDisplay(false);
-    }
-    
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
-  }, [isLoading]);
-  
-  if (!shouldDisplay) return null;
-  
-  return (
-    <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center"
-      style={{
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent overlay
-      }}
-      aria-live="assertive"
-      aria-busy="true"
-      role="status"
-    >
-      <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm mx-4">
-        {/* Spinner */}
-        <div className="flex justify-center mb-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600" />
-        </div>
-        
-        {/* Loading Message */}
-        {loadingMessage && (
-          <p className="text-center text-gray-700 font-medium">
-            {loadingMessage}
-          </p>
-        )}
-      </div>
-    </div>
-  );
-}
-```
+- Client component with loading state hook
+- Local state for display delay management
+- Delay 200ms before showing to avoid flashing on fast operations
+- Return null when not displaying
+- Full-screen fixed overlay with z-index 9999
+- Semi-transparent black background (50% opacity)
+- Centered flexbox layout
+- White card with shadow, rounded corners, and padding
+- Animated spinner (circular border with indigo color)
+- Optional loading message below spinner
+- Timer cleanup in useEffect
+- ARIA attributes for accessibility (live, busy, role)
 
 **Design Requirements:**
 - Full-screen overlay blocking all interaction
@@ -618,130 +228,45 @@ export function LoadingOverlay() {
 
 [Implements: SRD-REQ-FRONT-021, SRS-REQ-UI-013, SRS-REQ-UI-015] The LoadingContext SHALL manage global loading state:
 
-```typescript
-// app/context/LoadingContext.tsx
-'use client';
-
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-
-interface LoadingContextType {
-  isLoading: boolean;
-  loadingMessage: string | null;
-  startLoading: (message?: string) => void;
-  stopLoading: () => void;
-}
-
-const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
-
-export function LoadingProvider({ children }: { children: ReactNode }) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
-  const [minDisplayTimer, setMinDisplayTimer] = useState<NodeJS.Timeout | null>(null);
-  
-  const startLoading = useCallback((message?: string) => {
-    setIsLoading(true);
-    setLoadingMessage(message || null);
-    
-    // Ensure minimum 300ms display time
-    const timer = setTimeout(() => {
-      setMinDisplayTimer(null);
-    }, 300);
-    setMinDisplayTimer(timer);
-  }, []);
-  
-  const stopLoading = useCallback(() => {
-    if (minDisplayTimer) {
-      // Wait for minimum display time
-      setTimeout(() => {
-        setIsLoading(false);
-        setLoadingMessage(null);
-      }, 300);
-    } else {
-      setIsLoading(false);
-      setLoadingMessage(null);
-    }
-  }, [minDisplayTimer]);
-  
-  return (
-    <LoadingContext.Provider value={{ isLoading, loadingMessage, startLoading, stopLoading }}>
-      {children}
-    </LoadingContext.Provider>
-  );
-}
-
-export function useLoadingState() {
-  const context = useContext(LoadingContext);
-  if (context === undefined) {
-    throw new Error('useLoadingState must be used within a LoadingProvider');
-  }
-  return context;
-}
-```
+- TypeScript interface defining context type (isLoading, loadingMessage, startLoading, stopLoading)
+- React Context creation with undefined default
+- Provider component managing loading state
+- State for loading flag, message, and minimum display timer
+- `startLoading()` callback accepting optional message
+- Minimum display time timer (300ms) to prevent flashing
+- `stopLoading()` callback respecting minimum display time
+- Conditional delay if timer is active
+- Context provider wrapping children with state and methods
+- `useLoadingState()` custom hook for consuming context
+- Error thrown if hook used outside provider
+- useCallback for memoized functions
 
 ### 3.11 Mobile Menu Hook
 
 [Implements: SRD-REQ-FRONT-017] The useMobileMenu hook SHALL manage mobile menu state:
 
-```typescript
-// app/hooks/useMobileMenu.ts
-'use client';
-
-import { create } from 'zustand';
-
-interface MobileMenuState {
-  isOpen: boolean;
-  openMenu: () => void;
-  closeMenu: () => void;
-  toggleMenu: () => void;
-}
-
-export const useMobileMenu = create<MobileMenuState>((set) => ({
-  isOpen: false,
-  openMenu: () => set({ isOpen: true }),
-  closeMenu: () => set({ isOpen: false }),
-  toggleMenu: () => set((state) => ({ isOpen: !state.isOpen })),
-}));
-```
+- Zustand store for mobile menu state management
+- TypeScript interface defining state and methods
+- `isOpen` boolean state (default false)
+- `openMenu()` method to open menu
+- `closeMenu()` method to close menu
+- `toggleMenu()` method to toggle state
+- Simple, lightweight state management without Context API
+- Global state accessible across components
 
 ### 3.12 Route Protection Middleware
 
 [Implements: SRD-REQ-FRONT-006, SRD-REQ-FRONT-007, SRS-REQ-SEC-001] The middleware SHALL protect authenticated routes:
 
-```typescript
-// middleware.ts
-import { NextRequest, NextResponse } from 'next/server';
-
-export function middleware(request: NextRequest) {
-  const authToken = request.cookies.get('authToken');
-  const path = request.nextUrl.pathname;
-  
-  // Public routes that don't require authentication
-  const publicRoutes = ['/', '/login'];
-  const isPublicRoute = publicRoutes.some(route => path.startsWith(route));
-  
-  // Authenticated routes (everything under /(authenticated))
-  const isAuthenticatedRoute = path.startsWith('/dashboard') || 
-                                path.startsWith('/settings');
-  
-  // Redirect to landing if trying to access authenticated route without token
-  if (isAuthenticatedRoute && !authToken) {
-    return NextResponse.redirect(new URL('/', request.url));
-  }
-  
-  // Redirect to dashboard if trying to access landing page while authenticated
-  if (path === '/' && authToken) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
-  }
-  
-  return NextResponse.next();
-}
-
-export const config = {
-  matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
-  ],
-};
-```
+- Extract auth token from cookies
+- Get current pathname from request
+- Define public routes array (root and login)
+- Define authenticated routes (dashboard and settings)
+- Redirect unauthenticated users to landing page from protected routes
+- Redirect authenticated users to dashboard from landing page
+- Allow request to proceed if no redirect needed
+- Config matcher excludes API routes, static assets, and favicon
+- Server-side route protection at middleware level
 
 ---
 
@@ -797,41 +322,6 @@ export const config = {
 - Mobile: Single column
 - Desktop: Centered card with max-width
 
-**Example Implementation:**
-```typescript
-export default function DashboardPage() {
-  const { user } = useAuth();
-  
-  return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">
-        Welcome, {user?.displayName}!
-      </h1>
-      
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex items-center space-x-4 mb-6">
-          <img
-            src={user?.photoURL}
-            alt="Profile"
-            className="h-20 w-20 rounded-full"
-          />
-          <div>
-            <h2 className="text-xl font-semibold">{user?.displayName}</h2>
-            <p className="text-gray-600">{user?.email}</p>
-          </div>
-        </div>
-        
-        <div className="border-t pt-4">
-          <p className="text-sm text-gray-500">
-            Account Status: <span className="text-green-600">Active</span>
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-```
-
 ---
 
 ### 4.3 Settings Page (`/settings`)
@@ -856,86 +346,6 @@ The settings page SHALL provide:
 - **Actions:**
   - "Save Changes" button
   - Success/error notifications
-
-**Example Implementation:**
-```typescript
-export default function SettingsPage() {
-  const { user } = useAuth();
-  const [firstName, setFirstName] = useState(user?.firstName || '');
-  const [lastName, setLastName] = useState(user?.lastName || '');
-  const [saving, setSaving] = useState(false);
-  
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      await fetch('/api/v1/me', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, lastName })
-      });
-      // Show success message
-    } catch (error) {
-      // Show error message
-    } finally {
-      setSaving(false);
-    }
-  };
-  
-  return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8">Account Settings</h1>
-      
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Email (from Google account)
-            </label>
-            <input
-              type="email"
-              value={user?.email}
-              disabled
-              className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              First Name
-            </label>
-            <input
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Last Name
-            </label>
-            <input
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300"
-            />
-          </div>
-          
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="btn-primary"
-          >
-            {saving ? 'Saving...' : 'Save Changes'}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-```
 
 ---
 
