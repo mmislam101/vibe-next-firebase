@@ -14,10 +14,10 @@
     "functions": "cd functions && npm run serve",
     "functions:install": "cd functions && npm install",
     "functions:test": "cd functions && npm test",
-    "functions:deploy": "cd functions && npm run deploy",
+    "functions:deploy": "npm run functions:deploy:config && cd functions && npm run deploy",
+    "functions:deploy:config": "firebase deploy --only firestore:rules,firestore:indexes",
     "functions:kill-port": "lsof -ti:5001 | xargs kill -9 2>/dev/null || echo 'No process found on port 5001'",
     "deploy": "npm run clean && npm run build:prod && firebase deploy --only hosting",
-    "deploy:firestore:config": "firebase deploy --only firestore:rules,firestore:indexes",
     "emulators": "firebase emulators:start"
   },
   "dependencies": {
