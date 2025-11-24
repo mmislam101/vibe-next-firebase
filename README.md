@@ -6,11 +6,11 @@ The template follows the Waterfall Methodology to help manage the relationship b
 ```
                            SRS
                             |
-                ___________SRD__________
-               /            |           \
- SDD Docs:  API Doc    Database Doc    Frontend Doc
-               |            |                |
-     Code:  Functions   Firestore         Next.js
+                ___________SRD_________________________________
+               /            |              \                   \
+ SDD Docs:  API Doc    Database Doc    Frontend Doc    Testing Behavior Doc
+               |            |                |                    |
+     Code:  Functions   Firestore         Next.js            API Tests
 ```
 
 ## How to use this Template
@@ -26,6 +26,7 @@ The template follows the Waterfall Methodology to help manage the relationship b
    - API Doc (`docs/software/api-specification.md`)
    - Database Doc (`docs/software/database-schema.md`)
    - Frontend Doc (`docs/software/frontend-requirements.md`)
+   - Testing Behavior Doc (`docs/software/testing-behaviors.md`)
 - PHASES.md
    - Use to help stage changes
    - Already seeded with Auth flow and basic layout
@@ -69,8 +70,8 @@ Use these to help during development
 │   │   └── shared/        # Shared utilities (auth, validators)
 │   └── lib/               # Compiled JavaScript
 ├── docs/                   # Documentation
-│   ├── system/            # System requirements
-│   └── software/          # Software specs and implementation docs
+│   ├── system/            # System requirements (SRS, SRD)
+│   └── software/          # Software specs (API, DB, Frontend, Testing)
 ├── firebase.json           # Firebase configuration
 ├── firestore.rules         # Firestore security rules
 └── firestore.indexes.json  # Firestore indexes
@@ -163,6 +164,7 @@ npm run deploy
 - `docs/software/api-specification.md` - API Specification
 - `docs/software/database-schema.md` - Firestore Schema
 - `docs/software/frontend-requirements.md` - Frontend Requirements
+- `docs/software/testing-behaviors.md` - Testing Behavior Document
 
 ## License
 
