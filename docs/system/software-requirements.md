@@ -87,38 +87,21 @@ This document defines the software requirements for implementing the [Insert Pro
 
 **SRD-REQ-FRONT-001:** [Implements: SRS-REQ-UI-003, SRS-REQ-UI-004, SRS-REQ-UI-017] The application SHALL follow Next.js 15 App Router structure:
 
-```
-app/
-├── layout.tsx                    # Root layout with providers
-├── page.tsx                      # Landing page (unauthenticated)
-├── globals.css                   # Tailwind CSS imports
-├── components/                   # Reusable UI components
-│   ├── ui/                      # Base UI components (buttons, inputs, etc.)
-│   ├── layout/                  # Layout components
-│   │   ├── TopNavBar.tsx       # Top navigation bar with profile menu
-│   │   ├── LeftSideMenu.tsx    # Left sidebar navigation (desktop/tablet)
-│   │   ├── MobileNavMenu.tsx   # Mobile hamburger menu
-│   │   ├── UserDropdownMenu.tsx # User profile dropdown
-│   │   ├── LoadingOverlay.tsx  # Global loading indicator
-│   │   └── NavLink.tsx         # Navigation link component
-│   └── auth/                    # Authentication components
-│       └── GoogleSignInButton.tsx # Google OAuth button
-├── context/                      # React context providers
-│   ├── AuthContext.tsx          # Firebase Auth state
-│   └── LoadingContext.tsx       # Global loading state
-├── hooks/                        # Custom React hooks
-│   ├── useAuth.ts               # Authentication hook
-│   ├── useLoadingState.ts       # Loading state hook
-│   └── useMobileMenu.ts         # Mobile menu state hook
-├── (authenticated)/             # Route group for authenticated pages
-│   ├── layout.tsx               # Authenticated layout wrapper
-│   └── dashboard/               # Dashboard placeholder
-│       └── page.tsx
-├── lib/                          # Utilities
-│   ├── firebase.ts              # Firebase configuration
-│   └── utils.ts                 # Helper functions
-└── middleware.ts                 # Route protection middleware (development only)
-```
+**App Directory Structure:**
+- `layout.tsx` - Root layout with providers
+- `page.tsx` - Landing page (unauthenticated)
+- `globals.css` - Tailwind CSS imports
+- `components/` - Reusable UI components
+  - `ui/` - Base UI components (buttons, inputs, etc.)
+  - `layout/` - Layout components (TopNavBar, LeftSideMenu, MobileNavMenu, UserDropdownMenu, LoadingOverlay, NavLink)
+  - `auth/` - Authentication components (GoogleSignInButton)
+- `context/` - React context providers (AuthContext, LoadingContext)
+- `hooks/` - Custom React hooks (useAuth, useLoadingState, useMobileMenu)
+- `(authenticated)/` - Route group for authenticated pages
+  - `layout.tsx` - Authenticated layout wrapper
+  - `dashboard/page.tsx` - Dashboard placeholder
+- `lib/` - Utilities (firebase.ts, utils.ts)
+- `middleware.ts` - Route protection middleware (development only)
 
 ### 3.2 UI Framework Requirements
 
@@ -175,29 +158,13 @@ export function middleware(request: NextRequest) {
 
 **SRD-REQ-FRONT-008:** [Implements: SRS-REQ-UI-001] The landing page SHALL be implemented as:
 
-```typescript
-// app/page.tsx
-export default function LandingPage() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-lg">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900">Family Pager</h1>
-          <p className="mt-2 text-lg text-gray-600">
-            Patient alert notification system for caretakers
-          </p>
-        </div>
-        
-        <GoogleSignInButton />
-        
-        <div className="text-center text-sm text-gray-500">
-          <p>Sign in with your Google account to get started</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-```
+- Centered layout with full viewport height
+- Gradient background (blue to indigo)
+- Card container with white background and shadow
+- Application title: "Family Pager"
+- Descriptive tagline: "Patient alert notification system for caretakers"
+- Google Sign-In button as primary CTA
+- Helper text explaining sign-in requirement
 
 **SRD-REQ-FRONT-009:** [Implements: SRS-REQ-UI-001, SRS-REQ-UI-002] The landing page SHALL:
 - Display prominently centered on the viewport
@@ -211,70 +178,25 @@ export default function LandingPage() {
 
 **SRD-REQ-FRONT-010:** [Implements: SRS-REQ-UI-003, SRS-REQ-UI-004, SRS-REQ-UI-006, SRS-REQ-UI-010, SRS-REQ-UI-017] Once authenticated, the application SHALL use a root layout component:
 
-```typescript
-// app/(authenticated)/layout.tsx
-export default function AuthenticatedLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="min-h-screen flex flex-col">
-      {/* Top Navigation Bar */}
-      <TopNavBar />
-      
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left Sidebar - Desktop/Tablet only */}
-        <LeftSideMenu />
-        
-        {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
-          {children}
-        </main>
-      </div>
-      
-      {/* Mobile Navigation - Hamburger Menu */}
-      <MobileNavMenu />
-      
-      {/* Global Loading Overlay */}
-      <LoadingOverlay />
-    </div>
-  );
-}
-```
+- Full-height flex layout with column direction
+- Top navigation bar spanning full width
+- Horizontal flex container for sidebar and main content
+- Left sidebar menu (desktop/tablet only)
+- Main content area with scrollable overflow and padding
+- Mobile navigation menu (slide-in drawer)
+- Global loading overlay component
 
 #### 3.5.3 Left-Side Menu Pane (Desktop/Tablet)
 
 **SRD-REQ-FRONT-011:** [Implements: SRS-REQ-UI-004, SRS-REQ-UI-005] The left-side menu SHALL be implemented with:
 
-```typescript
-// app/components/layout/LeftSideMenu.tsx
-'use client';
-
-export function LeftSideMenu() {
-  const pathname = usePathname();
-  const { user } = useAuth();
-  
-  return (
-    <aside className="hidden md:flex md:flex-shrink-0 w-64 bg-white border-r border-gray-200">
-      <div className="flex flex-col w-full">
-        {/* Navigation Links */}
-        <nav className="flex-1 px-4 py-6 space-y-2">
-          <NavLink 
-            href="/dashboard" 
-            icon={HomeIcon}
-            active={pathname === '/dashboard'}
-          >
-            Dashboard
-          </NavLink>
-          
-          {/* Future navigation items will be added here */}
-        </nav>
-      </div>
-    </aside>
-  );
-}
-```
+- Client component with pathname and auth hooks
+- Hidden on mobile, visible on tablet/desktop (≥768px)
+- Fixed width (256px) sidebar with white background
+- Navigation section with vertical spacing
+- NavLink components with icons and active state
+- Current pathname comparison for active highlighting
+- Placeholder for future navigation items
 
 **SRD-REQ-FRONT-012:** [Implements: SRS-REQ-UI-004, SRS-REQ-UI-005, SRS-REQ-UI-017] The left-side menu SHALL:
 - Be visible only on viewports ≥768px width (hidden on mobile)
@@ -290,70 +212,16 @@ export function LeftSideMenu() {
 
 **SRD-REQ-FRONT-013:** [Implements: SRS-REQ-UI-006, SRS-REQ-UI-007, SRS-REQ-UI-010] The top navigation bar SHALL be implemented as:
 
-```typescript
-// app/components/layout/TopNavBar.tsx
-'use client';
-
-export function TopNavBar() {
-  const { user } = useAuth();
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
-  
-  return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white">
-      <div className="flex items-center justify-between h-16 px-4">
-        {/* Left Section */}
-        <div className="flex items-center space-x-4">
-          {/* Hamburger Menu - Mobile Only */}
-          <button
-            onClick={() => setShowMobileMenu(true)}
-            className="md:hidden p-2 rounded-md hover:bg-gray-100"
-            aria-label="Open menu"
-          >
-            <Bars3Icon className="h-6 w-6" />
-          </button>
-          
-          {/* Logo/Brand */}
-          <Link href="/dashboard" className="flex items-center">
-            <span className="text-xl font-bold text-indigo-600">
-              Family Pager
-            </span>
-          </Link>
-        </div>
-        
-        {/* Right Section - User Profile */}
-        <div className="flex items-center">
-          <div className="relative">
-            <button
-              onClick={() => setShowDropdown(!showDropdown)}
-              className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100"
-              aria-label="User menu"
-            >
-              {/* Google Profile Picture */}
-              <img
-                src={user?.photoURL || '/default-avatar.png'}
-                alt={user?.displayName || 'User'}
-                className="h-8 w-8 rounded-full"
-              />
-              
-              {/* User Name - Desktop Only */}
-              <span className="hidden md:block text-sm font-medium text-gray-700">
-                {user?.displayName}
-              </span>
-              
-              {/* Dropdown Indicator */}
-              <ChevronDownIcon className="h-4 w-4 text-gray-500" />
-            </button>
-            
-            {/* Dropdown Menu */}
-            {showDropdown && <UserDropdownMenu />}
-          </div>
-        </div>
-      </div>
-    </header>
-  );
-}
-```
+- Client component with auth hook and dropdown state management
+- Sticky positioning at top with high z-index
+- Full-width header with fixed height (64px)
+- Left section with hamburger menu (mobile only) and logo/brand link
+- Right section with user profile button
+- Profile picture from Google account (circular avatar)
+- User display name (visible on desktop/tablet only)
+- Dropdown toggle indicator icon
+- Conditional rendering of dropdown menu based on state
+- Accessibility labels for interactive elements
 
 **SRD-REQ-FRONT-014:** [Implements: SRS-REQ-UI-006, SRS-REQ-UI-007, SRS-REQ-UI-010, SRS-REQ-UI-018] The top navigation bar SHALL:
 - Span the full width of the viewport
@@ -369,40 +237,15 @@ export function TopNavBar() {
 
 **SRD-REQ-FRONT-015:** [Implements: SRS-REQ-UI-008, SRS-REQ-UI-009] The user profile dropdown SHALL display:
 
-```typescript
-// app/components/layout/UserDropdownMenu.tsx
-'use client';
-
-export function UserDropdownMenu() {
-  const { user, logout } = useAuth();
-  
-  return (
-    <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-      <div className="py-1" role="menu">
-        {/* User Info Section */}
-        <div className="px-4 py-3 border-b border-gray-200">
-          <p className="text-sm font-medium text-gray-900">{user?.displayName}</p>
-          <p className="text-sm text-gray-500 truncate">{user?.email}</p>
-        </div>
-        
-        {/* Placeholder for future menu items (Settings, Help, etc.) */}
-        
-        {/* Divider */}
-        <div className="border-t border-gray-200 my-1" />
-        
-        {/* Logout */}
-        <DropdownMenuItem 
-          icon={ArrowRightOnRectangleIcon}
-          onClick={logout}
-          className="text-red-600 hover:bg-red-50"
-        >
-          Sign Out
-        </DropdownMenuItem>
-      </div>
-    </div>
-  );
-}
-```
+- Client component with auth hook for user data and logout
+- Absolute positioning relative to parent (right-aligned)
+- Dropdown card with shadow and border
+- User info section displaying name and email
+- Border separator after user info
+- Placeholder section for future menu items
+- Divider line before logout
+- Logout menu item with icon and distinct styling (red text)
+- Menu role for accessibility
 
 **SRD-REQ-FRONT-016:** [Implements: SRS-REQ-UI-008, SRS-REQ-UI-009, SRS-REQ-UI-017] The dropdown menu SHALL:
 - Appear when profile icon is clicked
@@ -419,53 +262,16 @@ export function UserDropdownMenu() {
 
 **SRD-REQ-FRONT-017:** [Implements: SRS-REQ-UI-010, SRS-REQ-UI-011, SRS-REQ-UI-012] The mobile navigation menu SHALL be implemented as:
 
-```typescript
-// app/components/layout/MobileNavMenu.tsx
-'use client';
-
-export function MobileNavMenu() {
-  const { isOpen, closeMenu } = useMobileMenu();
-  const pathname = usePathname();
-  
-  return (
-    <>
-      {/* Overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-          onClick={closeMenu}
-          aria-hidden="true"
-        />
-      )}
-      
-      {/* Slide-in Menu */}
-      <div
-        className={`
-          fixed top-0 left-0 bottom-0 w-64 bg-white z-50 transform transition-transform duration-300 ease-in-out md:hidden
-          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-        `}
-      >
-        {/* Close Button */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <span className="text-lg font-bold text-indigo-600">Menu</span>
-          <button
-            onClick={closeMenu}
-            className="p-2 rounded-md hover:bg-gray-100"
-            aria-label="Close menu"
-          >
-            <XMarkIcon className="h-6 w-6" />
-          </button>
-        </div>
-        
-        {/* Navigation Links - Same as Desktop */}
-        <nav className="flex-1 px-4 py-6 space-y-2">
-          {/* Same navigation items as LeftSideMenu */}
-        </nav>
-      </div>
-    </>
-  );
-}
-```
+- Client component with mobile menu state hook
+- Semi-transparent overlay (black 50% opacity) covering entire screen
+- Click overlay to dismiss menu
+- Slide-in drawer from left side with fixed positioning
+- 256px width drawer with white background
+- CSS transform animation (300ms) for smooth slide
+- Header with menu title and close button
+- Navigation section matching desktop menu items
+- Hidden on desktop/tablet (≥768px)
+- Higher z-index for drawer (50) than overlay (40)
 
 **SRD-REQ-FRONT-018:** [Implements: SRS-REQ-UI-010, SRS-REQ-UI-011, SRS-REQ-UI-012, SRS-REQ-UI-018] Mobile navigation (<768px) SHALL:
 - Hide the left-side menu pane
@@ -485,41 +291,15 @@ export function MobileNavMenu() {
 
 **SRD-REQ-FRONT-019:** [Implements: SRS-REQ-UI-013, SRS-REQ-UI-014, SRS-REQ-UI-015] The global loading overlay SHALL be implemented as:
 
-```typescript
-// app/components/layout/LoadingOverlay.tsx
-'use client';
-
-export function LoadingOverlay() {
-  const { isLoading, loadingMessage } = useLoadingState();
-  
-  if (!isLoading) return null;
-  
-  return (
-    <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center"
-      style={{
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent overlay
-      }}
-      aria-live="assertive"
-      aria-busy="true"
-    >
-      <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm mx-4">
-        {/* Spinner */}
-        <div className="flex justify-center mb-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600" />
-        </div>
-        
-        {/* Loading Message */}
-        {loadingMessage && (
-          <p className="text-center text-gray-700 font-medium">
-            {loadingMessage}
-          </p>
-        )}
-      </div>
-    </div>
-  );
-}
-```
+- Client component with loading state hook
+- Return null when not loading (conditional rendering)
+- Full-screen fixed overlay with very high z-index (9999)
+- Semi-transparent black background (50% opacity)
+- Centered content with flexbox
+- White card container with shadow and padding
+- Animated spinner with circular border animation
+- Optional loading message displayed below spinner
+- ARIA attributes for screen reader accessibility
 
 **SRD-REQ-FRONT-020:** [Implements: SRS-REQ-UI-013, SRS-REQ-UI-014, SRS-REQ-UI-015] The loading indicator SHALL:
 - Block the entire screen to prevent user interaction
@@ -535,53 +315,14 @@ export function LoadingOverlay() {
 
 **SRD-REQ-FRONT-021:** [Implements: SRS-REQ-UI-013, SRS-REQ-UI-015] The loading state management SHALL be centralized:
 
-```typescript
-// app/context/LoadingContext.tsx
-'use client';
-
-interface LoadingContextType {
-  isLoading: boolean;
-  loadingMessage: string | null;
-  startLoading: (message?: string) => void;
-  stopLoading: () => void;
-}
-
-export function LoadingProvider({ children }: { children: React.ReactNode }) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
-  const [minDisplayTime, setMinDisplayTime] = useState<NodeJS.Timeout | null>(null);
-  
-  const startLoading = useCallback((message?: string) => {
-    setIsLoading(true);
-    setLoadingMessage(message || null);
-    
-    // Ensure minimum 300ms display time
-    const timer = setTimeout(() => {
-      setMinDisplayTime(null);
-    }, 300);
-    setMinDisplayTime(timer);
-  }, []);
-  
-  const stopLoading = useCallback(() => {
-    if (minDisplayTime) {
-      // Wait for minimum display time
-      setTimeout(() => {
-        setIsLoading(false);
-        setLoadingMessage(null);
-      }, 300);
-    } else {
-      setIsLoading(false);
-      setLoadingMessage(null);
-    }
-  }, [minDisplayTime]);
-  
-  return (
-    <LoadingContext.Provider value={{ isLoading, loadingMessage, startLoading, stopLoading }}>
-      {children}
-    </LoadingContext.Provider>
-  );
-}
-```
+- TypeScript interface defining loading context methods and state
+- Provider component managing loading state
+- State for loading flag, message, and minimum display timer
+- `startLoading()` function accepting optional message parameter
+- Minimum display time enforcement (300ms) to prevent flashing
+- `stopLoading()` function respecting minimum display time
+- Timer cleanup to avoid premature dismissal
+- Context provider wrapping children with loading functionality
 
 **SRD-REQ-FRONT-022:** [Implements: SRS-REQ-UI-016] Loading indicators SHALL be displayed for:
 - Initial page load and route navigation
@@ -617,18 +358,14 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
 
 **SRD-REQ-FUNC-001:** [Implements: SRS-REQ-TECH-001] Cloud Functions SHALL be organized with basic structure:
 
-```
-functions/
-├── src/
-│   ├── index.ts                 # Main exports
-│   ├── api/                     # API endpoints (placeholder)
-│   │   └── index.ts
-│   └── shared/                  # Shared utilities
-│       ├── auth.ts              # Authentication helpers
-│       ├── firebase-admin.ts    # Firebase Admin SDK initialization
-│       └── validators.ts        # Input validation utilities
-└── package.json
-```
+**Functions Directory Structure:**
+- `src/index.ts` - Main exports for Cloud Functions
+- `src/api/` - API endpoints (placeholder structure)
+- `src/shared/` - Shared utilities
+  - `auth.ts` - Authentication helpers
+  - `firebase-admin.ts` - Firebase Admin SDK initialization
+  - `validators.ts` - Input validation utilities
+- `package.json` - Dependencies and scripts
 
 ### 4.2 API Endpoints
 
@@ -713,20 +450,18 @@ export async function verifyAuth(req: Request): Promise<string> {
 
 **SRD-REQ-DEV-001:** [Implements: SRS-REQ-TECH-001] The project SHALL follow this structure:
 
-```
-family-pager/
-├── app/                          # Next.js app directory
-├── functions/                    # Firebase Cloud Functions
-├── public/                       # Static assets
-├── docs/                         # Documentation
-├── firebase.json                 # Firebase configuration
-├── firestore.rules               # Firestore security rules
-├── firestore.indexes.json        # Firestore indexes
-├── next.config.ts                # Next.js configuration
-├── tailwind.config.ts            # Tailwind configuration
-├── tsconfig.json                 # TypeScript configuration
-└── package.json                  # Root dependencies
-```
+**Project Root Structure:**
+- `app/` - Next.js app directory
+- `functions/` - Firebase Cloud Functions
+- `public/` - Static assets
+- `docs/` - Documentation
+- `firebase.json` - Firebase configuration
+- `firestore.rules` - Firestore security rules
+- `firestore.indexes.json` - Firestore indexes
+- `next.config.ts` - Next.js configuration
+- `tailwind.config.ts` - Tailwind configuration
+- `tsconfig.json` - TypeScript configuration
+- `package.json` - Root dependencies
 
 ### 7.2 Build Configuration
 

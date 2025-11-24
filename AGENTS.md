@@ -67,6 +67,8 @@ Documents are broken into three parts,
     - Defines testing behaviors and standards for API endpoints
     - Reference when writing tests for any API implementation
 
+- Avoid adding obvious code for basic examples. 
+  - Add code if there's some special implementation details that can only be shown through code
 - Don't add implementation status or phase details
 - Don't do version or dates
 - Keep traceability links updated [Implements: SRD-REQ-XXX]
