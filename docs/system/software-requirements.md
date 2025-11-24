@@ -147,12 +147,12 @@ app/
 
 ### 3.4 Routing and Navigation
 
-**SRD-REQ-FRONT-006:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005] The application SHALL implement protected routes:
+**SRD-REQ-FRONT-006:** [Implements: SRS-REQ-SEC-001] The application SHALL implement protected routes:
 
 - **Public Routes:** Landing page (/)
 - **Authenticated Routes:** Dashboard (/dashboard)
 
-**SRD-REQ-FRONT-007:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005] Route protection SHALL be implemented via middleware:
+**SRD-REQ-FRONT-007:** [Implements: SRS-REQ-SEC-001] Route protection SHALL be implemented via middleware:
 
 ```typescript
 // middleware.ts
@@ -643,7 +643,7 @@ functions/
 
 ### 4.3 Authentication and Authorization
 
-**SRD-REQ-FUNC-003:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-API-001, SRS-REQ-API-002] All API endpoints SHALL require Firebase Google Authentication:
+**SRD-REQ-FUNC-003:** [Implements: SRS-REQ-SEC-001, SRS-REQ-API-001, SRS-REQ-API-002] All API endpoints SHALL require Firebase Google Authentication:
 
 ```typescript
 // Example: Authentication middleware
@@ -665,7 +665,7 @@ export async function verifyAuth(req: Request): Promise<string> {
 }
 ```
 
-**SRD-REQ-FUNC-004:** [Implements: SRS-REQ-SEC-005] Role-based access control framework SHALL be established:
+**SRD-REQ-FUNC-004:** [Implements: SRS-REQ-SEC-001] Role-based access control framework SHALL be established:
 
 - Authentication middleware for verifying Firebase tokens
 - User role determination (caretaker/observer) - foundation for future use
@@ -684,7 +684,7 @@ export async function verifyAuth(req: Request): Promise<string> {
 
 ### 5.2 Security Rules
 
-**SRD-REQ-DB-002:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005] Firestore security rules SHALL enforce:
+**SRD-REQ-DB-002:** [Implements: SRS-REQ-SEC-001] Firestore security rules SHALL enforce:
 
 - Authenticated users can read/write their own user document
 - Cloud Functions have full access via Admin SDK
@@ -692,7 +692,7 @@ export async function verifyAuth(req: Request): Promise<string> {
 
 ### 5.3 Indexes
 
-**SRD-REQ-DB-003:** [Implements: SRS-REQ-SCALE-002] Basic indexes:
+**SRD-REQ-DB-003:** Basic indexes:
 
 - Single-field indexes created automatically by Firestore
 - Composite indexes will be added as needed
@@ -763,7 +763,7 @@ const nextConfig: NextConfig = {
 
 ### 7.3 Environment Variables
 
-**SRD-REQ-DEV-004:** [Implements: SRS-SRD-REQ-SEC-001] Required environment variables:
+**SRD-REQ-DEV-004:** [Implements: SRS-REQ-SEC-001] Required environment variables:
 
 **Frontend (.env.local):**
 - `NEXT_PUBLIC_FIREBASE_API_KEY`
@@ -784,13 +784,13 @@ const nextConfig: NextConfig = {
 
 ### 8.1 Frontend Performance
 
-**SRD-REQ-PERF-001:** [Implements: SRS-SRD-REQ-PERF-001] The application SHALL meet baseline performance targets:
+**SRD-REQ-PERF-001:** The application SHALL meet baseline performance targets:
 
 - First Contentful Paint: < 1.5s
 - Time to Interactive: < 3s
 - Lighthouse Performance Score: > 85
 
-**SRD-REQ-PERF-002:** [Implements: SRS-SRD-REQ-PERF-001] Optimization strategies:
+**SRD-REQ-PERF-002:** Optimization strategies:
 
 - Static site generation for landing page
 - Code splitting for authenticated routes
@@ -803,7 +803,7 @@ const nextConfig: NextConfig = {
 
 ### 9.1 Authentication
 
-**SRD-REQ-SEC-001:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-API-001] Authentication SHALL use Firebase Google Authentication:
+**SRD-REQ-SEC-001:** [Implements: SRS-REQ-SEC-001] Authentication SHALL use Firebase Google Authentication:
 
 - Google Sign-In OAuth authentication for all users
 - JWT token validation framework in Cloud Functions
@@ -813,7 +813,7 @@ const nextConfig: NextConfig = {
 
 ### 9.2 Authorization
 
-**SRD-REQ-SEC-002:** [Implements: SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005] Basic authorization framework SHALL be established:
+**SRD-REQ-SEC-002:** [Implements: SRS-REQ-SEC-001] Basic authorization framework SHALL be established:
 
 - Firestore security rules for user documents (read/write own document only)
 - Cloud Function authentication middleware
@@ -821,7 +821,7 @@ const nextConfig: NextConfig = {
 
 ### 9.3 Data Protection
 
-**SRD-REQ-SEC-003:** [Implements: SRS-SRD-REQ-SEC-003] Basic data protection:
+**SRD-REQ-SEC-003:** [Implements: SRS-REQ-SEC-003] Basic data protection:
 
 - Google OAuth tokens managed by Firebase (not stored locally)
 - HTTPS/TLS for all communications
@@ -832,9 +832,23 @@ const nextConfig: NextConfig = {
 
 ## 10. Testing Requirements
 
-### 10.1 Manual Testing
+### 10.1 API Testing
 
-**SRD-REQ-TEST-001:** Manual testing SHALL verify functionality:
+**SRD-REQ-TEST-001:** [Implements: SRS-REQ-TEST-001] API functions SHALL be tested using Behavior-Driven Development (BDD):
+
+- All Firebase Cloud Functions endpoints SHALL have BDD tests
+- Tests SHALL be written before implementation (test-first approach)
+- Tests SHALL use a BDD framework (e.g., Jest with BDD syntax or Mocha/Chai)
+- Tests SHALL cover:
+  - Authentication and authorization
+  - Request validation
+  - Response formatting
+  - Error handling
+  - Edge cases and boundary conditions
+
+### 10.2 Manual Testing
+
+**SRD-REQ-TEST-002:** [Implements: SRS-REQ-TEST-001] Frontend functionality SHALL be verified through manual testing:
 
 - Google Sign-In authentication flow
 - Landing page display (unauthenticated state)
@@ -843,6 +857,8 @@ const nextConfig: NextConfig = {
 - User profile dropdown and logout
 - Loading states
 - Responsive design across devices
+
+**Note:** Automated frontend testing is explicitly excluded per SRS-REQ-TEST-001.
 
 ---
 
