@@ -705,7 +705,7 @@ export const useMobileMenu = create<MobileMenuState>((set) => ({
 
 ### 3.12 Route Protection Middleware
 
-[Implements: SRD-REQ-FRONT-006, SRD-REQ-FRONT-007, SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005] The middleware SHALL protect authenticated routes:
+[Implements: SRD-REQ-FRONT-006, SRD-REQ-FRONT-007, SRS-REQ-SEC-001] The middleware SHALL protect authenticated routes:
 
 ```typescript
 // middleware.ts
@@ -1040,11 +1040,11 @@ interface LoadingContextValue {
 
 ## 7. Google Authentication Implementation
 
-**[Implements: SRS-SRD-REQ-SEC-001, SRD-REQ-FRONT-006, SRD-REQ-FRONT-007]**
+**[Implements: SRS-REQ-SEC-001, SRD-REQ-FRONT-006, SRD-REQ-FRONT-007]**
 
 ### 7.1 Firebase Google Auth Setup
 
-[Implements: SRS-SRD-REQ-SEC-001, SRD-REQ-DEV-004] Google Authentication SHALL be implemented using Firebase Auth:
+[Implements: SRS-REQ-SEC-001, SRD-REQ-DEV-004] Google Authentication SHALL be implemented using Firebase Auth:
 
 ```typescript
 // app/firebase/config.ts
@@ -1068,7 +1068,7 @@ export { auth, googleProvider, db };
 
 ### 7.2 Sign-In Implementation
 
-[Implements: SRS-SRD-REQ-SEC-001] Google Sign-In SHALL be implemented:
+[Implements: SRS-REQ-SEC-001] Google Sign-In SHALL be implemented:
 
 ```typescript
 // app/context/AuthContext.tsx
@@ -1192,11 +1192,11 @@ class ApiClient {
 
 ## 10. Performance Requirements
 
-**[Implements: SRS-SRD-REQ-PERF-001, SRS-SRD-REQ-PERF-002, SRS-SRD-REQ-PERF-003]**
+**[Implements: SRD-REQ-PERF-001, SRD-REQ-PERF-002]**
 
 ### 10.1 Loading Performance
 
-**SRS-SRD-REQ-PERF-001:** [Implements: SRS-SRD-REQ-PERF-001, SRS-SRD-REQ-PERF-002, SRS-SRD-REQ-PERF-003] The application SHALL meet:
+**REQ-PERF-001:** [Implements: SRD-REQ-PERF-001, SRD-REQ-PERF-002] The application SHALL meet:
 
 - First Contentful Paint: < 1.5s
 - Time to Interactive: < 3s
@@ -1213,7 +1213,7 @@ class ApiClient {
 
 ### 10.2 Real-Time Performance
 
-**SRS-SRD-REQ-PERF-002:** [Implements: SRD-REQ-FRONT-005, SRS-REQ-INC-002] Real-time updates SHALL:
+**REQ-PERF-002:** Real-time updates SHALL:
 
 - Update UI within 1 second of Firestore change
 - Handle connection loss gracefully
@@ -1280,50 +1280,114 @@ The application SHALL handle:
 
 ## 13. Testing Requirements
 
-**[Implements: SRD-REQ-TEST-001, SRD-REQ-TEST-002]**
+**[Implements: SRD-REQ-TEST-001, SRD-REQ-TEST-002, SRS-REQ-TEST-001]**
 
-### 13.1 Component Testing
+### 13.1 Frontend Testing Approach
 
-Components SHALL be tested for:
+**[Implements: SRD-REQ-TEST-002, SRS-REQ-TEST-001]** Per SRS-REQ-TEST-001, the frontend SHALL be tested through **manual testing only**. Automated frontend testing is explicitly excluded.
 
-- Component rendering
-- User interaction (button clicks, form inputs)
-- Loading states
-- Error states
-- Accessibility compliance
+### 13.2 Manual Testing Checklist
 
-### 13.2 Integration Testing
+The following manual testing scenarios SHALL be performed:
 
-Integration tests SHALL cover:
+#### 13.2.1 Authentication Flow
+- [ ] Click "Sign in with Google" on landing page
+- [ ] Complete Google OAuth flow
+- [ ] Verify redirect to dashboard after successful sign-in
+- [ ] Verify user profile picture displayed in top nav
+- [ ] Verify user name displayed in top nav (desktop)
+- [ ] Verify cannot access protected routes when not authenticated
 
-- Authentication flow (Google Sign-In, logout)
-- API integration (`GET /api/v1/me`, `PUT /api/v1/me`)
-- Navigation between pages
-- Form submissions (settings update)
-- Route protection (middleware redirect)
+#### 13.2.2 Navigation Testing
+- [ ] **Desktop/Tablet (≥768px):**
+  - Verify left sidebar menu visible
+  - Verify menu items highlighted when active
+  - Test navigation between Dashboard and Settings
+  - Verify hamburger menu hidden
+  
+- [ ] **Mobile (<768px):**
+  - Verify left sidebar hidden
+  - Verify hamburger menu visible in top nav
+  - Tap hamburger to open mobile menu
+  - Verify slide-in animation
+  - Verify semi-transparent backdrop
+  - Tap outside menu to close
+  - Test navigation between pages from mobile menu
+  - Verify menu closes after selection
 
-### 13.3 E2E Testing Scenarios
+#### 13.2.3 User Profile Dropdown
+- [ ] Click user profile icon in top nav
+- [ ] Verify dropdown menu appears
+- [ ] Verify user name and email displayed
+- [ ] Verify "Account Settings" link present
+- [ ] Verify "Sign Out" button present with red styling
+- [ ] Click outside dropdown to close
+- [ ] Click "Account Settings" and verify navigation to `/settings`
 
-Key user journeys to test:
+#### 13.2.4 Settings Page
+- [ ] Navigate to Settings page
+- [ ] Verify email field displayed (read-only)
+- [ ] Edit first name
+- [ ] Edit last name
+- [ ] Click "Save Changes"
+- [ ] Verify success message
+- [ ] Verify loading state during save
+- [ ] Navigate away and back to verify changes persisted
+- [ ] Test validation (max length, required fields)
 
-1. **First-time user sign-in:**
-   - Click "Sign in with Google"
-   - Complete Google OAuth flow
-   - Verify redirect to dashboard
-   - Verify user profile displayed
+#### 13.2.5 Sign Out Flow
+- [ ] Open user dropdown
+- [ ] Click "Sign Out"
+- [ ] Verify redirect to landing page
+- [ ] Verify authentication state cleared
+- [ ] Attempt to access `/dashboard` directly
+- [ ] Verify redirect to landing page
 
-2. **Update profile:**
-   - Navigate to settings
-   - Update first/last name
-   - Save changes
-   - Verify success message
-   - Verify updated data displayed
+#### 13.2.6 Loading States
+- [ ] Verify loading overlay appears for API calls > 200ms
+- [ ] Verify loading overlay has semi-transparent backdrop
+- [ ] Verify centered spinner displayed
+- [ ] Verify loading message shown when appropriate
+- [ ] Verify loading dismisses after operation completes
 
-3. **Sign out:**
-   - Click user dropdown
-   - Click sign out
-   - Verify redirect to landing page
-   - Verify cannot access protected routes
+#### 13.2.7 Responsive Design
+- [ ] Test on mobile device (320px - 767px)
+- [ ] Test on tablet device (768px - 1023px)
+- [ ] Test on desktop (1024px+)
+- [ ] Verify all touch targets ≥ 44x44px on mobile
+- [ ] Verify no horizontal scroll on any viewport
+- [ ] Verify text readable on all screen sizes
+
+#### 13.2.8 Accessibility
+- [ ] Navigate entire app using keyboard only
+- [ ] Verify focus indicators visible on all interactive elements
+- [ ] Test with screen reader (NVDA, JAWS, or VoiceOver)
+- [ ] Verify all images have alt text
+- [ ] Verify form labels properly associated
+- [ ] Check color contrast ratios (WCAG AA 4.5:1)
+- [ ] Verify ARIA labels present on icon-only buttons
+
+#### 13.2.9 Error Handling
+- [ ] Disconnect network and attempt API call
+- [ ] Verify user-friendly error message
+- [ ] Test form validation errors
+- [ ] Verify error messages clear and actionable
+- [ ] Test recovery from errors
+
+### 13.3 Cross-Browser Testing
+
+Manual tests SHALL be performed on:
+- [ ] Chrome (latest)
+- [ ] Safari (latest)
+- [ ] Firefox (latest)
+- [ ] Mobile Safari (iOS)
+- [ ] Chrome Mobile (Android)
+
+### 13.4 API Testing
+
+**[Implements: SRD-REQ-TEST-001, SRS-REQ-TEST-001]** API endpoints SHALL be tested using BDD (Behavior-Driven Development). See API Specification document for detailed API testing requirements.
+
+**Note:** Frontend testing is manual only. API testing uses BDD approach.
 
 ---
 

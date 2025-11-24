@@ -32,11 +32,11 @@ All layout components can use real-time Firestore listeners on these fields to p
 
 ## 2. User Profile Collections
 
-**[Implements: SRD-REQ-DB-001, SRS-SRD-REQ-SEC-001, SRS-SRD-REQ-SEC-003]**
+**[Implements: SRD-REQ-DB-001, SRS-REQ-SEC-001, SRS-REQ-SEC-003]**
 
 ### 2.1 Caretakers Collection
 
-**[Implements: SRD-REQ-DB-001, SRS-SRD-REQ-SEC-001, SRS-SRD-REQ-SEC-003]**
+**[Implements: SRD-REQ-DB-001, SRS-REQ-SEC-001, SRS-REQ-SEC-003]**
 
 **Collection Path:** `caretakers/{caretakerId}`
 

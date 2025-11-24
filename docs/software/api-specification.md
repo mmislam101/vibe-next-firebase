@@ -33,7 +33,7 @@ This document defines the REST API endpoints implemented as Firebase Cloud Funct
 
 ### 1.2 Authentication
 
-**[Implements: SRD-REQ-FUNC-003, SRS-SRD-REQ-SEC-001, SRS-REQ-API-001, SRS-REQ-API-002]**
+**[Implements: SRD-REQ-FUNC-003, SRS-REQ-SEC-001, SRS-REQ-API-001, SRS-REQ-API-002]**
 
 All authenticated endpoints require a Firebase ID token from Google Sign-In in the Authorization header:
 
@@ -64,8 +64,6 @@ Authorization: Bearer <firebase-id-token>
 
 ### 1.4 HTTP Status Codes
 
-**[Implements: SRS-SRD-REQ-PERF-003]**
-
 - `200` - Success
 - `201` - Created
 - `400` - Bad Request
@@ -93,7 +91,7 @@ All layout components use these endpoints to provide user information in the nav
 
 ### 2.1 Get User Profile
 
-**[Implements: SRS-REQ-UI-001, SRS-SRD-REQ-SEC-001, SRD-REQ-FUNC-002, SRS-REQ-API-007, SRS-REQ-API-008]**
+**[Implements: SRS-REQ-UI-001, SRS-REQ-SEC-001, SRD-REQ-FUNC-002, SRS-REQ-API-007, SRS-REQ-API-008]**
 
 **Endpoint:** `GET /api/v1/me`
 
@@ -121,7 +119,7 @@ All layout components use these endpoints to provide user information in the nav
 
 ### 2.2 Update User Profile
 
-**[Implements: SRS-REQ-UI-001, SRS-SRD-REQ-SEC-001, SRD-REQ-FUNC-002, SRS-REQ-API-007]**
+**[Implements: SRS-REQ-UI-001, SRS-REQ-SEC-001, SRD-REQ-FUNC-002, SRS-REQ-API-007]**
 
 **Endpoint:** `PUT /api/v1/me`
 
