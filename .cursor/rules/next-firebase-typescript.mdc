@@ -8,6 +8,74 @@ alwaysApply: true
 
 Based on current best practices from official documentation and proven developer patterns, these cursor rules provide comprehensive guidance for building production-ready applications with Next.js, TypeScript, and Firebase.
 
+## 🚨 Top Priority Rules - Read These First
+
+### CRITICAL: Next.js Static Export Configuration Issues
+
+**⚠️ Known Next.js Bugs with `output: 'export'`:**
+
+1. **`generateStaticParams()` Validation Bug:**
+   - Next.js checks `prerenderedRoutes.length > 0`, not if the function exists
+   - ❌ Returning `[]` fails: `"Page is missing generateStaticParams()"`
+   - ✅ Must return at least one route: `[{ id: '_' }]`
+   - The placeholder route is generated but never used (actual routes load client-side)
+
+2. **`rewrites` Configuration Conflict:**
+   - Defining `rewrites` with `output: 'export'` causes validation warnings
+   - ❌ Don't define `rewrites` when static export is enabled
+   - ✅ Conditionally exclude: `...(!isStaticExport && { async rewrites() {...} })`
+
+**Correct Pattern for Dynamic Routes:**
+```typescript
+// page.tsx (server component)
+export async function generateStaticParams() {
+  return [{ id: '_' }]; // ⚠️ Must have at least one route!
+}
+
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return <ClientComponent id={id} />;
+}
+```
+
+**Correct next.config.ts:**
+```typescript
+const isStaticExport = process.env.NEXT_PUBLIC_BUILD_MODE === 'export';
+
+const nextConfig: NextConfig = {
+  ...(isStaticExport && { output: 'export' }),
+  // ⚠️ Only define rewrites when NOT doing static export
+  ...(!isStaticExport && { async rewrites() { /* ... */ } }),
+};
+```
+
+---
+
+### CRITICAL: API Communication Pattern for Static Export
+
+**⚠️ NEVER create API client wrappers or abstraction layers for Firebase Functions calls.**
+
+When working with Next.js static export (`output: 'export'`) and Firebase Hosting:
+
+✅ **DO:** Use direct `fetch()` calls with manual token handling in all 
+❌ **DON'T:** Create API client classes or wrapper functions like `patientApi.list()` or similar abstractions
+
+**When Adding New API Endpoints:**
+1. Implement Firebase Function in `functions/src/`
+2. Add tests following BDD principles (see testing-behaviors.md)
+3. In frontend components, use direct `fetch()` calls - no wrapper functions
+4. For dynamic routes (`[id]`, etc.):
+   - Keep the page file as a SERVER component (no `'use client'`)
+   - Export `generateStaticParams()` returning **at least one placeholder route** (e.g., `[{ id: '_' }]`)
+     - ⚠️ CRITICAL: Empty array `[]` will fail Next.js validation!
+     - Next.js checks `prerenderedRoutes.length > 0`, not just function existence
+   - Create a separate CLIENT component file for interactive logic
+   - Pass the dynamic param as a prop to the client component
+
+See detailed architecture explanation in [Next.js + Firebase Hosting Architecture](#nextjs--firebase-hosting-architecture) section below.
+
+---
+
 ## Next.js and React Development Patterns
 
 ### Component Architecture Rules
@@ -441,10 +509,12 @@ However, these features are valuable during development. The solution is **condi
 ```typescript
 import type { NextConfig } from 'next';
 
+const isStaticExport = process.env.NEXT_PUBLIC_BUILD_MODE === 'export';
+
 const nextConfig: NextConfig = {
   // Enable static export ONLY for production builds
   // Keep dynamic mode for local development (supports middleware, better DX)
-  ...(process.env.NEXT_PUBLIC_BUILD_MODE === 'export' && { output: 'export' }),
+  ...(isStaticExport && { output: 'export' }),
   
   eslint: {
     dirs: ['app', 'components', 'lib'],
@@ -452,18 +522,22 @@ const nextConfig: NextConfig = {
   
   // Development: Proxy API calls to Firebase Functions emulator
   // Production: Firebase Hosting rewrites handle this (see firebase.json)
-  async rewrites() {
-    if (process.env.NODE_ENV === 'development') {
-      const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'your-project-id';
-      return [
-        {
-          source: '/api/:path*',
-          destination: `http://localhost:5001/${projectId}/us-central1/api/:path*`,
-        },
-      ];
-    }
-    return [];
-  },
+  // ⚠️ CRITICAL: Do NOT define rewrites when output: 'export' is enabled
+  // This causes validation warnings and build issues
+  ...(!isStaticExport && {
+    async rewrites() {
+      if (process.env.NODE_ENV === 'development') {
+        const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'your-project-id';
+        return [
+          {
+            source: '/api/:path*',
+            destination: `http://localhost:5001/${projectId}/us-central1/api/:path*`,
+          },
+        ];
+      }
+      return [];
+    },
+  }),
 };
 
 export default nextConfig;
@@ -523,25 +597,268 @@ Browser → https://your-app.web.app/api/v1/me
           Firebase Cloud Functions
 ```
 
-#### Frontend API Calls
+#### Frontend API Calls - Direct Fetch Pattern
 
-**Frontend code works identically in both environments:**
+**⚠️ CRITICAL: Always use direct `fetch()` calls. Never create API client abstractions.**
+
+This is the **ONLY CORRECT PATTERN** for static export compatibility:
 
 ```typescript
-// ✅ app/context/AuthContext.tsx
+// ✅ CORRECT: Direct fetch with manual token handling
+'use client';
+import { auth } from '@/app/firebase/config';
+
+async function loadPatients() {
+  const user = auth.currentUser;
+  if (!user) {
+    throw new Error('Not authenticated');
+  }
+  
+  const idToken = await user.getIdToken();
+  const response = await fetch('/api/v1/patients', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${idToken}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  
+  if (!response.ok) {
+    throw new Error('Failed to load patients');
+  }
+  
+  const result = await response.json();
+  return result.data.patients;
+}
+```
+
+**❌ WRONG: API client abstraction (causes static export issues)**
+
+```typescript
+// ❌ DON'T create wrapper functions or client classes
+// This pattern interferes with Next.js static export
+
+// app/lib/api-client.ts (DO NOT CREATE THIS FILE)
+export const patientApi = {
+  async list() {
+    const token = await getAuthToken();
+    return fetch('/api/v1/patients', { ... });
+  }
+};
+
+// Usage in component (DON'T DO THIS)
+const patients = await patientApi.list();
+```
+
+**Why Direct Fetch Only?**
+
+1. **Static Export Compatibility:** 
+   - API client wrappers add abstraction layers that can cause `generateStaticParams()` errors
+   - Direct `fetch()` is explicitly supported by Next.js static export
+   - Example error you'll encounter: `Page "/patients/[id]" is missing "generateStaticParams()"`
+
+2. **Works Identically in Dev & Production:**
+   - Development: Next.js rewrites proxy to `localhost:5001`
+   - Production: Firebase Hosting rewrites route to Cloud Functions
+   - Same code, no environment-specific logic needed
+
+3. **Simplicity & Debugging:**
+   - Clear code path: Component → fetch → Firebase Function
+   - Easy to debug: No abstraction layers hiding behavior
+   - Consistent pattern across all API calls
+
+4. **TypeScript Safety Without Wrappers:**
+   - Define interfaces locally in components that need them
+   - No need for centralized API client types
+
+**Complete Example with Error Handling:**
+
+```typescript
+// ✅ Patient list page
 'use client';
 import { useState, useEffect } from 'react';
-import { auth } from '@/lib/firebase';
+import { auth } from '@/app/firebase/config';
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState(null);
+interface Patient {
+  id: string;
+  name: string;
+  status: 'active' | 'inactive' | 'archived';
+  // ... other fields
+}
 
-  const signIn = async () => {
-    const result = await signInWithPopup(auth, googleProvider);
-    const idToken = await result.user.getIdToken();
+export default function PatientsPage() {
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  
+  useEffect(() => {
+    loadPatients();
+  }, []);
+  
+  async function loadPatients() {
+    try {
+      const user = auth.currentUser;
+      if (!user) {
+        setError('Not authenticated');
+        return;
+      }
+      
+      const idToken = await user.getIdToken();
+      const response = await fetch('/api/v1/patients', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${idToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to load patients');
+      }
+      
+      const result = await response.json();
+      setPatients(result.data.patients);
+    } catch (err) {
+      console.error('Failed to load patients:', err);
+      setError('Failed to load patients. Please try again.');
+    }
+  }
+  
+  return (
+    <div>
+      {error && <div className="error">{error}</div>}
+      {patients.map(patient => (
+        <div key={patient.id}>{patient.name}</div>
+      ))}
+    </div>
+  );
+}
+```
+
+**POST/PUT/DELETE Examples:**
+
+```typescript
+// ✅ Creating a patient
+async function createPatient(data: CreatePatientData) {
+  const user = auth.currentUser;
+  if (!user) throw new Error('Not authenticated');
+  
+  const idToken = await user.getIdToken();
+  const response = await fetch('/api/v1/patients', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${idToken}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+  
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to create patient');
+  }
+  
+  const result = await response.json();
+  return result.data;
+}
+
+// ✅ Updating a patient
+async function updatePatient(id: string, updates: Partial<Patient>) {
+  const user = auth.currentUser;
+  if (!user) throw new Error('Not authenticated');
+  
+  const idToken = await user.getIdToken();
+  const response = await fetch(`/api/v1/patients/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${idToken}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(updates)
+  });
+  
+  if (!response.ok) {
+    throw new Error('Failed to update patient');
+  }
+  
+  const result = await response.json();
+  return result.data;
+}
+
+// ✅ Deleting a patient
+async function deletePatient(id: string) {
+  const user = auth.currentUser;
+  if (!user) throw new Error('Not authenticated');
+  
+  const idToken = await user.getIdToken();
+  const response = await fetch(`/api/v1/patients/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${idToken}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  
+  if (!response.ok) {
+    throw new Error('Failed to delete patient');
+  }
+}
+```
+
+**Dynamic Routes with Static Export:**
+
+⚠️ **IMPORTANT:** Pages with dynamic routes cannot use `'use client'` if they export `generateStaticParams()`. The solution is to split into server page + client component.
+
+⚠️ **CRITICAL:** `generateStaticParams()` must return **at least one route**. Empty arrays fail Next.js validation!
+
+```typescript
+// ✅ CORRECT: Server page - /patients/[id]/page.tsx
+import PatientDetailClient from './PatientDetailClient';
+
+// REQUIRED for static export with dynamic routes
+// ⚠️ MUST return at least one route, or Next.js validation fails
+// Next.js checks if prerenderedRoutes.length > 0, not just if function exists
+export async function generateStaticParams() {
+  return [{ id: '_' }]; // Placeholder route to satisfy validation
+}
+
+export default async function PatientDetailPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+  const { id } = await params;
+  
+  return <PatientDetailClient patientId={id} />;
+}
+```
+
+```typescript
+// ✅ CORRECT: Client component - /patients/[id]/PatientDetailClient.tsx
+'use client';
+import { useState, useEffect } from 'react';
+import { auth } from '@/app/firebase/config';
+
+interface PatientDetailClientProps {
+  patientId: string;
+}
+
+export default function PatientDetailClient({ patientId }: PatientDetailClientProps) {
+  const [patient, setPatient] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  
+  useEffect(() => {
+    loadPatient();
+  }, [patientId]);
+  
+  async function loadPatient() {
+    const user = auth.currentUser;
+    if (!user) {
+      setError('Not authenticated');
+      return;
+    }
     
-    // Call API - works in dev and production
-    const response = await fetch('/api/v1/me', {
+    const idToken = await user.getIdToken();
+    const response = await fetch(`/api/v1/patients/${patientId}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${idToken}`,
@@ -550,20 +867,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
     
     if (!response.ok) {
-      throw new Error('Failed to fetch user profile');
+      setError('Failed to load patient');
+      return;
     }
     
-    const data = await response.json();
-    setUser(data);
-  };
-
-  return (
-    <AuthContext.Provider value={{ user, signIn }}>
-      {children}
-    </AuthContext.Provider>
-  );
+    const result = await response.json();
+    setPatient(result.data);
+  }
+  
+  // ... rest of component JSX
 }
 ```
+
+**Why This Pattern?**
+- ❌ **Error:** `Page cannot use both "use client" and export function "generateStaticParams()"`
+- ✅ **Solution:** Keep page as server component, move interactive logic to separate client component
+- Server page: Exports `generateStaticParams()` and passes dynamic param to client
+- Client component: Contains all state, effects, and API calls
+
+**Understanding the `generateStaticParams()` Validation Bug:**
+
+Next.js has a validation bug where it checks for `generateStaticParams()` by verifying if any routes were returned, not by checking if the function exists:
+
+```javascript
+// How Next.js validates (from node_modules/next/dist/build/index.js):
+const hasGenerateStaticParams = workerResult.prerenderedRoutes && 
+                                 workerResult.prerenderedRoutes.length > 0;
+
+if (config.output === 'export' && isDynamic && !hasGenerateStaticParams) {
+  throw new Error(`Page "${page}" is missing "generateStaticParams()"...`);
+}
+```
+
+This means:
+- ❌ `return []` → `prerenderedRoutes.length` is 0 → Validation fails
+- ✅ `return [{ id: '_' }]` → `prerenderedRoutes.length` is 1 → Validation passes
+
+The placeholder route `/patients/_` gets generated but is never used in production. Actual routes are loaded dynamically at runtime via client-side navigation.
+
+**Key Takeaways:**
+- ✅ Use direct `fetch()` in every component that needs API access
+- ✅ Always get token with `auth.currentUser.getIdToken()`
+- ✅ Use relative paths (`/api/v1/...`) - rewrites handle routing
+- ✅ Define TypeScript interfaces locally in components
+- ✅ For dynamic routes: Server page + separate client component pattern
+- ✅ Export `generateStaticParams()` returning `[]` from server pages only
+- ❌ Never create `api-client.ts`, wrapper functions, or abstraction layers
+- ❌ Never hardcode Firebase Functions URLs
+- ❌ Never use `'use client'` in pages that export `generateStaticParams()`
 
 #### Authentication Protection Strategy
 
@@ -748,13 +1099,22 @@ firebase deploy --only firestore:rules,firestore:indexes
 - Single codebase for dev and prod
 - Frontend code doesn't change between environments
 - No environment-specific API URL configuration
+- Direct `fetch()` pattern is simple, explicit, and static-export compatible
 
 ✅ **Security:**
 - Server-side protection in dev (middleware)
 - Client-side protection in prod (still secure with Firebase Auth)
 - Firebase Functions enforce authentication via tokens
 
+✅ **Static Export Compatibility:**
+- Direct `fetch()` calls work seamlessly with `output: 'export'`
+- No abstraction layers to cause build errors
+- Dynamic routes work correctly with `generateStaticParams()`
+- Deployment succeeds without modification
+
 #### Common Pitfalls to Avoid
+
+❌ **Don't create API client wrappers or abstraction layers:** This is the #1 mistake that breaks static export. Use direct `fetch()` calls in every component. Creating files like `api-client.ts` or wrapper functions like `patientApi.list()` will cause `generateStaticParams()` errors and deployment failures.
 
 ❌ **Don't use Next.js API routes for production:** Firebase Functions are your backend. Next.js API routes won't work with static export and create confusion.
 
@@ -763,6 +1123,12 @@ firebase deploy --only firestore:rules,firestore:indexes
 ❌ **Don't skip emulator testing:** Always test with Firebase emulators before deploying to catch issues early.
 
 ❌ **Don't forget to set `NEXT_PUBLIC_BUILD_MODE=export`:** Without this, production builds won't generate the static `out` directory.
+
+❌ **Don't return empty array from `generateStaticParams()`:** ⚠️ **CRITICAL BUG** - Next.js validates `generateStaticParams()` by checking if `prerenderedRoutes.length > 0`, not by checking if the function exists. Returning `[]` will cause the error: `"Page "/route/[id]" is missing "generateStaticParams()"`. Always return at least one placeholder route: `[{ id: '_' }]`.
+
+❌ **Don't define `rewrites` when using `output: 'export'`:** The `rewrites` configuration conflicts with static export and causes validation warnings. Conditionally exclude it: `...(!isStaticExport && { async rewrites() {...} })`.
+
+❌ **Don't use `'use client'` in pages that export `generateStaticParams()`:** Next.js will throw error: `"Page cannot use both 'use client' and export function 'generateStaticParams()'"`. Instead, keep the page as a server component and create a separate client component file for the interactive logic.
 
 ## Performance Optimization Patterns
 
