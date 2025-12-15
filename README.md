@@ -15,7 +15,6 @@ The template follows the Waterfall Methodology to help manage the relationship b
 
 ## How to use this Template
 - AGENTS.md file
-   - Contains instructions for each of the Agent Roles: SRS Agent, SRD Agent, SDD Agent, API Agent, and Frontend Agent
    - Contains instructions on how the Agents should implement the Waterfall
 - SRS Doc (`docs/system/system-requirements.md`)
    - Product level requirements and specifications
@@ -30,6 +29,16 @@ The template follows the Waterfall Methodology to help manage the relationship b
 - PHASES.md
    - Use to help stage changes
    - Already seeded with Auth flow and basic layout
+- Agent Roles
+   - Use cursor commands, e.g. `/as-api-agent please update...`
+   - [Doc Agent](.cursor/commands/as-docs-agent.md)
+      - Use for updating the docs
+   - [API Agent](.cursor/commands/as-api-agent.md)
+      - Use for any backend related changes
+   - [Frontend Agent](.cursor/commands/as-frontend-agent.md)
+      - Use for any frontend related changes
+   - [Debugger Agent](.cursor/commands/as-frontend-agent.md)
+      - Use for debugging the app
 
 1. Create the Firebase Account and Project in `https://console.firebase.google.com`
 2. Have Agent implement Phase 1 from the `PHASES.md` doc
@@ -40,9 +49,10 @@ The template follows the Waterfall Methodology to help manage the relationship b
 
 ## Cursor Commands
 Use these to help during development
-- Run with `.cursor/commands/failingtests.md` when API tests are failing
-- Use `.cursor/commands/feedback.md` as a prefix and then provide Github Copilot feedback from PR
-- Use `.cursor/commands/runninglocally.md` as a prefix when coming across problems while testing the app locally
+- Run with `/failingtests` when API tests are failing
+- Use `/feedback` as a prefix and then provide Github Copilot feedback from PR
+- Use `/runninglocally` as a prefix when coming across problems while testing the app locally
+- Use `/as-...` when wanting the agent to assume a particular role
 
 **Delete above, below is the Readme**
 
