@@ -8,8 +8,8 @@
 # Watefall Method
 Agents should follow these steps when making changes. Agent Roles are described in the Agent Roles section.
 
-1. Doc Agent updates the System Requirements Specifications (SRS) based on developer requests
-2. Doc Agent makes changes to Software Requirements Document (SRD), based on changes to the SRS.
+1. Doc Agent updates the System Requirements Specifications (PRD) based on developer requests
+2. Doc Agent makes changes to Software Requirements Document (SRD), based on changes to the PRD.
 3. Doc Agent makes changes to the Software Development Documents (SDD) where appropriate
 4. API Agent implements the changes to the Database Doc
 5. API Agent implements the changes to the API Doc following BDD Principles
@@ -29,8 +29,8 @@ Agents should follow these steps when making changes. Agent Roles are described 
 
 ### For Each Developer Request
 1. **Identify Scope**: Determine which agents need to be involved
-   - UI-only changes? SRS → SRD → Frontend Agent
-   - API changes? SRS → SRD → SDD → API Agent (with BDD)
+   - UI-only changes? PRD → SRD → Frontend Agent
+   - API changes? PRD → SRD → SDD → API Agent (with BDD)
    - Full feature? All agents in sequence
 
 2. **Execute in Order**: Complete each agent's role fully before moving to next

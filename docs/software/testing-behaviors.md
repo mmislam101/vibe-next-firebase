@@ -11,7 +11,7 @@ This document defines the testing behaviors and standards for API endpoints impl
 
 ### 1.1 Testing Philosophy
 
-**[Implements: SRD-REQ-TEST-001, SRS-REQ-TEST-001]**
+**[Implements: SRD-REQ-TEST-001, PRD-REQ-TEST-001]**
 
 - **Test-First Approach:** Write tests before implementation (RED-GREEN-REFACTOR)
 - **Behavior-Driven:** Tests describe what the system should do, not how
@@ -70,7 +70,7 @@ functions/
 
 ### 2.1 Authentication Behaviors
 
-**[Implements: SRD-REQ-FUNC-003, SRD-REQ-SEC-001, SRS-REQ-SEC-001, SRS-REQ-API-001, SRS-REQ-API-002]**
+**[Implements: SRD-REQ-FUNC-003, SRD-REQ-SEC-001, PRD-REQ-SEC-001, PRD-REQ-API-001, PRD-REQ-API-002]**
 
 Every authenticated endpoint MUST test these behaviors:
 
@@ -88,7 +88,7 @@ Every authenticated endpoint MUST test these behaviors:
 
 ### 2.2 Authorization Behaviors
 
-**[Implements: SRD-REQ-FUNC-004, SRD-REQ-SEC-002, SRS-REQ-SEC-001]**
+**[Implements: SRD-REQ-FUNC-004, SRD-REQ-SEC-002, PRD-REQ-SEC-001]**
 
 For endpoints that require specific permissions or user ownership:
 
@@ -476,7 +476,7 @@ Each endpoint in `api-specification.md` MUST include:
 
 ### 6.1 Manual Testing Only
 
-**[Implements: SRD-REQ-TEST-002, SRS-REQ-TEST-001]**
+**[Implements: SRD-REQ-TEST-002, PRD-REQ-TEST-001]**
 
 Frontend functionality SHALL be verified through manual testing only. Automated frontend tests are explicitly excluded.
 

@@ -85,7 +85,7 @@ This document defines the software requirements for implementing the [Insert Pro
 
 ### 3.1 Next.js Application Structure
 
-**SRD-REQ-FRONT-001:** [Implements: SRS-REQ-UI-003, SRS-REQ-UI-004, SRS-REQ-UI-017] The application SHALL follow Next.js 15 App Router structure:
+**SRD-REQ-FRONT-001:** [Implements: PRD-REQ-UI-003, PRD-REQ-UI-004, PRD-REQ-UI-017] The application SHALL follow Next.js 15 App Router structure:
 
 **App Directory Structure:**
 - `layout.tsx` - Root layout with providers
@@ -105,7 +105,7 @@ This document defines the software requirements for implementing the [Insert Pro
 
 ### 3.2 UI Framework Requirements
 
-**SRD-REQ-FRONT-002:** [Implements: SRS-REQ-UI-002, SRS-REQ-UI-018] The application SHALL use Tailwind CSS for styling:
+**SRD-REQ-FRONT-002:** [Implements: PRD-REQ-UI-002, PRD-REQ-UI-018] The application SHALL use Tailwind CSS for styling:
 
 - **Design System:** Modern, clean healthcare-focused UI
 - **Responsive Design:** Mobile-first approach, optimized for mobile devices
@@ -113,7 +113,7 @@ This document defines the software requirements for implementing the [Insert Pro
 - **Component Library:** Custom components built on Tailwind utilities
 - **Dark Mode:** Optional (future enhancement)
 
-**SRD-REQ-FRONT-003:** [Implements: SRS-REQ-UI-003, SRS-REQ-UI-013, SRS-REQ-UI-016] Key UI components SHALL include:
+**SRD-REQ-FRONT-003:** [Implements: PRD-REQ-UI-003, PRD-REQ-UI-013, PRD-REQ-UI-016] Key UI components SHALL include:
 
 - **Button:** Primary, secondary, and danger variants
 - **Input:** Text input with validation states
@@ -123,19 +123,19 @@ This document defines the software requirements for implementing the [Insert Pro
 
 ### 3.3 State Management
 
-**SRD-REQ-FRONT-004:** [Implements: SRS-REQ-UI-003, SRS-REQ-UI-017] The application SHALL use React Context API for state management:
+**SRD-REQ-FRONT-004:** [Implements: PRD-REQ-UI-003, PRD-REQ-UI-017] The application SHALL use React Context API for state management:
 
 - **AuthContext:** Firebase Authentication state and user profile
 - **LoadingContext:** Global loading state management
 
 ### 3.4 Routing and Navigation
 
-**SRD-REQ-FRONT-006:** [Implements: SRS-REQ-SEC-001] The application SHALL implement protected routes:
+**SRD-REQ-FRONT-006:** [Implements: PRD-REQ-SEC-001] The application SHALL implement protected routes:
 
 - **Public Routes:** Landing page (/)
 - **Authenticated Routes:** Dashboard (/dashboard)
 
-**SRD-REQ-FRONT-007:** [Implements: SRS-REQ-SEC-001] Route protection SHALL be implemented via middleware:
+**SRD-REQ-FRONT-007:** [Implements: PRD-REQ-SEC-001] Route protection SHALL be implemented via middleware:
 
 ```typescript
 // middleware.ts
@@ -156,7 +156,7 @@ export function middleware(request: NextRequest) {
 
 #### 3.5.1 Landing Page (Unauthenticated State)
 
-**SRD-REQ-FRONT-008:** [Implements: SRS-REQ-UI-001] The landing page SHALL be implemented as:
+**SRD-REQ-FRONT-008:** [Implements: PRD-REQ-UI-001] The landing page SHALL be implemented as:
 
 - Centered layout with full viewport height
 - Gradient background (blue to indigo)
@@ -166,7 +166,7 @@ export function middleware(request: NextRequest) {
 - Google Sign-In button as primary CTA
 - Helper text explaining sign-in requirement
 
-**SRD-REQ-FRONT-009:** [Implements: SRS-REQ-UI-001, SRS-REQ-UI-002] The landing page SHALL:
+**SRD-REQ-FRONT-009:** [Implements: PRD-REQ-UI-001, PRD-REQ-UI-002] The landing page SHALL:
 - Display prominently centered on the viewport
 - Show application name and value proposition
 - Feature a Google Sign-In button as primary call-to-action
@@ -176,7 +176,7 @@ export function middleware(request: NextRequest) {
 
 #### 3.5.2 Authenticated Layout Structure
 
-**SRD-REQ-FRONT-010:** [Implements: SRS-REQ-UI-003, SRS-REQ-UI-004, SRS-REQ-UI-006, SRS-REQ-UI-010, SRS-REQ-UI-017] Once authenticated, the application SHALL use a root layout component:
+**SRD-REQ-FRONT-010:** [Implements: PRD-REQ-UI-003, PRD-REQ-UI-004, PRD-REQ-UI-006, PRD-REQ-UI-010, PRD-REQ-UI-017] Once authenticated, the application SHALL use a root layout component:
 
 - Full-height flex layout with column direction
 - Top navigation bar spanning full width
@@ -188,7 +188,7 @@ export function middleware(request: NextRequest) {
 
 #### 3.5.3 Left-Side Menu Pane (Desktop/Tablet)
 
-**SRD-REQ-FRONT-011:** [Implements: SRS-REQ-UI-004, SRS-REQ-UI-005] The left-side menu SHALL be implemented with:
+**SRD-REQ-FRONT-011:** [Implements: PRD-REQ-UI-004, PRD-REQ-UI-005] The left-side menu SHALL be implemented with:
 
 - Client component with pathname and auth hooks
 - Hidden on mobile, visible on tablet/desktop (≥768px)
@@ -198,7 +198,7 @@ export function middleware(request: NextRequest) {
 - Current pathname comparison for active highlighting
 - Placeholder for future navigation items
 
-**SRD-REQ-FRONT-012:** [Implements: SRS-REQ-UI-004, SRS-REQ-UI-005, SRS-REQ-UI-017] The left-side menu SHALL:
+**SRD-REQ-FRONT-012:** [Implements: PRD-REQ-UI-004, PRD-REQ-UI-005, PRD-REQ-UI-017] The left-side menu SHALL:
 - Be visible only on viewports ≥768px width (hidden on mobile)
 - Have a fixed width between 200-280px (recommend 256px/64rem)
 - Remain fixed/persistent during navigation
@@ -210,7 +210,7 @@ export function middleware(request: NextRequest) {
 
 #### 3.5.4 Top Navigation Bar
 
-**SRD-REQ-FRONT-013:** [Implements: SRS-REQ-UI-006, SRS-REQ-UI-007, SRS-REQ-UI-010] The top navigation bar SHALL be implemented as:
+**SRD-REQ-FRONT-013:** [Implements: PRD-REQ-UI-006, PRD-REQ-UI-007, PRD-REQ-UI-010] The top navigation bar SHALL be implemented as:
 
 - Client component with auth hook and dropdown state management
 - Sticky positioning at top with high z-index
@@ -223,7 +223,7 @@ export function middleware(request: NextRequest) {
 - Conditional rendering of dropdown menu based on state
 - Accessibility labels for interactive elements
 
-**SRD-REQ-FRONT-014:** [Implements: SRS-REQ-UI-006, SRS-REQ-UI-007, SRS-REQ-UI-010, SRS-REQ-UI-018] The top navigation bar SHALL:
+**SRD-REQ-FRONT-014:** [Implements: PRD-REQ-UI-006, PRD-REQ-UI-007, PRD-REQ-UI-010, PRD-REQ-UI-018] The top navigation bar SHALL:
 - Span the full width of the viewport
 - Be fixed at the top with `position: sticky` or `fixed`
 - Have a minimum height of 56px (recommend 64px/4rem)
@@ -235,7 +235,7 @@ export function middleware(request: NextRequest) {
 - Include visual dropdown indicator (chevron/arrow icon)
 - Have adequate contrast for accessibility (WCAG 2.1 AA)
 
-**SRD-REQ-FRONT-015:** [Implements: SRS-REQ-UI-008, SRS-REQ-UI-009] The user profile dropdown SHALL display:
+**SRD-REQ-FRONT-015:** [Implements: PRD-REQ-UI-008, PRD-REQ-UI-009] The user profile dropdown SHALL display:
 
 - Client component with auth hook for user data and logout
 - Absolute positioning relative to parent (right-aligned)
@@ -247,7 +247,7 @@ export function middleware(request: NextRequest) {
 - Logout menu item with icon and distinct styling (red text)
 - Menu role for accessibility
 
-**SRD-REQ-FRONT-016:** [Implements: SRS-REQ-UI-008, SRS-REQ-UI-009, SRS-REQ-UI-017] The dropdown menu SHALL:
+**SRD-REQ-FRONT-016:** [Implements: PRD-REQ-UI-008, PRD-REQ-UI-009, PRD-REQ-UI-017] The dropdown menu SHALL:
 - Appear when profile icon is clicked
 - Display user's full name and email at the top
 - Show Logout/Sign Out option with clear visual separation (divider line)
@@ -260,7 +260,7 @@ export function middleware(request: NextRequest) {
 
 #### 3.5.5 Mobile Responsive Layout
 
-**SRD-REQ-FRONT-017:** [Implements: SRS-REQ-UI-010, SRS-REQ-UI-011, SRS-REQ-UI-012] The mobile navigation menu SHALL be implemented as:
+**SRD-REQ-FRONT-017:** [Implements: PRD-REQ-UI-010, PRD-REQ-UI-011, PRD-REQ-UI-012] The mobile navigation menu SHALL be implemented as:
 
 - Client component with mobile menu state hook
 - Semi-transparent overlay (black 50% opacity) covering entire screen
@@ -273,7 +273,7 @@ export function middleware(request: NextRequest) {
 - Hidden on desktop/tablet (≥768px)
 - Higher z-index for drawer (50) than overlay (40)
 
-**SRD-REQ-FRONT-018:** [Implements: SRS-REQ-UI-010, SRS-REQ-UI-011, SRS-REQ-UI-012, SRS-REQ-UI-018] Mobile navigation (<768px) SHALL:
+**SRD-REQ-FRONT-018:** [Implements: PRD-REQ-UI-010, PRD-REQ-UI-011, PRD-REQ-UI-012, PRD-REQ-UI-018] Mobile navigation (<768px) SHALL:
 - Hide the left-side menu pane
 - Display hamburger menu icon (☰) in top-left of navigation bar
 - Maintain user profile icon in top-right
@@ -289,7 +289,7 @@ export function middleware(request: NextRequest) {
 
 #### 3.5.6 Loading Indicator UX
 
-**SRD-REQ-FRONT-019:** [Implements: SRS-REQ-UI-013, SRS-REQ-UI-014, SRS-REQ-UI-015] The global loading overlay SHALL be implemented as:
+**SRD-REQ-FRONT-019:** [Implements: PRD-REQ-UI-013, PRD-REQ-UI-014, PRD-REQ-UI-015] The global loading overlay SHALL be implemented as:
 
 - Client component with loading state hook
 - Return null when not loading (conditional rendering)
@@ -301,7 +301,7 @@ export function middleware(request: NextRequest) {
 - Optional loading message displayed below spinner
 - ARIA attributes for screen reader accessibility
 
-**SRD-REQ-FRONT-020:** [Implements: SRS-REQ-UI-013, SRS-REQ-UI-014, SRS-REQ-UI-015] The loading indicator SHALL:
+**SRD-REQ-FRONT-020:** [Implements: PRD-REQ-UI-013, PRD-REQ-UI-014, PRD-REQ-UI-015] The loading indicator SHALL:
 - Block the entire screen to prevent user interaction
 - Use semi-transparent black overlay (rgba(0, 0, 0, 0.5) or similar)
 - Display centered spinner/loading animation
@@ -313,7 +313,7 @@ export function middleware(request: NextRequest) {
 - Never block critical error messages or alerts
 - Use proper ARIA attributes for screen readers
 
-**SRD-REQ-FRONT-021:** [Implements: SRS-REQ-UI-013, SRS-REQ-UI-015] The loading state management SHALL be centralized:
+**SRD-REQ-FRONT-021:** [Implements: PRD-REQ-UI-013, PRD-REQ-UI-015] The loading state management SHALL be centralized:
 
 - TypeScript interface defining loading context methods and state
 - Provider component managing loading state
@@ -324,7 +324,7 @@ export function middleware(request: NextRequest) {
 - Timer cleanup to avoid premature dismissal
 - Context provider wrapping children with loading functionality
 
-**SRD-REQ-FRONT-022:** [Implements: SRS-REQ-UI-016] Loading indicators SHALL be displayed for:
+**SRD-REQ-FRONT-022:** [Implements: PRD-REQ-UI-016] Loading indicators SHALL be displayed for:
 - Initial page load and route navigation
 - Authentication operations (login, logout, token refresh)
 - API calls that take longer than 200ms
@@ -333,7 +333,7 @@ export function middleware(request: NextRequest) {
 
 #### 3.5.7 Layout Consistency and Accessibility
 
-**SRD-REQ-FRONT-023:** [Implements: SRS-REQ-UI-017, SRS-REQ-UI-018] The layout SHALL ensure:
+**SRD-REQ-FRONT-023:** [Implements: PRD-REQ-UI-017, PRD-REQ-UI-018] The layout SHALL ensure:
 - Consistent structure across all authenticated pages
 - Navigation state maintained during page transitions
 - Semantic HTML5 elements (`<header>`, `<nav>`, `<main>`, `<aside>`)
@@ -345,7 +345,7 @@ export function middleware(request: NextRequest) {
 - Consistent spacing and padding using Tailwind spacing scale
 - Unified color scheme (recommend indigo/blue as primary)
 
-**SRD-REQ-FRONT-024:** [Implements: SRS-REQ-UI-002, SRS-REQ-UI-018] The layout responsive breakpoints SHALL follow:
+**SRD-REQ-FRONT-024:** [Implements: PRD-REQ-UI-002, PRD-REQ-UI-018] The layout responsive breakpoints SHALL follow:
 - Mobile: < 768px (sm)
 - Tablet: 768px - 1023px (md)
 - Desktop: ≥ 1024px (lg+)
@@ -356,7 +356,7 @@ export function middleware(request: NextRequest) {
 
 ### 4.1 Function Organization
 
-**SRD-REQ-FUNC-001:** [Implements: SRS-REQ-TECH-001] Cloud Functions SHALL be organized with basic structure:
+**SRD-REQ-FUNC-001:** [Implements: PRD-REQ-TECH-001] Cloud Functions SHALL be organized with basic structure:
 
 **Functions Directory Structure:**
 - `src/index.ts` - Main exports for Cloud Functions
@@ -369,7 +369,7 @@ export function middleware(request: NextRequest) {
 
 ### 4.2 API Endpoints
 
-**SRD-REQ-FUNC-002:** [Implements: SRS-REQ-API-003] Basic API structure SHALL be established:
+**SRD-REQ-FUNC-002:** [Implements: PRD-REQ-API-003] Basic API structure SHALL be established:
 
 #### Basic API Setup
 - API routing structure with versioning (`/api/v1/`)
@@ -380,7 +380,7 @@ export function middleware(request: NextRequest) {
 
 ### 4.3 Authentication and Authorization
 
-**SRD-REQ-FUNC-003:** [Implements: SRS-REQ-SEC-001, SRS-REQ-API-001, SRS-REQ-API-002] All API endpoints SHALL require Firebase Google Authentication:
+**SRD-REQ-FUNC-003:** [Implements: PRD-REQ-SEC-001, PRD-REQ-API-001, PRD-REQ-API-002] All API endpoints SHALL require Firebase Google Authentication:
 
 ```typescript
 // Example: Authentication middleware
@@ -402,7 +402,7 @@ export async function verifyAuth(req: Request): Promise<string> {
 }
 ```
 
-**SRD-REQ-FUNC-004:** [Implements: SRS-REQ-SEC-001] Role-based access control framework SHALL be established:
+**SRD-REQ-FUNC-004:** [Implements: PRD-REQ-SEC-001] Role-based access control framework SHALL be established:
 
 - Authentication middleware for verifying Firebase tokens
 - User role determination (caretaker/observer) - foundation for future use
@@ -414,14 +414,14 @@ export async function verifyAuth(req: Request): Promise<string> {
 
 ### 5.1 Collection Structure
 
-**SRD-REQ-DB-001:** [Implements: SRS-REQ-TECH-001] Basic Firestore collections:
+**SRD-REQ-DB-001:** [Implements: PRD-REQ-TECH-001] Basic Firestore collections:
 
 - `users` - User accounts (both caretakers and observers)
   - Fields: `uid`, `email`, `displayName`, `photoURL`, `role`, `createdAt`, `updatedAt`
 
 ### 5.2 Security Rules
 
-**SRD-REQ-DB-002:** [Implements: SRS-REQ-SEC-001] Firestore security rules SHALL enforce:
+**SRD-REQ-DB-002:** [Implements: PRD-REQ-SEC-001] Firestore security rules SHALL enforce:
 
 - Authenticated users can read/write their own user document
 - Cloud Functions have full access via Admin SDK
@@ -438,7 +438,7 @@ export async function verifyAuth(req: Request): Promise<string> {
 
 ## 6. External Service Integration
 
-**SRD-REQ-INT-001:** [Implements: SRS-REQ-TECH-001] SHALL only integrate:
+**SRD-REQ-INT-001:** [Implements: PRD-REQ-TECH-001] SHALL only integrate:
 
 - **Firebase Authentication:** Google OAuth for user authentication
 
@@ -448,7 +448,7 @@ export async function verifyAuth(req: Request): Promise<string> {
 
 ### 7.1 Project Structure
 
-**SRD-REQ-DEV-001:** [Implements: SRS-REQ-TECH-001] The project SHALL follow this structure:
+**SRD-REQ-DEV-001:** [Implements: PRD-REQ-TECH-001] The project SHALL follow this structure:
 
 **Project Root Structure:**
 - `app/` - Next.js app directory
@@ -465,7 +465,7 @@ export async function verifyAuth(req: Request): Promise<string> {
 
 ### 7.2 Build Configuration
 
-**SRD-REQ-DEV-002:** [Implements: SRS-REQ-TECH-001] Next.js SHALL be configured for static export:
+**SRD-REQ-DEV-002:** [Implements: PRD-REQ-TECH-001] Next.js SHALL be configured for static export:
 
 ```typescript
 // next.config.ts
@@ -478,7 +478,7 @@ const nextConfig: NextConfig = {
 };
 ```
 
-**SRD-REQ-DEV-003:** [Implements: SRS-REQ-TECH-001, SRS-REQ-API-003] Firebase hosting SHALL be configured for static site deployment:
+**SRD-REQ-DEV-003:** [Implements: PRD-REQ-TECH-001, PRD-REQ-API-003] Firebase hosting SHALL be configured for static site deployment:
 
 ```json
 // firebase.json
@@ -498,7 +498,7 @@ const nextConfig: NextConfig = {
 
 ### 7.3 Environment Variables
 
-**SRD-REQ-DEV-004:** [Implements: SRS-REQ-SEC-001] Required environment variables:
+**SRD-REQ-DEV-004:** [Implements: PRD-REQ-SEC-001] Required environment variables:
 
 **Frontend (.env.local):**
 - `NEXT_PUBLIC_FIREBASE_API_KEY`
@@ -538,7 +538,7 @@ const nextConfig: NextConfig = {
 
 ### 9.1 Authentication
 
-**SRD-REQ-SEC-001:** [Implements: SRS-REQ-SEC-001] Authentication SHALL use Firebase Google Authentication:
+**SRD-REQ-SEC-001:** [Implements: PRD-REQ-SEC-001] Authentication SHALL use Firebase Google Authentication:
 
 - Google Sign-In OAuth authentication for all users
 - JWT token validation framework in Cloud Functions
@@ -548,7 +548,7 @@ const nextConfig: NextConfig = {
 
 ### 9.2 Authorization
 
-**SRD-REQ-SEC-002:** [Implements: SRS-REQ-SEC-001] Basic authorization framework SHALL be established:
+**SRD-REQ-SEC-002:** [Implements: PRD-REQ-SEC-001] Basic authorization framework SHALL be established:
 
 - Firestore security rules for user documents (read/write own document only)
 - Cloud Function authentication middleware
@@ -556,7 +556,7 @@ const nextConfig: NextConfig = {
 
 ### 9.3 Data Protection
 
-**SRD-REQ-SEC-003:** [Implements: SRS-REQ-SEC-003] Basic data protection:
+**SRD-REQ-SEC-003:** [Implements: PRD-REQ-SEC-003] Basic data protection:
 
 - Google OAuth tokens managed by Firebase (not stored locally)
 - HTTPS/TLS for all communications
@@ -569,7 +569,7 @@ const nextConfig: NextConfig = {
 
 ### 10.1 API Testing
 
-**SRD-REQ-TEST-001:** [Implements: SRS-REQ-TEST-001] API functions SHALL be tested using Behavior-Driven Development (BDD):
+**SRD-REQ-TEST-001:** [Implements: PRD-REQ-TEST-001] API functions SHALL be tested using Behavior-Driven Development (BDD):
 
 - All Firebase Cloud Functions endpoints SHALL have BDD tests
 - Tests SHALL be written before implementation (test-first approach)
@@ -583,7 +583,7 @@ const nextConfig: NextConfig = {
 
 ### 10.2 Manual Testing
 
-**SRD-REQ-TEST-002:** [Implements: SRS-REQ-TEST-001] Frontend functionality SHALL be verified through manual testing:
+**SRD-REQ-TEST-002:** [Implements: PRD-REQ-TEST-001] Frontend functionality SHALL be verified through manual testing:
 
 - Google Sign-In authentication flow
 - Landing page display (unauthenticated state)
@@ -593,7 +593,7 @@ const nextConfig: NextConfig = {
 - Loading states
 - Responsive design across devices
 
-**Note:** Automated frontend testing is explicitly excluded per SRS-REQ-TEST-001.
+**Note:** Automated frontend testing is explicitly excluded per PRD-REQ-TEST-001.
 
 ---
 
@@ -601,7 +601,7 @@ const nextConfig: NextConfig = {
 
 ### 11.1 Build Process
 
-**SRD-REQ-DEPLOY-001:** [Implements: SRS-REQ-TECH-001] Deployment SHALL use:
+**SRD-REQ-DEPLOY-001:** [Implements: PRD-REQ-TECH-001] Deployment SHALL use:
 
 ```bash
 # Build Next.js app for static export
@@ -616,14 +616,14 @@ firebase deploy --only firestore:rules
 
 ### 11.2 Environment Configuration
 
-**SRD-REQ-DEPLOY-002:** [Implements: SRS-REQ-TECH-001] Environment setup:
+**SRD-REQ-DEPLOY-002:** [Implements: PRD-REQ-TECH-001] Environment setup:
 
 - **Development:** Local development server (`npm run dev`)
 - **Production:** Firebase Hosting with static site
 
 ### 11.3 Monitoring
 
-**SRD-REQ-DEPLOY-003:** [Implements: SRS-REQ-REL-004] Basic monitoring:
+**SRD-REQ-DEPLOY-003:** [Implements: PRD-REQ-REL-004] Basic monitoring:
 
 - Firebase Hosting analytics
 - Firebase Authentication logs

@@ -7,7 +7,7 @@
 
 ## 2. Application Structure
 
-**[Implements: SRD-REQ-FRONT-001, SRS-REQ-UI-003, SRS-REQ-UI-004, SRS-REQ-UI-017]**
+**[Implements: SRD-REQ-FRONT-001, PRD-REQ-UI-003, PRD-REQ-UI-004, PRD-REQ-UI-017]**
 
 ### 2.1 Directory Structure
 
@@ -33,18 +33,18 @@
 
 ## 3. Application Layout Structure
 
-**[Implements: SRD-REQ-FRONT-001, SRD-REQ-FRONT-010, SRS-REQ-UI-003, SRS-REQ-UI-017]**
+**[Implements: SRD-REQ-FRONT-001, SRD-REQ-FRONT-010, PRD-REQ-UI-003, PRD-REQ-UI-017]**
 
 ### 3.1 Layout Overview
 
-[Implements: SRD-REQ-FRONT-001, SRS-REQ-UI-017] The application SHALL implement a two-state layout system:
+[Implements: SRD-REQ-FRONT-001, PRD-REQ-UI-017] The application SHALL implement a two-state layout system:
 
 1. **Unauthenticated State:** Landing page with Google Sign-In
 2. **Authenticated State:** Dashboard layout with navigation
 
 ### 3.2 Landing Page Layout (Unauthenticated)
 
-[Implements: SRD-REQ-FRONT-008, SRD-REQ-FRONT-009, SRS-REQ-UI-001, SRS-REQ-UI-002] The landing page (`app/page.tsx`) SHALL implement:
+[Implements: SRD-REQ-FRONT-008, SRD-REQ-FRONT-009, PRD-REQ-UI-001, PRD-REQ-UI-002] The landing page (`app/page.tsx`) SHALL implement:
 
 - Client component with auth and routing hooks
 - Auto-redirect authenticated users to dashboard
@@ -64,7 +64,7 @@
 
 ### 3.3 Authenticated Layout Structure
 
-[Implements: SRD-REQ-FRONT-010, SRS-REQ-UI-003, SRS-REQ-UI-004, SRS-REQ-UI-017] The authenticated layout SHALL be implemented as a route group:
+[Implements: SRD-REQ-FRONT-010, PRD-REQ-UI-003, PRD-REQ-UI-004, PRD-REQ-UI-017] The authenticated layout SHALL be implemented as a route group:
 
 - Client component with auth and routing hooks
 - Redirect unauthenticated users to landing page
@@ -80,7 +80,7 @@
 
 ### 3.4 Top Navigation Bar Component
 
-[Implements: SRD-REQ-FRONT-013, SRD-REQ-FRONT-014, SRS-REQ-UI-006, SRS-REQ-UI-007, SRS-REQ-UI-010] The TopNavBar component SHALL implement:
+[Implements: SRD-REQ-FRONT-013, SRD-REQ-FRONT-014, PRD-REQ-UI-006, PRD-REQ-UI-007, PRD-REQ-UI-010] The TopNavBar component SHALL implement:
 
 - Client component with auth and mobile menu hooks
 - Dropdown state management with useState
@@ -105,7 +105,7 @@
 
 ### 3.5 Left Side Menu Component
 
-[Implements: SRD-REQ-FRONT-011, SRD-REQ-FRONT-012, SRS-REQ-UI-004, SRS-REQ-UI-005, SRS-REQ-UI-017] The LeftSideMenu component SHALL implement:
+[Implements: SRD-REQ-FRONT-011, SRD-REQ-FRONT-012, PRD-REQ-UI-004, PRD-REQ-UI-005, PRD-REQ-UI-017] The LeftSideMenu component SHALL implement:
 
 - Client component with pathname and auth hooks
 - Hidden on mobile, visible on tablet/desktop (≥768px)
@@ -127,7 +127,7 @@
 
 ### 3.6 Navigation Link Component
 
-[Implements: SRD-REQ-FRONT-012, SRS-REQ-UI-005] The NavLink component SHALL implement:
+[Implements: SRD-REQ-FRONT-012, PRD-REQ-UI-005] The NavLink component SHALL implement:
 
 - TypeScript interface for props (href, icon component, active state, children)
 - Next.js Link component for client-side navigation
@@ -148,7 +148,7 @@
 
 ### 3.7 Mobile Navigation Menu
 
-[Implements: SRD-REQ-FRONT-017, SRD-REQ-FRONT-018, SRS-REQ-UI-010, SRS-REQ-UI-011, SRS-REQ-UI-012, SRS-REQ-UI-018] The MobileNavMenu component SHALL implement:
+[Implements: SRD-REQ-FRONT-017, SRD-REQ-FRONT-018, PRD-REQ-UI-010, PRD-REQ-UI-011, PRD-REQ-UI-012, PRD-REQ-UI-018] The MobileNavMenu component SHALL implement:
 
 - Client component using Headless UI Dialog and Transition components
 - Mobile menu state hook and pathname hook
@@ -176,7 +176,7 @@
 
 ### 3.8 User Dropdown Menu
 
-[Implements: SRD-REQ-FRONT-015, SRD-REQ-FRONT-016, SRS-REQ-UI-008, SRS-REQ-UI-009, SRS-REQ-UI-017] The UserDropdownMenu component SHALL implement:
+[Implements: SRD-REQ-FRONT-015, SRD-REQ-FRONT-016, PRD-REQ-UI-008, PRD-REQ-UI-009, PRD-REQ-UI-017] The UserDropdownMenu component SHALL implement:
 
 - Client component with auth and router hooks
 - Receives onClose callback prop
@@ -200,7 +200,7 @@
 
 ### 3.9 Loading Overlay Component
 
-[Implements: SRD-REQ-FRONT-019, SRD-REQ-FRONT-020, SRS-REQ-UI-013, SRS-REQ-UI-014, SRS-REQ-UI-015] The LoadingOverlay component SHALL implement:
+[Implements: SRD-REQ-FRONT-019, SRD-REQ-FRONT-020, PRD-REQ-UI-013, PRD-REQ-UI-014, PRD-REQ-UI-015] The LoadingOverlay component SHALL implement:
 
 - Client component with loading state hook
 - Local state for display delay management
@@ -226,7 +226,7 @@
 
 ### 3.10 Loading Context Provider
 
-[Implements: SRD-REQ-FRONT-021, SRS-REQ-UI-013, SRS-REQ-UI-015] The LoadingContext SHALL manage global loading state:
+[Implements: SRD-REQ-FRONT-021, PRD-REQ-UI-013, PRD-REQ-UI-015] The LoadingContext SHALL manage global loading state:
 
 - TypeScript interface defining context type (isLoading, loadingMessage, startLoading, stopLoading)
 - React Context creation with undefined default
@@ -256,7 +256,7 @@
 
 ### 3.12 Route Protection Middleware
 
-[Implements: SRD-REQ-FRONT-006, SRD-REQ-FRONT-007, SRS-REQ-SEC-001] The middleware SHALL protect authenticated routes:
+[Implements: SRD-REQ-FRONT-006, SRD-REQ-FRONT-007, PRD-REQ-SEC-001] The middleware SHALL protect authenticated routes:
 
 - Extract auth token from cookies
 - Get current pathname from request
@@ -272,11 +272,11 @@
 
 ## 4. Page Requirements
 
-**[Implements: SRD-REQ-FRONT-001, SRS-REQ-UI-003]**
+**[Implements: SRD-REQ-FRONT-001, PRD-REQ-UI-003]**
 
 ### 4.1 Landing Page (`/`)
 
-[Implements: SRD-REQ-FRONT-008, SRD-REQ-FRONT-009, SRS-REQ-UI-001] The landing page is defined in section 3.2 above. Additional requirements:
+[Implements: SRD-REQ-FRONT-008, SRD-REQ-FRONT-009, PRD-REQ-UI-001] The landing page is defined in section 3.2 above. Additional requirements:
 
 **Features:**
 - Automatic redirect to `/dashboard` if user is already authenticated
@@ -299,7 +299,7 @@
 
 ### 4.2 Dashboard (`/dashboard`)
 
-[Implements: SRD-REQ-FRONT-005, SRS-REQ-UI-003, SRS-REQ-UI-006, SRS-REQ-UI-007] The dashboard page SHALL be wrapped in the authenticated layout and display:
+[Implements: SRD-REQ-FRONT-005, PRD-REQ-UI-003, PRD-REQ-UI-006, PRD-REQ-UI-007] The dashboard page SHALL be wrapped in the authenticated layout and display:
 
 - **Welcome Section:**
   - Welcome message with user's name
@@ -351,11 +351,11 @@ The settings page SHALL provide:
 
 ## 5. Component Requirements
 
-**[Implements: SRD-REQ-FRONT-003, SRS-REQ-UI-003, SRS-REQ-UI-013, SRS-REQ-UI-016]**
+**[Implements: SRD-REQ-FRONT-003, PRD-REQ-UI-003, PRD-REQ-UI-013, PRD-REQ-UI-016]**
 
 ### 5.1 Base UI Components
 
-[Implements: SRD-REQ-FRONT-003, SRS-REQ-UI-013, SRS-REQ-UI-016] The following base UI components SHALL be implemented:
+[Implements: SRD-REQ-FRONT-003, PRD-REQ-UI-013, PRD-REQ-UI-016] The following base UI components SHALL be implemented:
 
 **Button Component:**
 ```typescript
@@ -413,11 +413,11 @@ interface ErrorMessageProps {
 
 ## 6. State Management
 
-**[Implements: SRD-REQ-FRONT-004, SRS-REQ-UI-003, SRS-REQ-UI-017]**
+**[Implements: SRD-REQ-FRONT-004, PRD-REQ-UI-003, PRD-REQ-UI-017]**
 
 ### 6.1 Context Providers
 
-[Implements: SRD-REQ-FRONT-004, SRS-REQ-UI-003] The following context providers SHALL be implemented:
+[Implements: SRD-REQ-FRONT-004, PRD-REQ-UI-003] The following context providers SHALL be implemented:
 
 **AuthContext:**
 ```typescript
@@ -450,11 +450,11 @@ interface LoadingContextValue {
 
 ## 7. Google Authentication Implementation
 
-**[Implements: SRS-REQ-SEC-001, SRD-REQ-FRONT-006, SRD-REQ-FRONT-007]**
+**[Implements: PRD-REQ-SEC-001, SRD-REQ-FRONT-006, SRD-REQ-FRONT-007]**
 
 ### 7.1 Firebase Google Auth Setup
 
-[Implements: SRS-REQ-SEC-001, SRD-REQ-DEV-004] Google Authentication SHALL be implemented using Firebase Auth:
+[Implements: PRD-REQ-SEC-001, SRD-REQ-DEV-004] Google Authentication SHALL be implemented using Firebase Auth:
 
 ```typescript
 // app/firebase/config.ts
@@ -478,7 +478,7 @@ export { auth, googleProvider, db };
 
 ### 7.2 Sign-In Implementation
 
-[Implements: SRS-REQ-SEC-001] Google Sign-In SHALL be implemented:
+[Implements: PRD-REQ-SEC-001] Google Sign-In SHALL be implemented:
 
 ```typescript
 // app/context/AuthContext.tsx
@@ -517,7 +517,7 @@ User profiles SHALL be automatically created from Google account:
 
 ### 8.1 API Client Implementation
 
-**SRS-REQ-API-001:** The API client SHALL provide:
+**PRD-REQ-API-001:** The API client SHALL provide:
 
 - **Base Configuration:**
   - Base URL from environment
@@ -545,11 +545,11 @@ class ApiClient {
 
 ## 9. Styling Requirements
 
-**[Implements: SRD-REQ-FRONT-002, SRS-REQ-UI-002, SRS-REQ-UI-018]**
+**[Implements: SRD-REQ-FRONT-002, PRD-REQ-UI-002, PRD-REQ-UI-018]**
 
 ### 9.1 Tailwind Configuration
 
-[Implements: SRD-REQ-FRONT-002, SRS-REQ-UI-002] Tailwind CSS SHALL be configured with:
+[Implements: SRD-REQ-FRONT-002, PRD-REQ-UI-002] Tailwind CSS SHALL be configured with:
 
 - **Custom Colors:**
   - Primary (healthcare blue)
@@ -578,7 +578,7 @@ class ApiClient {
 
 ### 9.2 Design System
 
-[Implements: SRD-REQ-FRONT-002, SRD-REQ-FRONT-024, SRS-REQ-UI-002, SRS-REQ-UI-018] The design system SHALL include:
+[Implements: SRD-REQ-FRONT-002, SRD-REQ-FRONT-024, PRD-REQ-UI-002, PRD-REQ-UI-018] The design system SHALL include:
 
 - **Color Palette:**
   - Primary: Blue (#3B82F6)
@@ -634,11 +634,11 @@ class ApiClient {
 
 ## 11. Accessibility Requirements
 
-**[Implements: SRD-REQ-FRONT-002, SRD-REQ-FRONT-023, SRS-REQ-UI-018]**
+**[Implements: SRD-REQ-FRONT-002, SRD-REQ-FRONT-023, PRD-REQ-UI-018]**
 
 ### 11.1 WCAG Compliance
 
-**REQ-A11Y-001:** [Implements: SRD-REQ-FRONT-002, SRD-REQ-FRONT-014, SRD-REQ-FRONT-018, SRD-REQ-FRONT-023, SRS-REQ-UI-018] The application SHALL meet WCAG 2.1 AA:
+**REQ-A11Y-001:** [Implements: SRD-REQ-FRONT-002, SRD-REQ-FRONT-014, SRD-REQ-FRONT-018, SRD-REQ-FRONT-023, PRD-REQ-UI-018] The application SHALL meet WCAG 2.1 AA:
 
 - **Keyboard Navigation:**
   - All interactive elements keyboard accessible
@@ -690,11 +690,11 @@ The application SHALL handle:
 
 ## 13. Testing Requirements
 
-**[Implements: SRD-REQ-TEST-001, SRD-REQ-TEST-002, SRS-REQ-TEST-001]**
+**[Implements: SRD-REQ-TEST-001, SRD-REQ-TEST-002, PRD-REQ-TEST-001]**
 
 ### 13.1 Frontend Testing Approach
 
-**[Implements: SRD-REQ-TEST-002, SRS-REQ-TEST-001]** Per SRS-REQ-TEST-001, the frontend SHALL be tested through **manual testing only**. Automated frontend testing is explicitly excluded.
+**[Implements: SRD-REQ-TEST-002, PRD-REQ-TEST-001]** Per PRD-REQ-TEST-001, the frontend SHALL be tested through **manual testing only**. Automated frontend testing is explicitly excluded.
 
 ### 13.2 Manual Testing Checklist
 
@@ -795,7 +795,7 @@ Manual tests SHALL be performed on:
 
 ### 13.4 API Testing
 
-**[Implements: SRD-REQ-TEST-001, SRS-REQ-TEST-001]** API endpoints SHALL be tested using BDD (Behavior-Driven Development). See API Specification document for detailed API testing requirements.
+**[Implements: SRD-REQ-TEST-001, PRD-REQ-TEST-001]** API endpoints SHALL be tested using BDD (Behavior-Driven Development). See API Specification document for detailed API testing requirements.
 
 **Note:** Frontend testing is manual only. API testing uses BDD approach.
 

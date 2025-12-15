@@ -4,7 +4,7 @@ This template is designed for prototyping an MVP of a web app product by Vibe Co
 The template follows the Waterfall Methodology to help manage the relationship between the developer and the AI.
 
 ```
-                           SRS
+                           PRD
                             |
                 ___________SRD_________________________________
                /            |              \                   \
@@ -16,16 +16,16 @@ The template follows the Waterfall Methodology to help manage the relationship b
 ## How to use this Template
 - AGENTS.md file
    - Contains instructions on how the Agents should implement the Waterfall
-- SRS Doc (`docs/system/system-requirements.md`)
+- [PRD Doc](docs/system/product-requirements.md)
    - Product level requirements and specifications
-- SRD Doc (`docs/system/software-requirements.md`)
+- [SRD Doc](docs/system/software-requirements.md)
    - Software architecture
    - Software requirements
-- SDD Docs (`docs/software`)
-   - API Doc (`docs/software/api-specification.md`)
-   - Database Doc (`docs/software/database-schema.md`)
-   - Frontend Doc (`docs/software/frontend-requirements.md`)
-   - Testing Behavior Doc (`docs/software/testing-behaviors.md`)
+- [SDD Docs](docs/software)
+   - [API Doc](docs/software/api-specification.md)
+   - [Database Doc](docs/software/database-schema.md)
+   - [Frontend Doc](docs/software/frontend-requirements.md)
+   - [Testing Behavior Doc](docs/software/testing-behaviors.md)
 - PHASES.md
    - Use to help stage changes
    - Already seeded with Auth flow and basic layout
@@ -44,7 +44,7 @@ The template follows the Waterfall Methodology to help manage the relationship b
 2. Have Agent implement Phase 1 from the `PHASES.md` doc
 3. Test locally successfully
 4. Deploy to Firebase successfully
-5. Fill out the rest of the SRS document with full product details
+5. Fill out the rest of the PRD document with full product details
 6. Have AI generate the rest of the documents and code changes following the Waterfall methodology
 
 ## Cursor Commands
@@ -80,7 +80,7 @@ Use these to help during development
 │   │   └── shared/        # Shared utilities (auth, validators)
 │   └── lib/               # Compiled JavaScript
 ├── docs/                   # Documentation
-│   ├── system/            # System requirements (SRS, SRD)
+│   ├── system/            # System requirements (PRD, SRD)
 │   └── software/          # Software specs (API, DB, Frontend, Testing)
 ├── firebase.json           # Firebase configuration
 ├── firestore.rules         # Firestore security rules
@@ -166,15 +166,6 @@ npm run deploy:firestore:config
 npm run functions:deploy # Deploys hosting, functions, and firestore rules
 npm run deploy
 ```
-
-## Documentation
-
-- `docs/system/system-requirements.md` - System Requirements Specification (SRS)
-- `docs/system/software-requirements.md` - Software Requirements Document (SRD)
-- `docs/software/api-specification.md` - API Specification
-- `docs/software/database-schema.md` - Firestore Schema
-- `docs/software/frontend-requirements.md` - Frontend Requirements
-- `docs/software/testing-behaviors.md` - Testing Behavior Document
 
 ## License
 

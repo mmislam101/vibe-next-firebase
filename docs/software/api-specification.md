@@ -26,14 +26,14 @@ This document defines the REST API endpoints implemented as Firebase Cloud Funct
 
 ### 1.1 Base URL
 
-**[Implements: SRD-REQ-FUNC-001, SRD-REQ-DEV-003, SRS-REQ-API-003, SRS-REQ-API-011]**
+**[Implements: SRD-REQ-FUNC-001, SRD-REQ-DEV-003, PRD-REQ-API-003, PRD-REQ-API-011]**
 
 - **Development:** `http://localhost:5001/{project-id}/us-central1`
 - **Production:** `https://us-central1-{project-id}.cloudfunctions.net`
 
 ### 1.2 Authentication
 
-**[Implements: SRD-REQ-FUNC-003, SRS-REQ-SEC-001, SRS-REQ-API-001, SRS-REQ-API-002]**
+**[Implements: SRD-REQ-FUNC-003, PRD-REQ-SEC-001, PRD-REQ-API-001, PRD-REQ-API-002]**
 
 All authenticated endpoints require a Firebase ID token from Google Sign-In in the Authorization header:
 
@@ -87,11 +87,11 @@ All layout components use these endpoints to provide user information in the nav
 
 ## 2. User Profile Endpoints
 
-**[Implements: SRD-REQ-FUNC-002, SRS-REQ-API-007]**
+**[Implements: SRD-REQ-FUNC-002, PRD-REQ-API-007]**
 
 ### 2.1 Get User Profile
 
-**[Implements: SRS-REQ-UI-001, SRS-REQ-SEC-001, SRD-REQ-FUNC-002, SRS-REQ-API-007, SRS-REQ-API-008]**
+**[Implements: PRD-REQ-UI-001, PRD-REQ-SEC-001, SRD-REQ-FUNC-002, PRD-REQ-API-007, PRD-REQ-API-008]**
 
 **Endpoint:** `GET /api/v1/me`
 
@@ -119,7 +119,7 @@ All layout components use these endpoints to provide user information in the nav
 
 ### 2.2 Update User Profile
 
-**[Implements: SRS-REQ-UI-001, SRS-REQ-SEC-001, SRD-REQ-FUNC-002, SRS-REQ-API-007]**
+**[Implements: PRD-REQ-UI-001, PRD-REQ-SEC-001, SRD-REQ-FUNC-002, PRD-REQ-API-007]**
 
 **Endpoint:** `PUT /api/v1/me`
 

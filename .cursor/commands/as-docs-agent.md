@@ -2,20 +2,20 @@ Implement as Doc Agent
 
 # Docs
 Documents are broken into three parts,
-- System Requirements Specifications (SRS): `docs/system/system-requirements.md`
+- System Requirements Specifications (PRD): `docs/system/product-requirements.md`
   - Defines WHAT the system does
-  - Requirements are tagged with the `SRS-` prefix
+  - Requirements are tagged with the `PRD-` prefix
 - Software Requirements Document (SRD): `docs/system/software-requirements.md`
   - Defines WHAT the software does
   - Requirements are tagged with the `SRD-` prefix
-  - SRD requirements implement one or more SRS requirement.
-    - Trace which SRS requirement(s) the SRD requirement implements:
-      **SRD-REQ-DB-001:** [Implements: SRS-REQ-PATIENT-001, SRS-REQ-OBS-001]
+  - SRD requirements implement one or more PRD requirement.
+    - Trace which PRD requirement(s) the SRD requirement implements:
+      **SRD-REQ-DB-001:** [Implements: PRD-REQ-PATIENT-001, PRD-REQ-OBS-001]
 - Software Development Documents (SDD):
   - Defines HOW the software should behave
   - Software documents implement one or more SRD requirement.
     - Trace which SRD requirement(s) the sections of the software documents:
-      [Implements: SRD-REQ-FRONT-006, SRD-REQ-FRONT-007, SRS-SRD-REQ-SEC-001, SRS-REQ-SEC-005]
+      [Implements: SRD-REQ-FRONT-006, SRD-REQ-FRONT-007, PRD-SRD-REQ-SEC-001, PRD-REQ-SEC-005]
   - API Doc: `docs/software/api-specification.md`
     - Update whenever endpoints are added/modified/removed
   - Database Doc: `docs/software/database-schema.md`
