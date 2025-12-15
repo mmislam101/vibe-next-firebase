@@ -9,7 +9,7 @@
 Agents should follow these steps when making changes. Agent Roles are described in the Agent Roles section.
 
 1. Doc Agent updates the System Requirements Specifications (PRD) based on developer requests
-2. Doc Agent makes changes to Software Requirements Document (SRD), based on changes to the PRD.
+2. Doc Agent makes changes to Systems Requirements Document (SRD), based on changes to the PRD.
 3. Doc Agent makes changes to the Software Development Documents (SDD) where appropriate
 4. API Agent implements the changes to the Database Doc
 5. API Agent implements the changes to the API Doc following BDD Principles

@@ -18,10 +18,13 @@ The template follows the Waterfall Methodology to help manage the relationship b
    - Contains instructions on how the Agents should implement the Waterfall
 - [PRD Doc](docs/system/product-requirements.md)
    - Product level requirements and specifications
+   - WHAT the product does
 - [SRD Doc](docs/system/software-requirements.md)
-   - Software architecture
-   - Software requirements
+   - Systems Requirements and software architecture
+   - WHAT the system will do to implement the PRD
 - [SDD Docs](docs/software)
+   - Software Development Documents
+   - HOW the software will implement the SRD 
    - [API Doc](docs/software/api-specification.md)
    - [Database Doc](docs/software/database-schema.md)
    - [Frontend Doc](docs/software/frontend-requirements.md)

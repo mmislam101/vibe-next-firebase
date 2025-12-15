@@ -1,4 +1,4 @@
-# Software Requirements Document
+# Systems Requirements Document
 
 **Technology Stack:** Next.js, Firebase Hosting, Firestore, Firebase Cloud Functions, Tailwind CSS
 
@@ -6,7 +6,7 @@
 
 ## 1. Executive Summary
 
-This document defines the software requirements for implementing the [Insert Project Name] as a Next.js application hosted on Firebase.
+This document defines the Systems Requirements for implementing the [Insert Project Name] as a Next.js application hosted on Firebase.
 
 ### 1.1 Technology Stack
 

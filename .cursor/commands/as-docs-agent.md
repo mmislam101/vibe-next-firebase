@@ -5,7 +5,7 @@ Documents are broken into three parts,
 - System Requirements Specifications (PRD): `docs/system/product-requirements.md`
   - Defines WHAT the system does
   - Requirements are tagged with the `PRD-` prefix
-- Software Requirements Document (SRD): `docs/system/software-requirements.md`
+- Systems Requirements Document (SRD): `docs/system/software-requirements.md`
   - Defines WHAT the software does
   - Requirements are tagged with the `SRD-` prefix
   - SRD requirements implement one or more PRD requirement.
